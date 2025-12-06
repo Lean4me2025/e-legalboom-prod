@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>E-LegalBoom – Tier 1 Startup & Essential Documents</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    main {
+      max-width: 960px;
+      margin: 2rem auto;
+      padding: 1.5rem;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    }
+    .breadcrumb {
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+      color: #666;
+    }
+    .tier-badge {
+      display: inline-block;
+      padding: 0.2rem 0.7rem;
+      border-radius: 999px;
+      background: #eff5ff;
+      color: #1f4fbf;
+      font-size: 0.8rem;
+      margin-bottom: 0.4rem;
+    }
+    h1 {
+      margin: 0.3rem 0 0.5rem;
+      font-size: 1.8rem;
+    }
+    .price {
+      font-weight: 700;
+      color: #e05a2a;
+      margin-bottom: 0.6rem;
+    }
+    .two-col {
+      display: grid;
+      grid-template-columns: 2fr 3fr;
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+    @media (max-width: 768px) {
+      .two-col { grid-template-columns: 1fr; }
+    }
+    .doc-list label {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+    }
+    .doc-list input[type="radio"] {
+      margin-top: 0.2rem;
+    }
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: #1363df;
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      padding: 0.75rem 1.6rem;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .btn-secondary {
+      background: #f3f4f6;
+      color: #111827;
+      border-radius: 999px;
+      padding: 0.65rem 1.4rem;
+      border: 1px solid #d1d5db;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .notice {
+      font-size: 0.85rem;
+      color: #555;
+      margin-top: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="logo">E-LegalBoom</a>
+      <nav class="main-nav">
+        <a href="catalog.html">Catalog</a>
+        <a href="index.html#how-it-works">How it Works</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="breadcrumb">
+      <a href="catalog.html">Catalog</a> ▸ Tier 1 – Startup & Essential Documents
+    </div>
+
+    <span class="tier-badge">Tier 1</span>
+    <h1>Startup & Essential Documents</h1>
+    <div class="price">$39 per document</div>
+    <p>
+      Ideal for simple but important agreements that protect your ideas, clarify money
+      owed, or document a single-owner business structure.
+    </p>
+
+    <div class="two-col">
+      <section>
+        <h2>Select Your Document</h2>
+        <form id="tier1-form" class="doc-list">
+          <label>
+            <input type="radio" name="document" value="Mutual NDA (Non-Disclosure Agreement)" />
+            <span>Mutual NDA (Non-Disclosure Agreement)</span>
+          </label>
+          <label>
+            <input type="radio" name="document" value
