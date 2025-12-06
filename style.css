@@ -1,0 +1,214 @@
+Nov 24, 2025 at 11:59 AM
+
+/* ------------------------------
+   GLOBAL BASE STYLES
+--------------------------------*/
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    margin: 0;
+    background: #f5f7fb;
+    color: #1f2933;
+}
+
+h1, h2, h3, h4 {
+    margin: 0;
+    font-weight: 700;
+}
+
+/* ------------------------------
+   HEADER & NAVIGATION
+--------------------------------*/
+header {
+    padding: 1.5rem 8vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #ffffff;
+    border-bottom: 1px solid #dde3f0;
+}
+
+header .logo {
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: 0.03em;
+    color: #2563eb;
+}
+
+header nav a {
+    margin-left: 1.5rem;
+    text-decoration: none;
+    color: #334155;
+    font-size: 0.95rem;
+}
+
+header nav a:hover {
+    color: #2563eb;
+}
+
+/* ------------------------------
+   PAGE TITLE SECTIONS
+--------------------------------*/
+.page-hero {
+    padding: 3rem 8vw 2rem;
+}
+
+.page-hero h1 {
+    margin-bottom: 0.75rem;
+    font-size: 2.2rem;
+    font-weight: 800;
+}
+
+.page-hero p {
+    max-width: 620px;
+    margin: 0;
+    color: #4b5563;
+    font-size: 1rem;
+}
+
+/* ------------------------------
+   CATALOG GRID LAYOUT
+--------------------------------*/
+.catalog-grid {
+    padding: 1.5rem 8vw 4rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.75rem;
+}
+
+/* ------------------------------
+   PACKAGE CARD BOXES
+--------------------------------*/
+.package-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 1.75rem 1.5rem;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ------------------------------
+   TIER TITLE (UPGRADED)
+--------------------------------*/
+.package-tier-title {
+    font-size: 1.55rem;       /* Larger */
+    font-weight: 800;         /* Bolder */
+    color: #1f2a44;
+    margin-bottom: 12px;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #3f77ff28; /* subtle premium underline */
+}
+
+/* ------------------------------
+   PRICE
+--------------------------------*/
+.price {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #2563eb;
+    margin-bottom: 0.75rem;
+}
+
+/* ------------------------------
+   PARAGRAPH TEXT
+--------------------------------*/
+.package-card p {
+    font-size: 0.95rem;
+    color: #4b5563;
+    margin-bottom: 1rem;
+}
+
+/* ------------------------------
+   WHAT'S INCLUDED LIST
+--------------------------------*/
+.package-list {
+    padding-left: 1.1rem;
+    margin-bottom: 1.25rem;
+    font-size: 0.9rem;
+    color: #374151;
+}
+
+.package-list li {
+    margin-bottom: 0.35rem;
+}
+
+/* ------------------------------
+   BUTTONS
+--------------------------------*/
+.btn-primary {
+    display: inline-block;
+    padding: 0.65rem 1.1rem;
+    border-radius: 999px;
+    border: none;
+    background: #2563eb;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+.btn-outline {
+    display: inline-block;
+    padding: 0.55rem 1rem;
+    border-radius: 999px;
+    border: 1px solid #cbd5f5;
+    background: transparent;
+    color: #2563eb;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+}
+
+.btn-outline:hover {
+    background: #e0ecff;
+}
+
+/* ------------------------------
+   SUPPORT FOOTER STRIP
+--------------------------------*/
+.support-strip {
+    border-top: 1px solid #e2e8f0;
+    background: #f9fafb;
+    padding: 1rem 8vw 1.5rem;
+    font-size: 0.9rem;
+    color: #4b5563;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.support-strip a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+/* ------------------------------
+   MOBILE RESPONSIVENESS
+--------------------------------*/
+@media (max-width: 640px) {
+    .page-hero h1 {
+        font-size: 1.8rem;
+    }
+
+    .package-tier-title {
+        font-size: 1.35rem;
+    }
+
+    .catalog-grid {
+        padding-left: 5vw;
+        padding-right: 5vw;
+    }
+}
