@@ -1,510 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Secure Intake | E-LegalBoom</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<title>E-LegalBoom Intake</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Site-wide stylesheet if you have one -->
-  <link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- Page-specific styling so this page looks good even if global styles differ -->
-  <style>
-    :root {
-      --brand-orange: #ff7a3c;
-      --brand-orange-dark: #e55f1f;
-      --brand-blue: #213a7a;
-      --bg-light: #f5f7fb;
-      --border-soft: #d7d9e5;
-      --text-main: #222638;
-      --text-soft: #5b6073;
-    }
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f7fb;
+  margin: 0;
+  padding: 0;
+}
+.container {
+  max-width: 900px;
+  margin: 40px auto;
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+}
+h2 { color: #1f2d3d; }
+input, textarea {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 10px;
+}
+button {
+  padding: 12px 20px;
+  background: #004aad;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+button:hover { background: #003080; }
+</style>
 
-    * {
-      box-sizing: border-box;
-    }
-
-    body.page-intake {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg-light);
-      color: var(--text-main);
-    }
-
-    .site-header {
-      background: #ffffff;
-      border-bottom: 1px solid #e1e4f0;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .site-header .container {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .site-logo {
-      margin: 0;
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--brand-blue);
-    }
-
-    .site-nav a {
-      margin-left: 16px;
-      text-decoration: none;
-      color: var(--text-soft);
-      font-weight: 500;
-      font-size: 0.95rem;
-    }
-
-    .site-nav a:hover {
-      color: var(--brand-blue);
-    }
-
-    main {
-      padding-bottom: 40px;
-    }
-
-    .hero-small {
-      background: linear-gradient(135deg, #f5f7ff, #e7f2ff);
-      border-bottom: 1px solid #dde2f2;
-    }
-
-    .hero-small .container {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 18px 16px 14px;
-    }
-
-    .step-indicator {
-      margin: 0 0 4px;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--brand-orange);
-    }
-
-    .hero-small h2 {
-      margin: 0 0 4px;
-      font-size: 1.6rem;
-    }
-
-    .section-subtitle {
-      margin: 0;
-      font-size: 0.95rem;
-      color: var(--text-soft);
-      max-width: 640px;
-    }
-
-    .section {
-      margin-top: 16px;
-    }
-
-    .section .container {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 0 16px;
-    }
-
-    .intake-form {
-      margin-top: 8px;
-    }
-
-    .section-block {
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 18px 20px 16px;
-      margin-bottom: 16px;
-      box-shadow: 0 8px 20px rgba(20, 34, 80, 0.06);
-      border: 1px solid #e3e6f2;
-    }
-
-    .section-block h3 {
-      margin-top: 0;
-      margin-bottom: 10px;
-      font-size: 1.15rem;
-      color: var(--brand-blue);
-    }
-
-    .section-block > p {
-      margin-top: 0;
-      margin-bottom: 14px;
-      font-size: 0.95rem;
-      color: var(--text-soft);
-    }
-
-    .field-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    .field-group {
-      flex: 1 1 240px;
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 12px;
-    }
-
-    label {
-      font-size: 0.86rem;
-      font-weight: 600;
-      margin-bottom: 4px;
-      color: var(--text-main);
-    }
-
-    .required {
-      color: var(--brand-orange);
-    }
-
-    input,
-    select,
-    textarea {
-      padding: 8px 10px;
-      border-radius: 6px;
-      border: 1px solid var(--border-soft);
-      font-size: 0.9rem;
-      font-family: inherit;
-      color: var(--text-main);
-      background: #ffffff;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      outline: none;
-      border-color: var(--brand-blue);
-      box-shadow: 0 0 0 1px rgba(33, 58, 122, 0.15);
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 80px;
-    }
-
-    .primary-button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 24px;
-      border-radius: 999px;
-      border: none;
-      background: var(--brand-orange);
-      color: #ffffff;
-      font-size: 0.98rem;
-      font-weight: 600;
-      cursor: pointer;
-      min-width: 240px;
-    }
-
-    .primary-button:hover {
-      background: var(--brand-orange-dark);
-    }
-
-    .primary-button:disabled {
-      opacity: 0.7;
-      cursor: default;
-    }
-
-    .small-print {
-      margin-top: 8px;
-      font-size: 0.8rem;
-      color: var(--text-soft);
-    }
-
-    .form-message {
-      margin-top: 8px;
-      font-size: 0.85rem;
-    }
-
-    .form-message.error {
-      color: #b00020;
-    }
-
-    .form-message.success {
-      color: #0f7b3f;
-    }
-
-    .site-footer {
-      border-top: 1px solid #dde1f0;
-      padding: 14px 0;
-      background: #ffffff;
-      margin-top: 24px;
-    }
-
-    .site-footer .container {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 0 16px;
-      font-size: 0.82rem;
-      color: var(--text-soft);
-    }
-
-    @media (max-width: 640px) {
-      .site-header .container {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 6px;
-      }
-      .site-nav a {
-        margin-left: 0;
-        margin-right: 12px;
-      }
-      .primary-button {
-        width: 100%;
-      }
-    }
-  </style>
 </head>
+<body>
 
-<body class="page-intake">
-  <header class="site-header">
-    <div class="container">
-      <h1 class="site-logo">E-LegalBoom</h1>
-      <nav class="site-nav">
-        <a href="index.html">Home</a>
-        <a href="catalog.html">Catalog</a>
-        <a href="howitworks.html">How It Works</a>
-      </nav>
-    </div>
-  </header>
+<div class="container">
+<h2>Personal & Business Intake</h2>
 
-  <main>
-    <section class="hero-small">
-      <div class="container">
-        <p class="step-indicator">Step 2 of 3</p>
-        <h2>Personal &amp; Business Intake</h2>
-        <p class="section-subtitle">
-          This short intake gives us the information we need to prepare your document correctly
-          for the right tier and document type.
-        </p>
-      </div>
-    </section>
+<form id="intake-form">
 
-    <section class="section">
-      <div class="container">
-        <form id="intake-form" class="intake-form">
-          <!-- 1. Personal & Business Information -->
-          <div class="section-block">
-            <h3>1. Personal &amp; Business Information</h3>
+<input name="first_name" placeholder="First Name" required />
+<input name="last_name" placeholder="Last Name" required />
+<input name="email" type="email" placeholder="Email" required />
+<input name="phone" placeholder="Phone (optional)" />
+<input name="business_name" placeholder="Business Name" />
+<input name="state" placeholder="Primary State" required />
+<textarea name="notes" placeholder="Anything else we should know?"></textarea>
 
-            <div class="field-row">
-              <div class="field-group">
-                <label for="first_name">First Name <span class="required">*</span></label>
-                <input type="text" id="first_name" name="first_name" required>
-              </div>
-              <div class="field-group">
-                <label for="last_name">Last Name <span class="required">*</span></label>
-                <input type="text" id="last_name" name="last_name" required>
-              </div>
-            </div>
+<button type="submit">Continue to Payment</button>
 
-            <div class="field-row">
-              <div class="field-group">
-                <label for="email">Email <span class="required">*</span></label>
-                <input type="email" id="email" name="email" required>
-              </div>
-              <div class="field-group">
-                <label for="phone">Phone (optional)</label>
-                <input type="tel" id="phone" name="phone">
-              </div>
-            </div>
+</form>
+</div>
 
-            <div class="field-row">
-              <div class="field-group">
-                <label for="business_name">Business Name (if any)</label>
-                <input type="text" id="business_name" name="business_name">
-              </div>
-              <div class="field-group">
-                <label for="primary_state">Primary State <span class="required">*</span></label>
-                <input type="text" id="primary_state" name="primary_state" placeholder="e.g., CA, TX, NY" required>
-              </div>
-            </div>
+<script>
+// =============================
+// 🔹 SUPABASE CONFIG (EDIT ONLY THESE TWO LINES)
+// =============================
 
-            <div class="field-group">
-              <label for="personal_notes">Anything specific we should know?</label>
-              <textarea id="personal_notes" name="personal_notes" rows="3"
-                placeholder="Example: I'm lending money to my cousin for a truck purchase; we'd like payments monthly."></textarea>
-            </div>
-          </div>
+const SUPABASE_URL = "https://vvjbjfltqsivvxxifnvi.supabase.co";
 
-          <!-- 2. Legal & Document Details -->
-          <div class="section-block">
-            <h3>2. Legal &amp; Document Details</h3>
-            <p>Tell us what kind of help you need so we can prepare the right document for you.</p>
+// =============================
 
-            <div class="field-row">
-              <div class="field-group">
-                <label for="tier">Package / Tier <span class="required">*</span></label>
-                <select id="tier" name="tier" required>
-                  <option value="">Select your package...</option>
-                  <option value="TIER1">Tier 1 – Single Document</option>
-                  <option value="TIER2">Tier 2 – Bundle</option>
-                  <option value="TIER3">Tier 3 – Ongoing</option>
-                  <option value="BUNDLE">Entrepreneur Package</option>
-                </select>
-              </div>
+const supabase = supabaseJs.createClient(const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";, SUPABASE_ANON_KEY);
 
-              <div class="field-group">
-                <label for="service_type">Service type <span class="required">*</span></label>
-                <select id="service_type" name="service_type" required>
-                  <option value="">What are you looking for?</option>
-                  <option value="formation">Business formation / startup</option>
-                  <option value="contract">Contract / agreement</option>
-                  <option value="compliance">Compliance / policy</option>
-                  <option value="finance">Money owed / payment terms</option>
-                  <option value="other">Other / not sure</option>
-                </select>
-              </div>
-            </div>
+// Read tier from URL ?tier=Tier1 etc
+const tierValue = new URLSearchParams(window.location.search).get("tier") || null;
 
-            <div class="field-group">
-              <label for="document_purpose">Document you need or main purpose <span class="required">*</span></label>
-              <input type="text" id="document_purpose" name="document_purpose"
-                     placeholder="Example: LLC Single-Member Operating Agreement" required>
-            </div>
+document.getElementById("intake-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-            <div class="field-row">
-              <div class="field-group">
-                <label for="other_party">Name of the other party</label>
-                <input type="text" id="other_party" name="other_party"
-                       placeholder="Company or person on the other side">
-              </div>
-              <div class="field-group">
-                <label for="effective_date">Effective date (if known)</label>
-                <input type="date" id="effective_date" name="effective_date">
-              </div>
-            </div>
+  const payload = {
+    first_name: document.querySelector('[name="first_name"]').value,
+    last_name: document.querySelector('[name="last_name"]').value,
+    email: document.querySelector('[name="email"]').value,
+    phone: document.querySelector('[name="phone"]').value,
+    business_name: document.querySelector('[name="business_name"]').value,
+    state: document.querySelector('[name="state"]').value,
+    notes: document.querySelector('[name="notes"]').value
+  };
 
-            <div class="field-row">
-              <div class="field-group">
-                <label for="jurisdiction">Governing state / jurisdiction</label>
-                <input type="text" id="jurisdiction" name="jurisdiction" placeholder="e.g., CA, TX, FL">
-              </div>
-              <div class="field-group">
-                <label for="urgency">How urgent is this?</label>
-                <select id="urgency" name="urgency">
-                  <option value="normal">Normal (5–7 business days)</option>
-                  <option value="rush">Rush (2–3 business days)</option>
-                  <option value="urgent">Urgent (within 48 hours)</option>
-                </select>
-              </div>
-            </div>
+  try {
 
-            <div class="field-group">
-              <label for="situation_summary">
-                Briefly describe what you need this document to cover <span class="required">*</span>
-              </label>
-              <textarea id="situation_summary" name="situation_summary" rows="4" required
-                placeholder="Share the situation in plain language. We'll translate it into legal structure."></textarea>
-            </div>
+    // Insert customer
+    const { data: customer, error: customerError } = await supabase
+      .from("customers")
+      .insert(payload)
+      .select()
+      .single();
 
-            <div class="field-group">
-              <label for="key_terms">Key names, terms, or clauses you want included (optional)</label>
-              <textarea id="key_terms" name="key_terms" rows="3"
-                placeholder="Example: 12-month term, 30-day notice, late fees after 10 days, etc."></textarea>
-            </div>
-          </div>
+    if (customerError) throw customerError;
 
-          <!-- Submit -->
-          <div class="section-block">
-            <button type="submit" id="submit-btn" class="primary-button">
-              Continue to Secure Payment
-            </button>
-            <p class="small-print">
-              You will not be charged on this page. We’ll guide you through information first, then payment at the end.
-            </p>
-            <p id="form-message" class="form-message" aria-live="polite"></p>
-          </div>
-        </form>
-      </div>
-    </section>
-  </main>
+    // Insert intake
+    const { data: intake, error: intakeError } = await supabase
+      .from("intakes")
+      .insert({
+        customer_id: customer.id,
+        tier: tierValue,
+        intake_data: payload,
+        status: "submitted"
+      })
+      .select()
+      .single();
 
-  <footer class="site-footer">
-    <div class="container">
-      <p>© <span id="year"></span> E-LegalBoom. All rights reserved.</p>
-    </div>
-  </footer>
+    if (intakeError) throw intakeError;
 
-  <!-- Optional Supabase client -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    // TODO: replace these with your real Supabase values if/when you want DB storage.
-    const SUPABASE_URL = 'YOUR_SUPABSUPABASE_URL = "https://vvjbjfltqsivvxxifnvi.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q';
+    // Redirect to payment
+    window.location.href = `payment.html?tier=${encodeURIComponent(tierValue)}&intake_id=${intake.id}`;
 
-    let supabaseClient = null;
-    if (SUPABASE_URL && SUPABASE_URL !== 'YOUR_SUPABASE_URL_HERE') {
-      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    }
+  } catch (err) {
+    console.error("Supabase error:", err);
+    alert("Submission failed. Check console.");
+  }
+});
+</script>
 
-    // Current year
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Auto-select tier from ?tier=...
-    (function autoSelectTier() {
-      const params = new URLSearchParams(window.location.search);
-      const raw = params.get('tier');
-      if (!raw) return;
-
-      const select = document.getElementById('tier');
-      if (!select) return;
-
-      const tier = raw.trim().toUpperCase();
-      let value = '';
-
-      if (tier === 'TIER 1' || tier === 'TIER1') value = 'TIER1';
-      else if (tier === 'TIER 2' || tier === 'TIER2') value = 'TIER2';
-      else if (tier === 'TIER 3' || tier === 'TIER3') value = 'TIER3';
-      else if (tier === 'BUNDLE' || tier === 'ENTREPRENEUR PACKAGE' || tier === 'ENTREPRENEUR') value = 'BUNDLE';
-
-      if (value) select.value = value;
-    })();
-
-    // Submit handler: optional Supabase write, then go to payment.html
-    document.getElementById('intake-form').addEventListener('submit', async function (e) {
-      e.preventDefault();
-      const messageEl = document.getElementById('form-message');
-      const submitBtn = document.getElementById('submit-btn');
-      messageEl.textContent = '';
-      messageEl.className = 'form-message';
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Saving...';
-
-      const formData = new FormData(e.target);
-      const data = Object.fromEntries(formData.entries());
-
-      let intakeId = null;
-
-      try {
-        if (supabaseClient) {
-          const { data: rows, error } = await supabaseClient
-            .from('intakes')
-            .insert([data])
-            .select();
-
-          if (error) throw error;
-          if (rows && rows.length > 0) intakeId = rows[0].id;
-        }
-      } catch (err) {
-        console.error('Supabase error:', err);
-        // We won't block the user; we'll just log it.
-      }
-
-      const tierValue = data.tier || '';
-      const params = new URLSearchParams();
-      if (tierValue) params.set('tier', tierValue);
-      if (intakeId) params.set('intake_id', intakeId);
-
-      window.location.href = 'payment.html' + (params.toString() ? '?' + params.toString() : '');
-    });
-  </script>
 </body>
 </html>
