@@ -4,9 +4,265 @@
   <meta charset="UTF-8">
   <title>Secure Intake | E-LegalBoom</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Reuse your existing site styles -->
+
+  <!-- Site-wide stylesheet if you have one -->
   <link rel="stylesheet" href="style.css">
+
+  <!-- Page-specific styling so this page looks good even if global styles differ -->
+  <style>
+    :root {
+      --brand-orange: #ff7a3c;
+      --brand-orange-dark: #e55f1f;
+      --brand-blue: #213a7a;
+      --bg-light: #f5f7fb;
+      --border-soft: #d7d9e5;
+      --text-main: #222638;
+      --text-soft: #5b6073;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body.page-intake {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg-light);
+      color: var(--text-main);
+    }
+
+    .site-header {
+      background: #ffffff;
+      border-bottom: 1px solid #e1e4f0;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .site-header .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .site-logo {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--brand-blue);
+    }
+
+    .site-nav a {
+      margin-left: 16px;
+      text-decoration: none;
+      color: var(--text-soft);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .site-nav a:hover {
+      color: var(--brand-blue);
+    }
+
+    main {
+      padding-bottom: 40px;
+    }
+
+    .hero-small {
+      background: linear-gradient(135deg, #f5f7ff, #e7f2ff);
+      border-bottom: 1px solid #dde2f2;
+    }
+
+    .hero-small .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 18px 16px 14px;
+    }
+
+    .step-indicator {
+      margin: 0 0 4px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--brand-orange);
+    }
+
+    .hero-small h2 {
+      margin: 0 0 4px;
+      font-size: 1.6rem;
+    }
+
+    .section-subtitle {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--text-soft);
+      max-width: 640px;
+    }
+
+    .section {
+      margin-top: 16px;
+    }
+
+    .section .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    .intake-form {
+      margin-top: 8px;
+    }
+
+    .section-block {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 18px 20px 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 20px rgba(20, 34, 80, 0.06);
+      border: 1px solid #e3e6f2;
+    }
+
+    .section-block h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 1.15rem;
+      color: var(--brand-blue);
+    }
+
+    .section-block > p {
+      margin-top: 0;
+      margin-bottom: 14px;
+      font-size: 0.95rem;
+      color: var(--text-soft);
+    }
+
+    .field-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .field-group {
+      flex: 1 1 240px;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 12px;
+    }
+
+    label {
+      font-size: 0.86rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--text-main);
+    }
+
+    .required {
+      color: var(--brand-orange);
+    }
+
+    input,
+    select,
+    textarea {
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border-soft);
+      font-size: 0.9rem;
+      font-family: inherit;
+      color: var(--text-main);
+      background: #ffffff;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--brand-blue);
+      box-shadow: 0 0 0 1px rgba(33, 58, 122, 0.15);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .primary-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 24px;
+      border-radius: 999px;
+      border: none;
+      background: var(--brand-orange);
+      color: #ffffff;
+      font-size: 0.98rem;
+      font-weight: 600;
+      cursor: pointer;
+      min-width: 240px;
+    }
+
+    .primary-button:hover {
+      background: var(--brand-orange-dark);
+    }
+
+    .primary-button:disabled {
+      opacity: 0.7;
+      cursor: default;
+    }
+
+    .small-print {
+      margin-top: 8px;
+      font-size: 0.8rem;
+      color: var(--text-soft);
+    }
+
+    .form-message {
+      margin-top: 8px;
+      font-size: 0.85rem;
+    }
+
+    .form-message.error {
+      color: #b00020;
+    }
+
+    .form-message.success {
+      color: #0f7b3f;
+    }
+
+    .site-footer {
+      border-top: 1px solid #dde1f0;
+      padding: 14px 0;
+      background: #ffffff;
+      margin-top: 24px;
+    }
+
+    .site-footer .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 16px;
+      font-size: 0.82rem;
+      color: var(--text-soft);
+    }
+
+    @media (max-width: 640px) {
+      .site-header .container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+      .site-nav a {
+        margin-left: 0;
+        margin-right: 12px;
+      }
+      .primary-button {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
+
 <body class="page-intake">
   <header class="site-header">
     <div class="container">
@@ -20,10 +276,10 @@
   </header>
 
   <main>
-    <section class="hero hero-small">
+    <section class="hero-small">
       <div class="container">
         <p class="step-indicator">Step 2 of 3</p>
-        <h2>Personal & Business Intake</h2>
+        <h2>Personal &amp; Business Intake</h2>
         <p class="section-subtitle">
           This short intake gives us the information we need to prepare your document correctly
           for the right tier and document type.
@@ -36,7 +292,7 @@
         <form id="intake-form" class="intake-form">
           <!-- 1. Personal & Business Information -->
           <div class="section-block">
-            <h3>1. Personal & Business Information</h3>
+            <h3>1. Personal &amp; Business Information</h3>
 
             <div class="field-row">
               <div class="field-group">
@@ -74,13 +330,13 @@
             <div class="field-group">
               <label for="personal_notes">Anything specific we should know?</label>
               <textarea id="personal_notes" name="personal_notes" rows="3"
-                placeholder="Example: I\'m lending money to my cousin for a truck purchase; we’d like payments monthly."></textarea>
+                placeholder="Example: I'm lending money to my cousin for a truck purchase; we'd like payments monthly."></textarea>
             </div>
           </div>
 
-          <!-- 2. Legal / Document Details -->
+          <!-- 2. Legal & Document Details -->
           <div class="section-block">
-            <h3>2. Legal & Document Details</h3>
+            <h3>2. Legal &amp; Document Details</h3>
             <p>Tell us what kind of help you need so we can prepare the right document for you.</p>
 
             <div class="field-row">
@@ -146,7 +402,7 @@
                 Briefly describe what you need this document to cover <span class="required">*</span>
               </label>
               <textarea id="situation_summary" name="situation_summary" rows="4" required
-                placeholder="Share the situation in plain language. We’ll translate it into legal structure."></textarea>
+                placeholder="Share the situation in plain language. We'll translate it into legal structure."></textarea>
             </div>
 
             <div class="field-group">
@@ -177,10 +433,10 @@
     </div>
   </footer>
 
-  <!-- Optional: Supabase client (safe to expose anon key) -->
+  <!-- Optional Supabase client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // TODO: replace these two with your real Supabase values if/when you want DB storage.
+    // TODO: replace these with your real Supabase values if/when you want DB storage.
     const SUPABASE_URL = 'YOUR_SUPABASE_URL_HERE';
     const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY_HERE';
 
@@ -189,35 +445,36 @@
       supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     }
 
-    // Auto-fill current year in footer
+    // Current year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Auto-select tier based on ?tier=... in the URL
+    // Auto-select tier from ?tier=...
     (function autoSelectTier() {
       const params = new URLSearchParams(window.location.search);
-      let tier = params.get('tier');
+      const raw = params.get('tier');
+      if (!raw) return;
+
       const select = document.getElementById('tier');
-      if (!tier || !select) return;
+      if (!select) return;
 
-      tier = tier.trim().toUpperCase();
-
+      const tier = raw.trim().toUpperCase();
       let value = '';
+
       if (tier === 'TIER 1' || tier === 'TIER1') value = 'TIER1';
       else if (tier === 'TIER 2' || tier === 'TIER2') value = 'TIER2';
       else if (tier === 'TIER 3' || tier === 'TIER3') value = 'TIER3';
-      else if (tier === 'BUNDLE' || tier === 'ENTREPRENEUR') value = 'BUNDLE';
+      else if (tier === 'BUNDLE' || tier === 'ENTREPRENEUR PACKAGE' || tier === 'ENTREPRENEUR') value = 'BUNDLE';
 
-      if (value) {
-        select.value = value;
-      }
+      if (value) select.value = value;
     })();
 
-    // Handle submit: optionally write to Supabase, then go to payment page
+    // Submit handler: optional Supabase write, then go to payment.html
     document.getElementById('intake-form').addEventListener('submit', async function (e) {
       e.preventDefault();
       const messageEl = document.getElementById('form-message');
       const submitBtn = document.getElementById('submit-btn');
       messageEl.textContent = '';
+      messageEl.className = 'form-message';
       submitBtn.disabled = true;
       submitBtn.textContent = 'Saving...';
 
@@ -228,23 +485,19 @@
 
       try {
         if (supabaseClient) {
-          // Insert into "intakes" table if Supabase is configured
           const { data: rows, error } = await supabaseClient
             .from('intakes')
             .insert([data])
             .select();
 
           if (error) throw error;
-          if (rows && rows.length > 0) {
-            intakeId = rows[0].id;
-          }
+          if (rows && rows.length > 0) intakeId = rows[0].id;
         }
       } catch (err) {
         console.error('Supabase error:', err);
-        // We won't block the user; we just log the issue.
+        // We won't block the user; we'll just log it.
       }
 
-      // Always continue to payment page, with tier + optional intake_id in the URL
       const tierValue = data.tier || '';
       const params = new URLSearchParams();
       if (tierValue) params.set('tier', tierValue);
