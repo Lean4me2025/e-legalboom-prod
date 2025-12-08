@@ -1,333 +1,237 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>E-LegalBoom | Find your Document in our Tiers</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
-    }
-
-    body {
-      background: #f3f4f8;
-      color: #111827;
-      min-height: 100vh;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .site-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 14px 24px;
-      background: #ffffff;
-      border-bottom: 1px solid #e5e7eb;
-    }
-
-    .site-brand {
-      font-size: 20px;
-      font-weight: 700;
-    }
-
-    .site-nav a {
-      margin-left: 18px;
-      font-size: 14px;
-      color: #374151;
-    }
-
-    .site-nav a:hover {
-      color: #1d4ed8;
-      text-decoration: underline;
-    }
-
-    .page {
-      max-width: 1120px;
-      margin: 28px auto 40px;
-      padding: 0 16px;
-    }
-
-    h1 {
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .lead {
-      font-size: 14px;
-      color: #4b5563;
-      margin-bottom: 22px;
-    }
-
-    .grid {
-      display: grid;
-      gap: 18px;
-    }
-
-    @media (min-width: 900px) {
-      .grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-      }
-    }
-
-    .tier-card {
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 16px 16px 18px;
-      border: 1px solid #e5e7eb;
-      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .tier-label {
-      font-size: 11px;
-      font-weight: 600;
-      color: #6b7280;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 4px;
-    }
-
-    .tier-title {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .tier-price {
-      font-size: 14px;
-      font-weight: 600;
-      color: #0f766e;
-      margin-bottom: 8px;
-    }
-
-    .tier-body {
-      font-size: 13px;
-      color: #4b5563;
-      margin-bottom: 8px;
-    }
-
-    .doc-list {
-      font-size: 13px;
-      color: #374151;
-      margin-left: 16px;
-      margin-bottom: 10px;
-    }
-
-    .doc-list li {
-      margin-bottom: 3px;
-    }
-
-    .flag {
-      display: inline-block;
-      padding: 3px 7px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 600;
-      background: #fef3c7;
-      color: #92400e;
-      margin-bottom: 6px;
-    }
-
-    .btn-primary,
-    .btn-secondary {
-      display: block;
-      width: 100%;
-      text-align: center;
-      padding: 8px 10px;
-      border-radius: 999px;
-      font-size: 13px;
-      text-decoration: none;
-      margin-top: 8px;
-      cursor: pointer;
-    }
-
-    .btn-primary {
-      background: #0f766e;
-      color: #ffffff;
-      font-weight: 600;
-      border: 1px solid #0f766e;
-    }
-
-    .btn-primary:hover {
-      background: #115e59;
-    }
-
-    .btn-secondary {
-      background: #ffffff;
-      color: #1d4ed8;
-      border: 1px solid #cbd5f5;
-    }
-
-    .btn-secondary:hover {
-      background: #e0edff;
-    }
-
-    .hint {
-      font-size: 11px;
-      color: #6b7280;
-      margin-top: 4px;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <title>E-LegalBoom | Document Catalog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+  <!-- Top navigation / header -->
   <header class="site-header">
-    <div class="site-brand">E-LegalBoom</div>
-    <nav class="site-nav">
+    <div class="logo-area">
+      <h1>E-LegalBoom</h1>
+      <p>Quality Legal Documents at Fair Prices</p>
+    </div>
+    <nav class="main-nav">
       <a href="index.html">Home</a>
-      <a href="catalog.html">Catalog</a>
-      <a href="how-it-works.html">How It Works</a>
-      <a href="orders.html">My Orders</a>
+      <a href="catalog.html" class="active">Catalog</a>
+      <a href="bundle.html">Bundles</a>
+      <a href="payment.html">Payment</a>
+      <a href="thankyou.html">Contact / Thank You</a>
     </nav>
   </header>
 
-  <main class="page">
-    <h1>Find and Identify Your needed Document in the E-LegalBoom Tiers</h1>
-    <p class="lead">
-      Find the doucument you want within the four tiers below. Once you do, select Continue or View a sample. Each tier is priced per
-      document, and the Entrepreneur Starter Bundle is available when you plan
-      multiple documents within a focused window. You’ll confirm details first,
-      then <strong>complete secure payment</strong>.
-    </p>
+  <main class="page-content">
 
-    <section class="grid">
-      <!-- Tier 1 -->
-      <article class="tier-card">
-        <div>
-          <div class="tier-label">Tier 1</div>
-          <h2 class="tier-title">Startup &amp; Essential Documents</h2>
-          <p class="tier-price">$39 per document</p>
-          <p class="tier-body">
-            Ideal for simple but important agreements that protect your ideas,
-            clarify money owed, or document a single-owner business structure.
-          </p>
-          <ul class="doc-list">
-            <li>Mutual NDA (Non-Disclosure Agreement)</li>
-            <li>Promissory Note</li>
-            <li>Single-Member LLC Operating Agreement</li>
-            <li>Simple Payment / IOU Agreement</li>
-            <li>Basic Contractor / Service Letter</li>
-            <li>Other Basic Business Forms</li>
-          </ul>
-        </div>
-        <div>
-          <a href="tier1.html" class="btn-primary">
-            Continue – Details &amp; Payment
-          </a>
-          <a href="tier1.html#samples" class="btn-secondary">
-            View Tier 1 Samples
-          </a>
-          <p class="hint">
-            One document per purchase. Need more than one? Place a second order
-            or use the Bundle.
-          </p>
-        </div>
-      </article>
-
-      <!-- Tier 2 -->
-      <article class="tier-card">
-        <div>
-          <div class="tier-label">Tier 2</div>
-          <h2 class="tier-title">Business Foundation Documents</h2>
-          <p class="tier-price">$59 per document</p>
-          <p class="tier-body">
-            For partnerships, multi-owner businesses, and agreements where roles
-            and profit-sharing must be clear.
-          </p>
-          <ul class="doc-list">
-            <li>Partnership Agreement</li>
-            <li>Two-Member LLC Agreement</li>
-            <li>Buy–Sell / Investor Arrangements</li>
-            <li>Other Core Business Agreements</li>
-          </ul>
-        </div>
-        <div>
-          <a href="tier2.html" class="btn-primary">
-            Continue – Details &amp; Payment
-          </a>
-          <a href="tier2.html#samples" class="btn-secondary">
-            View Tier 2 Samples
-          </a>
-          <p class="hint">
-            One document per purchase in Tier 2. Multiple documents require
-            multiple orders unless you use the Bundle.
-          </p>
-        </div>
-      </article>
-
-      <!-- Tier 3 -->
-      <article class="tier-card">
-        <div>
-          <div class="tier-label">Tier 3</div>
-          <h2 class="tier-title">Premium Business Agreements</h2>
-          <p class="tier-price">$99 per document</p>
-          <p class="tier-body">
-            For higher-impact business relationships, ongoing services, and more
-            complex operational agreements.
-          </p>
-          <ul class="doc-list">
-            <li>Service / Independent Contractor Agreements</li>
-            <li>Consulting &amp; Professional Services</li>
-            <li>Joint Venture / Founder Arrangements</li>
-            <li>Custom Structured Agreements</li>
-          </ul>
-        </div>
-        <div>
-          <a href="tier3.html" class="btn-primary">
-            Continue – Details &amp; Payment
-          </a>
-          <a href="tier3.html#samples" class="btn-secondary">
-            View Tier 3 Samples
-          </a>
-          <p class="hint">
-            Tier 3 checkout covers one document. For more than two or three,
-            the Entrepreneur Bundle may be better value.
-          </p>
-        </div>
-      </article>
-
-      <!-- Bundle -->
-      <article class="tier-card">
-        <div>
-          <span class="flag">Best for builders</span>
-          <div class="tier-label">Bundle</div>
-          <h2 class="tier-title">Entrepreneur Starter Bundle</h2>
-          <p class="tier-price">Bundle Price: $149 flat + 30-day access</p>
-          <p class="tier-body">
-            For founders who know they’ll need multiple documents in a short
-            window and want the best overall value.
-          </p>
-          <ul class="doc-list">
-            <li>Tier 1 document types</li>
-            <li>Tier 2 document types</li>
-            <li>Tier 3 document types</li>
-            <li>One intake per document during the 30-day window</li>
-          </ul>
-        </div>
-        <div>
-          <a href="bundle.html" class="btn-primary">
-            Continue – Bundle Details &amp; Payment
-          </a>
-          <a href="bundle.html#samples" class="btn-secondary">
-            View Bundle Samples
-          </a>
-          <p class="hint">
-            Ideal when you’re forming, documenting, and hiring within the same
-            30 days and expect more than two documents.
-          </p>
-        </div>
-      </article>
+    <!-- INTRO SECTION -->
+    <section class="catalog-intro">
+      <h2>Select Your Legal Solution</h2>
+      <p>
+        Choose a bundle if you want a full small-business setup, or select an individual
+        document if you only need one piece right now. All documents are attorney-grade
+        templates prepared for customization through E-LegalBoom.
+      </p>
     </section>
+
+    <!-- BUNDLES / TIERS (existing pages) -->
+    <section class="catalog-section">
+      <h2>Business Start-Up Bundles</h2>
+      <div class="catalog-grid">
+
+        <!-- Tier 1 -->
+        <div class="product-card">
+          <h3>Tier 1 – Starter Bundle</h3>
+          <p>Core documents for a simple single-entity business launch.</p>
+          <ul>
+            <li>LLC or Corporation setup structure</li>
+            <li>Basic ownership agreement</li>
+            <li>Website legal pages</li>
+          </ul>
+          <a href="tier1.html" class="btn-primary">View Tier 1 Details</a>
+        </div>
+
+        <!-- Tier 2 -->
+        <div class="product-card">
+          <h3>Tier 2 – Growth Bundle</h3>
+          <p>For multi-owner businesses needing stronger controls and agreements.</p>
+          <ul>
+            <li>Everything in Tier 1</li>
+            <li>Partnership / Operating / Shareholder Agreements</li>
+            <li>Employment / Contractor Agreements</li>
+          </ul>
+          <a href="tier2.html" class="btn-primary">View Tier 2 Details</a>
+        </div>
+
+        <!-- Tier 3 -->
+        <div class="product-card">
+          <h3>Tier 3 – Advanced Bundle</h3>
+          <p>For businesses needing exit planning and investor-grade documents.</p>
+          <ul>
+            <li>Everything in Tier 2</li>
+            <li>Buy–Sell Agreement</li>
+            <li>Advanced customization support</li>
+          </ul>
+          <a href="tier3.html" class="btn-primary">View Tier 3 Details</a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- INDIVIDUAL DOCUMENTS -->
+    <section class="catalog-section">
+      <h2>Individual Legal Documents</h2>
+      <p>
+        Prefer to start with a single document? Select one of the options below to
+        begin your guided intake. You’ll answer a short series of questions, and
+        E-LegalBoom will prepare a custom document framework for you.
+      </p>
+
+      <div class="catalog-grid">
+
+        <!-- Partnership Agreement -->
+        <div class="product-card">
+          <h3>Partnership Agreement</h3>
+          <p>
+            Defines ownership, profit sharing, decision-making, and responsibilities
+            between two or more business partners.
+          </p>
+          <button class="btn-primary" onclick="startOrder('partnership')">
+            Get Started
+          </button>
+        </div>
+
+        <!-- LLC Operating Agreement -->
+        <div class="product-card">
+          <h3>LLC Operating Agreement</h3>
+          <p>
+            Sets the rules for members of an LLC – capital contributions, voting,
+            management, and distributions.
+          </p>
+          <button class="btn-primary" onclick="startOrder('operating_agreement')">
+            Get Started
+          </button>
+        </div>
+
+        <!-- Joint Venture Agreement -->
+        <div class="product-card">
+          <h3>Joint Venture Agreement</h3>
+          <p>
+            Temporary or project-specific partnership between two or more parties
+            for a defined business opportunity.
+          </p>
+          <button class="btn-primary" onclick="startOrder('joint_venture')">
+            Get Started
+          </button>
+        </div>
+
+        <!-- Shareholder Agreement -->
+        <div class="product-card">
+          <h3>Shareholder Agreement</h3>
+          <p>
+            Governs rights and obligations of shareholders in a corporation, including
+            voting, transfers, and protections.
+          </p>
+          <button class="btn-primary" onclick="startOrder('shareholder_agreement')">
+            Get Started
+          </button>
+        </div>
+
+        <!-- Employment Agreement -->
+        <div class="product-card">
+          <h3>Employment Agreement</h3>
+          <p>
+            Sets out duties, compensation, confidentiality, and protections
+            for employees of your business.
+          </p>
+          <button class="btn-primary" onclick="startOrder('employment_agreement')">
+            Get Started
+          </button>
+        </div>
+
+        <!-- Independent Contractor Agreement -->
+        <div class="product-card">
+          <h3>Independent Contractor Agreement</h3>
+          <p>
+            Defines the relationship with non-employee contractors, including scope,
+            pay, IP, and liability protections.
+          </p>
+          <button class="btn-primary" onclick="startOrder('contractor_agreement')">
+            Get Started
+          </button>
+        </div>
+
+        <!-- Buy–Sell Agreement -->
+        <div class="product-card">
+          <h3>Buy–Sell Agreement</h3>
+          <p>
+            Owner-to-owner agreement covering death, disability, exit, or sale,
+            with clear valuation and buy-out terms.
+          </p>
+          <button class="btn-primary" onclick="startOrder('buy_sell_agreement')">
+            Get Started
+          </button>
+        </div>
+
+        <!-- Non-Disclosure Agreement (NDA) -->
+        <div class="product-card">
+          <h3>Non-Disclosure Agreement (NDA)</h3>
+          <p>
+            Protects confidential information when sharing ideas, proposals,
+            or business details with others.
+          </p>
+          <button class="btn-primary" onclick="startOrder('nda')">
+            Get Started
+          </button>
+        </div>
+
+        <!-- Website Policies – optional as products -->
+        <div class="product-card">
+          <h3>Website Privacy Policy</h3>
+          <p>
+            Privacy Policy tailored for small-business websites collecting basic
+            customer or visitor data.
+          </p>
+          <button class="btn-primary" onclick="startOrder('privacy_policy')">
+            Get Started
+          </button>
+        </div>
+
+        <div class="product-card">
+          <h3>Website Terms of Service</h3>
+          <p>
+            Terms & Conditions for users of your website or online service,
+            including disclaimers and limitations of liability.
+          </p>
+          <button class="btn-primary" onclick="startOrder('terms_of_service')">
+            Get Started
+          </button>
+        </div>
+
+        <!-- NOTE: Trusts & Divorce tools stay INTERNAL-ONLY for now.
+             Do NOT add buttons for them until you are ready to launch them. -->
+
+      </div>
+    </section>
+
   </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2025 E-LegalBoom. All rights reserved.</p>
+    <p>
+      <a href="privacy.html">Privacy Policy</a> |
+      <a href="tos.html">Terms of Service</a>
+    </p>
+  </footer>
+
+  <!-- Routing into intake.html with doc_type -->
+  <script>
+    function startOrder(docType) {
+      // send the customer to intake.html and remember which document they chose
+      window.location.href = 'intake.html?doc_type=' + encodeURIComponent(docType);
+    }
+  </script>
+
 </body>
 </html>
