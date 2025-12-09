@@ -2,340 +2,300 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Secure Payment | E-LegalBoom</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>E-LegalBoom | Confirm & Payment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
 
   <style>
-    :root {
-      --brand-orange: #ff7a3c;
-      --brand-orange-dark: #e55f1f;
-      --brand-blue: #213a7a;
-      --bg-light: #f5f7fb;
-      --border-soft: #d7d9e5;
-      --text-main: #222638;
-      --text-soft: #5b6073;
-    }
-
-    * { box-sizing: border-box; }
-
     body {
-      margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg-light);
-      color: var(--text-main);
+      margin: 0;
+      background: #f4f5fb;
+      color: #111827;
     }
 
     .site-header {
-      background: #ffffff;
-      border-bottom: 1px solid #e1e4f0;
-    }
-
-    .site-header .container {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 12px 16px;
+      background: #111827;
+      color: #f9fafb;
+      padding: 12px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
 
-    .site-logo {
-      margin: 0;
-      font-size: 1.4rem;
+    .site-header .brand {
       font-weight: 700;
-      color: var(--brand-blue);
+      font-size: 1.1rem;
     }
 
-    main { padding-bottom: 40px; }
-
-    .hero-small {
-      background: #ffffff;
-      border-bottom: 1px solid #dde2f2;
-    }
-
-    .hero-small .container {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 18px 16px 12px;
-    }
-
-    .step-indicator {
-      margin: 0 0 4px;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--brand-orange);
-    }
-
-    .hero-small h1 {
-      margin: 0 0 6px;
-      font-size: 1.9rem;
-    }
-
-    .hero-small p {
-      margin: 0;
-      font-size: 0.95rem;
-      color: var(--text-soft);
-    }
-
-    .selected-summary {
-      margin-top: 10px;
-      padding: 10px 12px;
-      border-radius: 8px;
-      background: #fef3c7;
-      border: 1px solid #facc15;
+    .site-header nav a {
+      color: #e5e7eb;
+      margin-left: 18px;
+      text-decoration: none;
       font-size: 0.92rem;
-      display: none;
     }
 
-    .selected-summary strong { color: #92400e; }
+    .site-header nav a:hover {
+      color: #ffffff;
+      text-decoration: underline;
+    }
 
-    .section { margin-top: 20px; }
-
-    .section .container {
-      max-width: 1120px;
-      margin: 0 auto;
+    .page-wrap {
+      max-width: 960px;
+      margin: 24px auto 40px;
       padding: 0 16px;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 18px;
-      margin-top: 16px;
+    .header-block h1 {
+      margin: 0 0 6px;
+      font-size: 1.6rem;
     }
 
-    .plan-card {
+    .header-block p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #4b5563;
+    }
+
+    .pill-row {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      background: #eef2ff;
+      font-size: 0.78rem;
+      color: #1f2937;
+    }
+
+    .pill-label {
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-size: 0.72rem;
+      font-weight: 600;
+      margin-right: 4px;
+      color: #4b5563;
+    }
+
+    .card-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .tier-card {
       background: #ffffff;
       border-radius: 12px;
-      padding: 18px 16px 16px;
+      padding: 16px 16px 18px;
       border: 1px solid #e5e7eb;
-      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
-      display: flex;
-      flex-direction: column;
+      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04);
       position: relative;
     }
 
-    .plan-title {
+    .tier-card h2 {
+      margin: 0 0 4px;
       font-size: 1.05rem;
-      font-weight: 700;
+    }
+
+    .tier-tag {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #6b7280;
       margin-bottom: 4px;
     }
 
-    .plan-price {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--brand-blue);
-      margin: 4px 0 4px;
-    }
-
-    .plan-note {
-      font-size: 0.86rem;
-      color: var(--text-soft);
-      margin-bottom: 14px;
-    }
-
-    .pay-btn {
-      display: inline-block;
-      margin-top: auto;
-      padding: 10px 18px;
-      border-radius: 999px;
-      border: none;
-      background: var(--brand-orange);
-      color: #ffffff;
-      text-decoration: none;
-      text-align: center;
-      font-size: 0.95rem;
+    .tier-price {
       font-weight: 600;
+      color: #b91c1c;
+      font-size: 0.94rem;
+      margin-bottom: 6px;
+    }
+
+    .tier-description {
+      font-size: 0.86rem;
+      color: #4b5563;
+      margin-bottom: 12px;
+    }
+
+    .tier-card .btn-pay {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: #ffffff;
+      background: #2563eb;
+      text-decoration: none;
+      border: none;
       cursor: pointer;
     }
 
-    .pay-btn:hover {
-      background: var(--brand-orange-dark);
+    .tier-card .btn-pay:hover {
+      background: #1d4ed8;
     }
 
-    .pill-selected {
+    .tier-card.selected {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 1px #2563eb33, 0 8px 24px rgba(37, 99, 235, 0.3);
+    }
+
+    .tier-card.selected::before {
+      content: "Selected";
       position: absolute;
       top: 10px;
-      right: 10px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
+      right: 12px;
       background: #2563eb;
       color: #ffffff;
-      display: none;
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
     }
 
-    .plan-card.selected {
-      border-color: #2563eb;
-      box-shadow: 0 0 0 1px #2563eb30, 0 18px 30px rgba(37, 99, 235, 0.18);
+    .help-text {
+      margin-top: 14px;
+      font-size: 0.85rem;
+      color: #6b7280;
     }
 
-    .plan-card.selected .pill-selected {
-      display: inline-block;
+    .help-text a {
+      color: #2563eb;
+      text-decoration: none;
     }
 
-    .plan-card.selected .pay-btn {
-      background: var(--brand-blue);
-    }
-
-    .support-note {
-      margin-top: 18px;
-      font-size: 0.86rem;
-      color: var(--text-soft);
+    .help-text a:hover {
+      text-decoration: underline;
     }
 
     @media (max-width: 640px) {
-      .hero-small h1 { font-size: 1.6rem; }
+      .page-wrap {
+        padding-inline: 12px;
+      }
     }
   </style>
 </head>
 <body>
   <header class="site-header">
-    <div class="container">
-      <h1 class="site-logo">E-LegalBoom</h1>
-      <div style="font-size:0.85rem; color:#6b7280;">Step 2 &mdash; Secure Payment</div>
-    </div>
+    <div class="brand">E-LegalBoom</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="catalog.html">Catalog</a>
+    </nav>
   </header>
 
-  <main>
-    <section class="hero-small">
-      <div class="container">
-        <p class="step-indicator">Step 2 of 3</p>
-        <h1>Complete Your Secure Payment</h1>
-        <p>
-          You've started your order. Now confirm the package level below and complete payment on our secure PayLink
-          checkout page.
-        </p>
-        <div id="selected-summary" class="selected-summary"></div>
-      </div>
-    </section>
+  <main class="page-wrap">
+    <div class="header-block">
+      <h1>Confirm Your Tier & Complete Payment</h1>
+      <p>
+        Review the tier you’ve selected. When you’re ready, use the payment button on your tier
+        to complete checkout. We’ll match your payment to your intake automatically.
+      </p>
 
-    <section class="section">
-      <div class="container">
-        <div class="grid">
-          <!-- Tier 1 -->
-          <article class="plan-card" data-tier="TIER1">
-            <div class="pill-selected">Selected</div>
-            <h2 class="plan-title">Tier One Documents</h2>
-            <p class="plan-price">$39.00</p>
-            <p class="plan-note">
-              Perfect for a single, straightforward document prepared from your intake.
-            </p>
-            <a class="pay-btn"
-               href="https://pay.elegalboom.org/e4b79a60-0fd7-431c-8bfc-ae0">
-              Pay $39 with PayLink
-            </a>
-          </article>
-
-          <!-- Tier 2 -->
-          <article class="plan-card" data-tier="TIER2">
-            <div class="pill-selected">Selected</div>
-            <h2 class="plan-title">Tier Two Documents</h2>
-            <p class="plan-price">$59.00</p>
-            <p class="plan-note">
-              Great when you need two related documents prepared together.
-            </p>
-            <a class="pay-btn"
-               href="https://pay.elegalboom.org/aeda586f-65f5-4bf0-98f3-7a2">
-              Pay $59 with PayLink
-            </a>
-          </article>
-
-          <!-- Tier 3 -->
-          <article class="plan-card" data-tier="TIER3">
-            <div class="pill-selected">Selected</div>
-            <h2 class="plan-title">Tier Three Documents</h2>
-            <p class="plan-price">$99.00</p>
-            <p class="plan-note">
-              Up to three documents bundled together as one tailored package.
-            </p>
-            <a class="pay-btn"
-               href="https://pay.elegalboom.org/71ca7144-e537-4fbd-823d-c10">
-              Pay $99 with PayLink
-            </a>
-          </article>
-
-          <!-- Entrepreneur Starter Bundle (maps from BUNDLE tier) -->
-          <article class="plan-card" data-tier="BUNDLE">
-            <div class="pill-selected">Selected</div>
-            <h2 class="plan-title">Entrepreneur Starter Bundle</h2>
-            <p class="plan-price">$149.00</p>
-            <p class="plan-note">
-              Starter bundle for new businesses and entrepreneurs.
-            </p>
-            <a class="pay-btn"
-               href="https://pay.elegalboom.org/55c7cd3d-1048-4b8c-aadb-843">
-              Pay $149 with PayLink
-            </a>
-          </article>
-
-          <!-- 30-Day Unlimited Add-On -->
-          <article class="plan-card" data-tier="UNLIMITED">
-            <div class="pill-selected">Selected</div>
-            <h2 class="plan-title">30 Days Unlimited Legal Documents</h2>
-            <p class="plan-price">$199.00</p>
-            <p class="plan-note">
-              Unlimited document preparation for 30 days on approved matters.
-            </p>
-            <a class="pay-btn"
-               href="https://pay.elegalboom.org/c9c5e4f6-ac37-4fd3-98a8-a84">
-              Pay $199 with PayLink
-            </a>
-          </article>
+      <div class="pill-row">
+        <div class="pill" id="tierPill" style="display:none;">
+          <span class="pill-label">Tier</span>
+          <span id="tierText">T1 – Tier One</span>
         </div>
-
-        <p class="support-note">
-          Not the right tier? You can still choose a different payment option above. If you have questions, reply to your
-          confirmation email and we’ll adjust your order before any work begins.
-        </p>
       </div>
-    </section>
+    </div>
+
+    <div class="card-row">
+      <!-- Tier 1 -->
+      <div class="tier-card" data-tier="T1">
+        <div class="tier-tag">Tier One</div>
+        <h2>Startup &amp; Essential Documents</h2>
+        <div class="tier-price">$39.00 – per document</div>
+        <div class="tier-description">
+          Best for one straightforward document such as an NDA, promissory note, or single-member
+          LLC agreement.
+        </div>
+        <!-- TODO: replace # with your real Tier 1 payment link -->
+        <a href="#" class="btn-pay">Pay for Tier One</a>
+      </div>
+
+      <!-- Tier 2 -->
+      <div class="tier-card" data-tier="T2">
+        <div class="tier-tag">Tier Two</div>
+        <h2>Business Foundation</h2>
+        <div class="tier-price">$XX.00 – per document</div>
+        <div class="tier-description">
+          For partnership agreements, two-member LLCs, employment contracts, and core business
+          relationships.
+        </div>
+        <!-- TODO: replace # with your real Tier 2 payment link -->
+        <a href="#" class="btn-pay">Pay for Tier Two</a>
+      </div>
+
+      <!-- Tier 3 -->
+      <div class="tier-card" data-tier="T3">
+        <div class="tier-tag">Tier Three</div>
+        <h2>Advanced Protection</h2>
+        <div class="tier-price">$XX.00 – coordinated set</div>
+        <div class="tier-description">
+          For more complex or coordinated structures where you need multiple documents aligned.
+        </div>
+        <!-- TODO: replace # with your real Tier 3 payment link -->
+        <a href="#" class="btn-pay">Pay for Tier Three</a>
+      </div>
+
+      <!-- Entrepreneur / Bundle (optional; you can remove if not needed now) -->
+      <div class="tier-card" data-tier="BUNDLE">
+        <div class="tier-tag">Entrepreneur Bundle</div>
+        <h2>3 Coordinated Documents</h2>
+        <div class="tier-price">$XX.00 – bundle</div>
+        <div class="tier-description">
+          For entrepreneurs wanting three coordinated legal documents prepared as a bundled set.
+        </div>
+        <!-- TODO: replace # with your real bundle payment link -->
+        <a href="#" class="btn-pay">Pay for Bundle</a>
+      </div>
+    </div>
+
+    <div class="help-text">
+      If the highlighted tier doesn’t match what you intended,
+      <a href="catalog.html">go back to the Catalog</a> and choose again.
+    </div>
   </main>
 
   <script>
-    // Read tier from ?tier=...
-    const params = new URLSearchParams(window.location.search);
-    const rawTier = (params.get('tier') || '').toString().trim().toUpperCase();
+    document.addEventListener("DOMContentLoaded", () => {
+      const params = new URLSearchParams(window.location.search);
+      const tier = params.get("tier") || "";
 
-    // Normalize values like "TIER 1", "1", etc.
-    let tier = '';
-    if (rawTier === '1' || rawTier === 'TIER1' || rawTier === 'TIER 1') tier = 'TIER1';
-    else if (rawTier === '2' || rawTier === 'TIER2' || rawTier === 'TIER 2') tier = 'TIER2';
-    else if (rawTier === '3' || rawTier === 'TIER3' || rawTier === 'TIER 3') tier = 'TIER3';
-    else if (['BUNDLE','ENTREPRENEUR','ENTREPRENEUR PACKAGE'].includes(rawTier)) tier = 'BUNDLE';
+      const tierPill = document.getElementById("tierPill");
+      const tierText = document.getElementById("tierText");
 
-    const summaryEl = document.getElementById('selected-summary');
-    const cards = document.querySelectorAll('.plan-card');
+      // Map code → human label
+      const tierLabels = {
+        T1: "T1 – Tier One (Startup & Essential Documents)",
+        T2: "T2 – Tier Two (Business Foundation)",
+        T3: "T3 – Tier Three (Advanced Protection)",
+        BUNDLE: "Entrepreneur Bundle"
+      };
 
-    const tierNames = {
-      TIER1: 'Tier One Documents – $39.00',
-      TIER2: 'Tier Two Documents – $59.00',
-      TIER3: 'Tier Three Documents – $99.00',
-      BUNDLE: 'Entrepreneur Starter Bundle – $149.00',
-    };
+      if (tier && tierPill && tierText && tierLabels[tier]) {
+        tierText.textContent = tierLabels[tier];
+        tierPill.style.display = "inline-flex";
+      }
 
-    if (tier && tierNames[tier]) {
+      // Highlight the selected tier card
+      const cards = document.querySelectorAll(".tier-card");
       cards.forEach(card => {
         if (card.dataset.tier === tier) {
-          card.classList.add('selected');
+          card.classList.add("selected");
         }
       });
-
-      summaryEl.style.display = 'block';
-      summaryEl.innerHTML =
-        'You selected: <strong>' +
-        tierNames[tier] +
-        '</strong>. Use the highlighted button below to complete your payment. ' +
-        'If you change your mind, you may choose a different option.';
-    } else {
-      summaryEl.style.display = 'block';
-      summaryEl.textContent =
-        'Review the options below and choose the payment level that matches what you need.';
-    }
+    });
   </script>
 </body>
 </html>
