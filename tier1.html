@@ -3,204 +3,292 @@
 <head>
   <meta charset="UTF-8" />
   <title>E-LegalBoom – Tier One • Startup & Essential Documents</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
 
-  <!-- Inline styles so you don't have to touch anything else -->
   <style>
     body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
-      background: #f5f7fb;
-      color: #222;
+      background-color: #f5f5f7;
+      color: #111827;
     }
-    header {
-      background: #1e1e2f;
-      color: #fff;
-      padding: 16px 24px;
+
+    /* Top escape nav */
+    .elb-top-nav {
+      background: #111827;
+      color: #e5e7eb;
+      padding: 8px 16px;
+      font-size: 0.9rem;
     }
-    header .brand {
-      font-weight: 700;
-      letter-spacing: 0.03em;
+    .elb-top-nav-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
-    .page-wrap {
-      max-width: 900px;
-      margin: 32px auto;
-      padding: 0 20px 40px;
-    }
-    .tier-tag {
-      display: inline-block;
-      background: #ff7b2c;
-      color: #fff;
-      border-radius: 999px;
-      padding: 6px 16px;
-      font-size: 13px;
+    .elb-top-nav-title {
       font-weight: 600;
+    }
+    .elb-top-nav-links a {
+      color: #93c5fd;
+      text-decoration: none;
+      margin-left: 16px;
+    }
+    .elb-top-nav-links a:hover {
+      color: #ffffff;
+    }
+
+    .page-wrap {
+      max-width: 880px;
+      margin: 24px auto 40px;
+      padding: 0 16px;
+    }
+
+    .tier-label {
+      display: inline-block;
+      background: #f97316;
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      margin-bottom: 8px;
       text-transform: uppercase;
       letter-spacing: 0.04em;
-      margin-bottom: 12px;
     }
+
     h1 {
-      margin: 0 0 4px;
-      font-size: 30px;
+      margin: 4px 0 0;
+      font-size: 1.6rem;
     }
-    .price {
-      margin: 0 0 16px;
-      font-size: 20px;
-      color: #e44739;
-      font-weight: 700;
+
+    .price-line {
+      font-weight: 600;
+      color: #b91c1c;
+      margin-top: 6px;
     }
-    .lede {
-      max-width: 720px;
+
+    .card {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 18px 18px 22px;
+      box-shadow: 0 5px 14px rgba(0,0,0,0.04);
+      border: 1px solid #e5e7eb;
+      margin-top: 18px;
+    }
+
+    .card p {
+      margin-top: 0;
+      font-size: 0.92rem;
+      color: #374151;
       line-height: 1.5;
-      margin-bottom: 24px;
     }
-    h2.section-title {
-      margin-top: 28px;
-      font-size: 20px;
+
+    h2, h3 {
+      margin-top: 16px;
       margin-bottom: 8px;
     }
+
     ul {
-      margin: 8px 0 0 22px;
-      padding: 0;
-      line-height: 1.45;
+      margin-top: 6px;
+      padding-left: 20px;
+      font-size: 0.92rem;
+      color: #374151;
     }
-    .sample-box {
-      margin-top: 16px;
-      background: #f0ecff;
+
+    .select-row {
+      margin-top: 18px;
+      padding: 12px 14px;
+      background: #f3f4f6;
       border-radius: 8px;
-      padding: 16px 18px;
-      border-left: 4px solid #9b51e0;
+      border: 1px solid #e5e7eb;
     }
-    .sample-box h3 {
-      margin: 0 0 8px;
-      font-size: 16px;
+
+    .select-row label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
     }
-    .sample-box ol {
-      margin: 8px 0 10px 20px;
-      padding: 0;
-    }
-    .sample-link {
-      font-size: 14px;
-      color: #2f80ed;
-      text-decoration: underline;
-      cursor: pointer;
-    }
-    .steps {
-      margin-top: 8px;
-    }
-    .steps li {
-      margin-bottom: 4px;
-    }
-    .cta-row {
-      margin-top: 28px;
-    }
-    .primary-btn {
-      display: inline-block;
-      padding: 12px 26px;
+
+    .select-row select {
+      width: 100%;
+      padding: 8px;
       border-radius: 6px;
-      background: #f2994a;
-      color: #fff;
-      font-weight: 700;
+      border: 1px solid #d1d5db;
+      font-size: 0.95rem;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      margin-top: 14px;
+      background: #f97316;
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 999px;
       text-decoration: none;
+      font-weight: 600;
       border: none;
       cursor: pointer;
-      font-size: 15px;
+      font-size: 0.95rem;
     }
-    .primary-btn:hover {
-      background: #e27d22;
+
+    .btn-primary:hover {
+      background: #ea580c;
     }
+
     .note {
-      margin-top: 10px;
-      font-size: 13px;
-      color: #555;
-      max-width: 520px;
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-top: 8px;
     }
-    /* NEW: nav links under the CTA so they’re not trapped */
-    .nav-links {
-      margin-top: 12px;
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
+
+    .link-row {
+      margin-top: 16px;
+      font-size: 0.85rem;
     }
-    .nav-links a {
-      font-size: 14px;
-      color: #555;
+    .link-row a {
+      color: #2563eb;
       text-decoration: none;
     }
-    .nav-links a:hover {
+    .link-row a:hover {
       text-decoration: underline;
+    }
+
+    .site-footer {
+      background-color: #111827;
+      color: #f9fafb;
+      padding: 12px 20px;
+      font-size: 0.8rem;
+    }
+    .site-footer-inner {
+      max-width: 960px;
+      margin: 0 auto;
     }
   </style>
 </head>
-
 <body>
-  <header>
-    <div class="brand">E-LegalBoom</div>
-  </header>
+  <!-- Escape nav -->
+  <div class="elb-top-nav">
+    <div class="elb-top-nav-inner">
+      <div class="elb-top-nav-title">
+        E-LegalBoom
+      </div>
+      <div class="elb-top-nav-links">
+        <a href="catalog.html">← Back to Document Catalog</a>
+        <a href="index.html">Home</a>
+      </div>
+    </div>
+  </div>
 
   <main class="page-wrap">
-    <div class="tier-tag">Tier One</div>
-
+    <span class="tier-label">Tier One</span>
     <h1>Startup &amp; Essential Documents</h1>
-    <p class="price">$39.00 — One Document</p>
+    <div class="price-line">$39.00 — One Document</div>
 
-    <p class="lede">
-      Tier One is ideal when you need one straightforward legal document prepared
-      from your information. These are simple but important agreements that
-      protect your ideas, clarify money owed, or document a single-owner
-      business structure.
-    </p>
+    <div class="card">
+      <p>
+        Tier One is ideal when you need one straightforward legal document prepared
+        from your information. These are simple but important agreements that protect
+        your ideas, clarify money owed, or document a single-owner business structure.
+      </p>
 
-    <h2 class="section-title">What You Get</h2>
-    <ul>
-      <li>One legal document prepared from your answers</li>
-      <li>Email delivery in PDF format</li>
-      <li>Plain-language structure and clear next steps</li>
-      <li>Turnaround within the stated time frame</li>
-    </ul>
+      <!-- What You Get (kept as context) -->
+      <h2>What You Get</h2>
+      <ul>
+        <li>One legal document prepared from your answers</li>
+        <li>Email delivery in PDF format</li>
+        <li>Plain-language structure and clear next steps</li>
+        <li>Turnaround within the stated time frame</li>
+      </ul>
 
-    <h2 class="section-title">Documents Available in Tier One</h2>
-    <div class="sample-box">
-      <h3>Sample Tier One Documents</h3>
-      <ol>
-        <li>Mutual NDA (Non-Disclosure Agreement)</li>
-        <li>Promissory Note</li>
-        <li>Single-Member LLC Operating Agreement</li>
-        <li>Simple Payment / IOU Agreement</li>
-        <li>Independent Contractor / Basic Service Agreement</li>
-        <li>Other basic startup documents shown in this tier</li>
-      </ol>
-      <a href="/samples/nda.html" class="sample-link" target="_blank" rel="noopener">
-        View a sample Tier One document
-      </a>
-    </div>
+      <!-- Document selection -->
+      <h2>Choose Your Tier One Document</h2>
+      <p style="margin-top:4px;">
+        Select which document you want to start with for this Tier One request.
+        You’ll complete a short intake next, then review your summary and pay securely at the end.
+      </p>
 
-    <h2 class="section-title">How It Works</h2>
-    <ul class="steps">
-      <li>Step 1 — Start your Tier One request using the button below.</li>
-      <li>Step 2 — Complete the Personal &amp; Business Intake form.</li>
-      <li>
-        Step 3 — Provide details for your document and review a summary.
-      </li>
-      <li>
-        Step 4 — Complete secure payment and receive your document by email.
-      </li>
-    </ul>
+      <div class="select-row">
+        <label for="docTypeSelect">Document you’d like for this request:</label>
+        <select id="docTypeSelect">
+          <option value="">-- Select a document --</option>
 
-    <div class="cta-row">
-      <a href="intake.html?tier=1" class="primary-btn">Start My Tier One Request</a>
-
-      <div class="nav-links">
-        <a href="index.html">← Back to All Bundles</a>
-        <a href="/">Home</a>
+          <!-- internal doc_type codes on value= -->
+          <option value="nda_mutual">
+            Mutual NDA (Non-Disclosure Agreement)
+          </option>
+          <option value="promissory_note">
+            Promissory Note
+          </option>
+          <option value="llc_single_member_operating">
+            Single-Member LLC Operating Agreement
+          </option>
+          <option value="simple_payment_iou">
+            Simple Payment / IOU Agreement
+          </option>
+          <option value="independent_contractor_basic">
+            Independent Contractor / Basic Service Agreement
+          </option>
+          <option value="other_startup_document">
+            Other basic startup document in this tier
+          </option>
+        </select>
       </div>
 
-      <p class="note">
-        You will not be charged on this page. We’ll guide you through
-        information first, then payment at the end.
-      </p>
+      <button id="startTierBtn" class="btn-primary">
+        Start My Tier One Request
+      </button>
+
+      <div class="link-row">
+        <a href="samples/tier1-sample.pdf" target="_blank">
+          View a sample Tier One document (PDF)
+        </a>
+        <!-- You can change/remove this link if your sample lives elsewhere -->
+      </div>
+
+      <div class="note">
+        You will not be charged on this page. We’ll guide you through your answers first,
+        then you’ll review everything and complete secure payment at the end.
+      </div>
+
+      <div class="link-row" style="margin-top:10px;">
+        <a href="catalog.html">← Back to All Bundles &amp; Documents</a>
+      </div>
     </div>
   </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      &copy; 2025 E-LegalBoom. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    // This page always represents Tier One
+    const TIER_CODE = 'T1';
+
+    document.getElementById('startTierBtn').addEventListener('click', () => {
+      const select = document.getElementById('docTypeSelect');
+      const docType = select.value;
+
+      if (!docType) {
+        alert('Please select a document type to continue.');
+        return;
+      }
+
+      // Optional: keep a copy client-side if you ever want it
+      try {
+        localStorage.setItem('elb_tier', TIER_CODE);
+        localStorage.setItem('elb_doc_type', docType);
+      } catch (e) {
+        // ignore storage errors
+      }
+
+      // Send both tier and doc_type into intake
+      const url = `intake.html?tier=${encodeURIComponent(TIER_CODE)}&doc_type=${encodeURIComponent(docType)}`;
+      window.location.href = url;
+    });
+  </script>
 </body>
 </html>
