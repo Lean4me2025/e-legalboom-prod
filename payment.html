@@ -2,300 +2,251 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>E-LegalBoom | Confirm & Payment</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="style.css" />
+  <title>E-LegalBoom | Secure Payment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
   <style>
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f4f6fb;
       margin: 0;
-      background: #f4f5fb;
-      color: #111827;
+      padding: 0;
+      color: #222;
     }
 
-    .site-header {
-      background: #111827;
-      color: #f9fafb;
-      padding: 12px 24px;
+    header {
+      background: #0d1b2a;
+      color: white;
+      padding: 14px 24px;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-    }
-
-    .site-header .brand {
-      font-weight: 700;
-      font-size: 1.1rem;
-    }
-
-    .site-header nav a {
-      color: #e5e7eb;
-      margin-left: 18px;
-      text-decoration: none;
-      font-size: 0.92rem;
-    }
-
-    .site-header nav a:hover {
-      color: #ffffff;
-      text-decoration: underline;
-    }
-
-    .page-wrap {
-      max-width: 960px;
-      margin: 24px auto 40px;
-      padding: 0 16px;
-    }
-
-    .header-block h1 {
-      margin: 0 0 6px;
-      font-size: 1.6rem;
-    }
-
-    .header-block p {
-      margin: 0;
-      font-size: 0.95rem;
-      color: #4b5563;
-    }
-
-    .pill-row {
-      margin-top: 10px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .pill {
-      display: inline-flex;
       align-items: center;
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid #e5e7eb;
-      background: #eef2ff;
-      font-size: 0.78rem;
-      color: #1f2937;
     }
 
-    .pill-label {
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      font-size: 0.72rem;
+    header h1 {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    header a {
+      color: #cde1ff;
+      text-decoration: none;
       font-weight: 600;
-      margin-right: 4px;
-      color: #4b5563;
+    }
+
+    main {
+      max-width: 1150px;
+      margin: auto;
+      padding: 30px 20px;
+    }
+
+    h2 {
+      margin-bottom: 8px;
+    }
+
+    .page-note {
+      margin-bottom: 25px;
+      color: #555;
     }
 
     .card-row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-      margin-top: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
     }
 
     .tier-card {
-      background: #ffffff;
+      background: white;
       border-radius: 12px;
-      padding: 16px 16px 18px;
-      border: 1px solid #e5e7eb;
-      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04);
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+      border: 2px solid transparent;
       position: relative;
-    }
-
-    .tier-card h2 {
-      margin: 0 0 4px;
-      font-size: 1.05rem;
-    }
-
-    .tier-tag {
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: #6b7280;
-      margin-bottom: 4px;
-    }
-
-    .tier-price {
-      font-weight: 600;
-      color: #b91c1c;
-      font-size: 0.94rem;
-      margin-bottom: 6px;
-    }
-
-    .tier-description {
-      font-size: 0.86rem;
-      color: #4b5563;
-      margin-bottom: 12px;
-    }
-
-    .tier-card .btn-pay {
-      display: inline-block;
-      padding: 8px 14px;
-      border-radius: 999px;
-      font-size: 0.86rem;
-      font-weight: 600;
-      color: #ffffff;
-      background: #2563eb;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-    }
-
-    .tier-card .btn-pay:hover {
-      background: #1d4ed8;
+      transition: 0.2s;
     }
 
     .tier-card.selected {
       border-color: #2563eb;
-      box-shadow: 0 0 0 1px #2563eb33, 0 8px 24px rgba(37, 99, 235, 0.3);
+      box-shadow: 0 8px 18px rgba(37,99,235,0.25);
+      transform: translateY(-2px);
     }
 
-    .tier-card.selected::before {
-      content: "Selected";
+    .selected-badge {
       position: absolute;
       top: 10px;
-      right: 12px;
+      right: 10px;
       background: #2563eb;
-      color: #ffffff;
-      font-size: 0.7rem;
-      padding: 2px 8px;
-      border-radius: 999px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 4px 8px;
+      border-radius: 6px;
     }
 
-    .help-text {
-      margin-top: 14px;
-      font-size: 0.85rem;
-      color: #6b7280;
+    .tier-tag {
+      font-size: 13px;
+      font-weight: 700;
+      color: #444;
+      margin-bottom: 6px;
     }
 
-    .help-text a {
+    .tier-price {
+      color: #c93333;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .tier-description {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 18px;
+    }
+
+    .btn-pay {
+      display: block;
+      text-align: center;
+      padding: 12px;
+      background: #2563eb;
+      color: white;
+      font-weight: bold;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+
+    .btn-pay:hover {
+      background: #1e4ed8;
+    }
+
+    footer {
+      margin-top: 25px;
+      font-size: 14px;
+      color: #444;
+      text-align: center;
+    }
+
+    footer a {
       color: #2563eb;
       text-decoration: none;
+      font-weight: 600;
     }
 
-    .help-text a:hover {
-      text-decoration: underline;
-    }
-
-    @media (max-width: 640px) {
-      .page-wrap {
-        padding-inline: 12px;
-      }
-    }
   </style>
 </head>
+
 <body>
-  <header class="site-header">
-    <div class="brand">E-LegalBoom</div>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="catalog.html">Catalog</a>
-    </nav>
-  </header>
 
-  <main class="page-wrap">
-    <div class="header-block">
-      <h1>Confirm Your Tier & Complete Payment</h1>
-      <p>
-        Review the tier you’ve selected. When you’re ready, use the payment button on your tier
-        to complete checkout. We’ll match your payment to your intake automatically.
-      </p>
+<header>
+  <h1>E-LegalBoom</h1>
+  <a href="catalog.html">← Back to Catalog</a>
+</header>
 
-      <div class="pill-row">
-        <div class="pill" id="tierPill" style="display:none;">
-          <span class="pill-label">Tier</span>
-          <span id="tierText">T1 – Tier One</span>
-        </div>
-      </div>
+<main>
+
+<h2>Confirm Your Tier & Complete Payment</h2>
+
+<p class="page-note">
+  Review your selected tier below. When ready, click the payment button on your tier to complete checkout.
+  We will automatically match your payment to your intake submission.
+</p>
+
+<div class="card-row">
+
+  <!-- Tier 1 -->
+  <div class="tier-card" data-tier="T1">
+    <div class="tier-tag">Tier One</div>
+    <h3>Startup & Essential Documents</h3>
+    <div class="tier-price">$39.00 – per document</div>
+    <div class="tier-description">
+      Best for one straightforward document such as an NDA, promissory note,
+      or single-member LLC agreement.
     </div>
+    <a href="https://pay.elegalboom.org/e4b79a60-0fd7-431c-8bfc-ae0"
+       class="btn-pay"
+       target="_blank"
+       rel="noopener">
+      Pay for Tier One
+    </a>
+  </div>
 
-    <div class="card-row">
-      <!-- Tier 1 -->
-      <div class="tier-card" data-tier="T1">
-        <div class="tier-tag">Tier One</div>
-        <h2>Startup &amp; Essential Documents</h2>
-        <div class="tier-price">$39.00 – per document</div>
-        <div class="tier-description">
-          Best for one straightforward document such as an NDA, promissory note, or single-member
-          LLC agreement.
-        </div>
-        <!-- TODO: replace # with your real Tier 1 payment link -->
-        <a href="#" class="btn-pay">Pay for Tier One</a>
-      </div>
 
-      <!-- Tier 2 -->
-      <div class="tier-card" data-tier="T2">
-        <div class="tier-tag">Tier Two</div>
-        <h2>Business Foundation</h2>
-        <div class="tier-price">$XX.00 – per document</div>
-        <div class="tier-description">
-          For partnership agreements, two-member LLCs, employment contracts, and core business
-          relationships.
-        </div>
-        <!-- TODO: replace # with your real Tier 2 payment link -->
-        <a href="#" class="btn-pay">Pay for Tier Two</a>
-      </div>
-
-      <!-- Tier 3 -->
-      <div class="tier-card" data-tier="T3">
-        <div class="tier-tag">Tier Three</div>
-        <h2>Advanced Protection</h2>
-        <div class="tier-price">$XX.00 – coordinated set</div>
-        <div class="tier-description">
-          For more complex or coordinated structures where you need multiple documents aligned.
-        </div>
-        <!-- TODO: replace # with your real Tier 3 payment link -->
-        <a href="#" class="btn-pay">Pay for Tier Three</a>
-      </div>
-
-      <!-- Entrepreneur / Bundle (optional; you can remove if not needed now) -->
-      <div class="tier-card" data-tier="BUNDLE">
-        <div class="tier-tag">Entrepreneur Bundle</div>
-        <h2>3 Coordinated Documents</h2>
-        <div class="tier-price">$XX.00 – bundle</div>
-        <div class="tier-description">
-          For entrepreneurs wanting three coordinated legal documents prepared as a bundled set.
-        </div>
-        <!-- TODO: replace # with your real bundle payment link -->
-        <a href="#" class="btn-pay">Pay for Bundle</a>
-      </div>
+  <!-- Tier 2 -->
+  <div class="tier-card" data-tier="T2">
+    <div class="tier-tag">Tier Two</div>
+    <h3>Business Foundation</h3>
+    <div class="tier-price">$XX.00 – per document</div>
+    <div class="tier-description">
+      For partnership agreements, two-member LLCs, employment contracts,
+      and core business relationships.
     </div>
+    <a href="https://pay.elegalboom.org/aeda586f-65f5-4bf0-98f3-7a2"
+       class="btn-pay"
+       target="_blank"
+       rel="noopener">
+      Pay for Tier Two
+    </a>
+  </div>
 
-    <div class="help-text">
-      If the highlighted tier doesn’t match what you intended,
-      <a href="catalog.html">go back to the Catalog</a> and choose again.
+
+  <!-- Tier 3 -->
+  <div class="tier-card" data-tier="T3">
+    <div class="tier-tag">Tier Three</div>
+    <h3>Advanced Protection</h3>
+    <div class="tier-price">$XX.00 – coordinated set</div>
+    <div class="tier-description">
+      For complex or coordinated structures where you need multiple documents aligned.
     </div>
-  </main>
+    <a href="https://pay.elegalboom.org/71ca7144-e537-4fbd-823d-c10"
+       class="btn-pay"
+       target="_blank"
+       rel="noopener">
+      Pay for Tier Three
+    </a>
+  </div>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const params = new URLSearchParams(window.location.search);
-      const tier = params.get("tier") || "";
 
-      const tierPill = document.getElementById("tierPill");
-      const tierText = document.getElementById("tierText");
+  <!-- Bundle -->
+  <div class="tier-card" data-tier="BUNDLE">
+    <div class="tier-tag">Entrepreneur Bundle</div>
+    <h3>3 Coordinated Documents</h3>
+    <div class="tier-price">$149.00 – bundle</div>
+    <div class="tier-description">
+      For entrepreneurs wanting three coordinated legal documents prepared as a bundled set.
+    </div>
+    <a href="https://pay.elegalboom.org/55c7cd3d-1048-4b8c-aadb-843"
+       class="btn-pay"
+       target="_blank"
+       rel="noopener">
+      Pay for Bundle
+    </a>
+  </div>
 
-      // Map code → human label
-      const tierLabels = {
-        T1: "T1 – Tier One (Startup & Essential Documents)",
-        T2: "T2 – Tier Two (Business Foundation)",
-        T3: "T3 – Tier Three (Advanced Protection)",
-        BUNDLE: "Entrepreneur Bundle"
-      };
+</div>
 
-      if (tier && tierPill && tierText && tierLabels[tier]) {
-        tierText.textContent = tierLabels[tier];
-        tierPill.style.display = "inline-flex";
-      }
+<footer>
+  If your highlighted tier doesn’t match what you intended,  
+  <a href="catalog.html">return to the catalog</a> and select again.
+</footer>
 
-      // Highlight the selected tier card
-      const cards = document.querySelectorAll(".tier-card");
-      cards.forEach(card => {
-        if (card.dataset.tier === tier) {
-          card.classList.add("selected");
-        }
-      });
-    });
-  </script>
+</main>
+
+<script>
+  // Highlight selected tier from URL
+  const params = new URLSearchParams(window.location.search);
+  const tier = params.get("tier");
+
+  if (tier) {
+    const card = document.querySelector(`.tier-card[data-tier="${tier}"]`);
+    if (card) {
+      card.classList.add("selected");
+
+      const badge = document.createElement("div");
+      badge.className = "selected-badge";
+      badge.innerText = "SELECTED";
+      card.appendChild(badge);
+    }
+  }
+</script>
+
 </body>
 </html>
