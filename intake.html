@@ -4,190 +4,511 @@
   <meta charset="UTF-8" />
   <title>E-LegalBoom | Intake Form</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Your existing CSS -->
   <link rel="stylesheet" href="style.css" />
 
-  <!-- Supabase SDK -->
+  <!-- Supabase JS v2 -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    /* ==============================
-       🔴 INSERT YOUR REAL VALUES
-       ============================== */
+    // 🔴 IMPORTANT: paste your real values here
     const SUPABASE_URL = "https://vvjbjfltqsivvxxifnvi.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";
 
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   </script>
-</head>
-<body>
 
-<header class="site-header">
-  <div class="logo-area">
-    <h1>E-LegalBoom</h1>
-    <p>Your Legal Documents, Built Right</p>
-  </div>
-  <nav class="main-nav">
-    <a href="index.html">Home</a>
-    <a href="catalog.html">Catalog</a>
-    <a href="bundle.html">Bundles</a>
-  </nav>
-</header>
-
-<main class="page-content">
-
-  <section class="form-intro">
-    <h2>Document Intake</h2>
-    <p>
-      Please complete the form below. Your answers will be used
-      to generate your legal document framework.
-    </p>
-  </section>
-
-  <section class="form-section">
-    <form id="intake-form">
-
-      <!-- ✅ WHICH DOCUMENT THE USER CHOSE -->
-      <input type="hidden" id="doc_type" name="doc_type">
-
-      <!-- CUSTOMER INFO -->
-      <label>
-        Full Name
-        <input type="text" name="customer_name" required>
-      </label>
-
-      <label>
-        Email Address
-        <input type="email" name="customer_email" required>
-      </label>
-
-      <label>
-        Phone (optional)
-        <input type="text" name="customer_phone">
-      </label>
-
-      <!-- ENTITY TYPE -->
-      <label>
-        Entity Type
-        <select name="entity_type" required>
-          <option value="">Select one...</option>
-          <option value="individual">Individual</option>
-          <option value="llc">LLC</option>
-          <option value="corporation">Corporation</option>
-          <option value="partnership">Partnership</option>
-          <option value="trust">Trust</option>
-        </select>
-      </label>
-
-      <!-- GOVERNING STATE -->
-      <label>
-        Governing State
-        <select name="governing_state" required>
-          <option value="">Select state...</option>
-          <option>Alabama</option><option>Alaska</option><option>Arizona</option>
-          <option>Arkansas</option><option>California</option><option>Colorado</option>
-          <option>Connecticut</option><option>Delaware</option><option>Florida</option>
-          <option>Georgia</option><option>Hawaii</option><option>Idaho</option>
-          <option>Illinois</option><option>Indiana</option><option>Iowa</option>
-          <option>Kansas</option><option>Kentucky</option><option>Louisiana</option>
-          <option>Maine</option><option>Maryland</option><option>Massachusetts</option>
-          <option>Michigan</option><option>Minnesota</option><option>Mississippi</option>
-          <option>Missouri</option><option>Montana</option><option>Nebraska</option>
-          <option>Nevada</option><option>New Hampshire</option><option>New Jersey</option>
-          <option>New Mexico</option><option>New York</option><option>North Carolina</option>
-          <option>North Dakota</option><option>Ohio</option><option>Oklahoma</option>
-          <option>Oregon</option><option>Pennsylvania</option><option>Rhode Island</option>
-          <option>South Carolina</option><option>South Dakota</option><option>Tennessee</option>
-          <option>Texas</option><option>Utah</option><option>Vermont</option>
-          <option>Virginia</option><option>Washington</option><option>West Virginia</option>
-          <option>Wisconsin</option><option>Wyoming</option>
-        </select>
-      </label>
-
-      <!-- BUSINESS / TRUST DETAILS -->
-      <label>
-        Business / Trust / Entity Name
-        <input type="text" name="entity_name">
-      </label>
-
-      <label>
-        Names of Other Parties / Members / Trustees / Partners (comma-separated)
-        <textarea name="other_parties" rows="3"></textarea>
-      </label>
-
-      <!-- FLEX FIELD (works for most docs) -->
-      <label>
-        Special Instructions or Notes
-        <textarea name="special_notes" rows="4"></textarea>
-      </label>
-
-      <!-- AGREEMENTS -->
-      <label class="checkbox">
-        <input type="checkbox" required>
-        I confirm that the information provided is accurate to the best of my knowledge.
-      </label>
-
-      <label class="checkbox">
-        <input type="checkbox" required>
-        I understand this is not legal advice and no attorney-client relationship is created.
-      </label>
-
-      <!-- SUBMIT -->
-      <button type="submit" class="btn-primary">
-        Submit & Continue to Payment
-      </button>
-
-    </form>
-  </section>
-</main>
-
-<footer class="site-footer">
-  <p>&copy; 2025 E-LegalBoom. All rights reserved.</p>
-</footer>
-
-<!-- ===========================
-     SCRIPT SECTION
-     =========================== -->
-<script>
-
-  /* ✅ Capture the document type from catalog.html (via ?doc_type=) */
-  const params = new URLSearchParams(window.location.search);
-  const docType = params.get("doc_type");
-  if (docType) {
-    document.getElementById("doc_type").value = docType;
-  }
-
-  /* ✅ Submit to Supabase */
-  const form = document.getElementById("intake-form");
-
-  form.addEventListener("submit", async function(e) {
-    e.preventDefault();
-
-    const formData = new FormData(form);
-    const payload = Object.fromEntries(formData.entries());
-
-    const { data, error } = await supabase
-      .from("document_requests")
-      .insert([{
-        doc_type: payload.doc_type || "unspecified",
-        customer_name: payload.customer_name,
-        customer_email: payload.customer_email,
-        governing_state: payload.governing_state,
-        entity_type: payload.entity_type,
-        data: payload
-      }]);
-
-    if (error) {
-      alert("There was an error submitting your intake. Please try again.");
-      console.error("Supabase error:", error);
-      return;
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      background-color: #f5f5f7;
+      color: #111827;
     }
 
-    /* ✅ Redirect to payment */
-    window.location.href = "payment.html";
-  });
+    /* Top nav (same as Tier pages) */
+    .elb-top-nav {
+      background: #111827;
+      color: #e5e7eb;
+      padding: 8px 16px;
+      font-size: 0.9rem;
+    }
+    .elb-top-nav-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .elb-top-nav-title {
+      font-weight: 600;
+    }
+    .elb-top-nav-links a {
+      color: #93c5fd;
+      text-decoration: none;
+      margin-left: 16px;
+    }
+    .elb-top-nav-links a:hover {
+      color: #ffffff;
+    }
 
-</script>
+    .page-wrap {
+      max-width: 960px;
+      margin: 24px auto 40px;
+      padding: 0 16px;
+    }
 
+    .page-header h1 {
+      margin: 8px 0 4px;
+      font-size: 1.7rem;
+    }
+    .page-header p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #4b5563;
+    }
+    .page-sub {
+      margin-top: 4px;
+      font-size: 0.85rem;
+      color: #6b7280;
+    }
+
+    .selected-doc-pill {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #e0f2fe;
+      color: #0f172a;
+      font-size: 0.8rem;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 18px 18px 20px;
+      margin-top: 18px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.04);
+    }
+
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .section-note {
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin-bottom: 12px;
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .field {
+      flex: 1 1 200px;
+    }
+    .field label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .field span.req {
+      color: #b91c1c;
+      margin-left: 2px;
+    }
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      padding: 7px 8px;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      font-size: 0.9rem;
+      box-sizing: border-box;
+    }
+    .field textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .chips-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .chip-label {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      background: #f9fafb;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    .chip-label input {
+      margin-right: 6px;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: #374151;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: #2563eb;
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .error-banner {
+      display: none;
+      margin-top: 10px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      background: #fef2f2;
+      color: #b91c1c;
+      font-size: 0.85rem;
+      border: 1px solid #fecaca;
+    }
+
+    .site-footer {
+      background-color: #111827;
+      color: #f9fafb;
+      padding: 12px 20px;
+      font-size: 0.8rem;
+    }
+    .site-footer-inner {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 640px) {
+      .page-wrap {
+        padding: 0 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- top nav -->
+  <div class="elb-top-nav">
+    <div class="elb-top-nav-inner">
+      <div class="elb-top-nav-title">E-LegalBoom</div>
+      <div class="elb-top-nav-links">
+        <a href="catalog.html">← Back to Document Catalog</a>
+        <a href="index.html">Home</a>
+      </div>
+    </div>
+  </div>
+
+  <main class="page-wrap">
+    <header class="page-header">
+      <h1>Client Intake</h1>
+      <p>
+        Please complete this intake form. Your responses will be used to generate the framework of your legal document.
+        You will review and approve the final version before it is used.
+      </p>
+      <div class="page-sub">
+        Fields marked with <span style="color:#b91c1c">*</span> are required.  
+        Some options (management, dispute resolution, non-compete, etc.) may not apply to every document; you may leave them blank when not relevant.
+      </div>
+      <div id="selectedDocPill" class="selected-doc-pill" style="display:none;">
+        Selected: <span id="selectedDocTypeLabel"></span>
+      </div>
+    </header>
+
+    <form id="intakeForm">
+      <!-- hidden tier & document type -->
+      <input type="hidden" id="doc_type" name="doc_type" />
+      <input type="hidden" id="tier" name="tier" />
+
+      <!-- Contact info -->
+      <section class="card">
+        <div class="section-title">1. Contact Information</div>
+        <div class="section-note">Tell us who we should list as the primary client or signing party.</div>
+
+        <div class="form-row">
+          <div class="field">
+            <label>Full Name<span class="req">*</span></label>
+            <input type="text" name="customer_name" required />
+          </div>
+          <div class="field">
+            <label>Email Address<span class="req">*</span></label>
+            <input type="email" name="customer_email" required />
+          </div>
+          <div class="field">
+            <label>Phone (optional)</label>
+            <input type="tel" name="phone" />
+          </div>
+        </div>
+      </section>
+
+      <!-- Entity info -->
+      <section class="card">
+        <div class="section-title">2. Entity / Relationship Information</div>
+        <div class="section-note">
+          This identifies the business, trust, or relationship the document will cover.
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label>Entity Type<span class="req">*</span></label>
+            <select name="entity_type" required>
+              <option value="">Select one…</option>
+              <option value="individual">Individual</option>
+              <option value="partnership">Partnership</option>
+              <option value="llc_single_member">Single-Member LLC</option>
+              <option value="llc_multi_member">Multi-Member LLC</option>
+              <option value="corporation">Corporation</option>
+              <option value="trust">Trust</option>
+              <option value="other">Other (describe in notes)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Governing State<span class="req">*</span></label>
+            <select name="governing_state" required>
+              <option value="">Select state…</option>
+              <option value="AL">Alabama</option>
+              <option value="AK">Alaska</option>
+              <option value="AZ">Arizona</option>
+              <option value="AR">Arkansas</option>
+              <option value="CA">California</option>
+              <option value="CO">Colorado</option>
+              <!-- you can fill in the rest later if you like -->
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label>Business / Trust / Entity Name</label>
+            <input type="text" name="entity_name" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label>Names of Other Parties / Members / Trustees / Partners (comma-separated)</label>
+            <textarea name="other_parties"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- Management, capital, dispute, non-compete options -->
+      <section class="card">
+        <div class="section-title">3. Management & Terms (if applicable)</div>
+        <div class="section-note">
+          These questions help shape management rights, dispute handling, and optional clauses. Leave items blank if they don’t apply to this document.
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label>Management Model</label>
+            <select name="management_model">
+              <option value="">Not specified</option>
+              <option value="managing_partner">Managing Partner / Managing Member</option>
+              <option value="vote_based">Vote-based authority</option>
+              <option value="equal_authority">Equal authority for all owners</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Dispute Resolution Preference</label>
+            <select name="dispute_method">
+              <option value="">Not specified</option>
+              <option value="mediation_then_arbitration">Mediation, then arbitration</option>
+              <option value="arbitration_only">Binding arbitration only</option>
+              <option value="court_only">Court / litigation only</option>
+              <option value="mediation_only">Mediation only</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label>Non-Compete / Non-Solicit</label>
+            <select name="non_compete_option">
+              <option value="">Not specified</option>
+              <option value="none">No non-compete</option>
+              <option value="basic_non_compete">Basic non-compete</option>
+              <option value="non_solicit_only">Non-solicit only (no full non-compete)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label>Capital Types (check all that may apply)</label>
+            <div class="chips-row">
+              <label class="chip-label">
+                <input type="checkbox" name="capital_types[]" value="cash" />
+                Cash
+              </label>
+              <label class="chip-label">
+                <input type="checkbox" name="capital_types[]" value="property" />
+                Property / equipment
+              </label>
+              <label class="chip-label">
+                <input type="checkbox" name="capital_types[]" value="services" />
+                Services / sweat equity
+              </label>
+              <label class="chip-label">
+                <input type="checkbox" name="capital_types[]" value="crypto" />
+                Cryptocurrency
+              </label>
+              <label class="chip-label">
+                <input type="checkbox" name="capital_types[]" value="other" />
+                Other
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label>Optional Legal Clauses (check any you’d like us to consider)</label>
+            <div class="chips-row">
+              <label class="chip-label">
+                <input type="checkbox" name="special_clauses[]" value="buy_sell" />
+                Buy-Sell / Exit terms
+              </label>
+              <label class="chip-label">
+                <input type="checkbox" name="special_clauses[]" value="ip_ownership" />
+                Intellectual Property (IP) ownership
+              </label>
+              <label class="chip-label">
+                <input type="checkbox" name="special_clauses[]" value="confidentiality" />
+                Confidentiality / trade secrets
+              </label>
+              <label class="chip-label">
+                <input type="checkbox" name="special_clauses[]" value="custom" />
+                Custom clause (describe in notes)
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Notes & confirmations -->
+      <section class="card">
+        <div class="section-title">4. Special Instructions & Confirmations</div>
+
+        <div class="form-row">
+          <div class="field">
+            <label>Special Instructions or Notes</label>
+            <textarea name="special_notes"></textarea>
+          </div>
+        </div>
+
+        <div class="checkbox-row">
+          <input type="checkbox" id="confirm_accuracy" name="confirm_accuracy" required />
+          <label for="confirm_accuracy">
+            I confirm that the information provided is accurate to the best of my knowledge.<span class="req">*</span>
+          </label>
+        </div>
+
+        <div class="checkbox-row">
+          <input type="checkbox" id="confirm_no_attorney" name="confirm_no_attorney" required />
+          <label for="confirm_no_attorney">
+            I understand this is not legal advice and no attorney-client relationship is created through E-LegalBoom.<span class="req">*</span>
+          </label>
+        </div>
+
+        <button type="submit" class="btn-primary">
+          Submit &amp; Continue to Payment
+        </button>
+
+        <div id="submitError" class="error-banner">
+          There was an error submitting your intake. Please try again. If the problem continues, contact support.
+        </div>
+      </section>
+    </form>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      &copy; 2025 E-LegalBoom. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const docType = params.get('doc_type') || '';
+      const tier = params.get('tier') || '';
+
+      const docTypeInput = document.getElementById('doc_type');
+      const tierInput = document.getElementById('tier');
+      if (docTypeInput) docTypeInput.value = docType;
+      if (tierInput) tierInput.value = tier;
+
+      // Show selected doc pill if present
+      if (docType) {
+        const pill = document.getElementById('selectedDocPill');
+        const label = document.getElementById('selectedDocTypeLabel');
+        if (pill && label) {
+          label.textContent = docType.replace(/_/g, ' ');
+          pill.style.display = 'inline-block';
+        }
+      }
+
+      const form = document.getElementById('intakeForm');
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+
+        const row = {
+          doc_type: formData.get('doc_type') || null,
+          tier: formData.get('tier') || null,
+          customer_name: formData.get('customer_name') || null,
+          customer_email: formData.get('customer_email') || null,
+          phone: formData.get('phone') || null,
+          entity_type: formData.get('entity_type') || null,
+          entity_name: formData.get('entity_name') || null,
+          governing_state: formData.get('governing_state') || null,
+          status: 'new',
+          management_model: formData.get('management_model') || null,
+          dispute_method: formData.get('dispute_method') || null,
+          non_compete_option: formData.get('non_compete_option') || null,
+          capital_types: formData.getAll('capital_types[]'),
+          special_clauses: formData.getAll('special_clauses[]'),
+          data: Object.fromEntries(formData.entries())
+        };
+
+        const { error } = await supabaseClient
+          .from('document_requests')
+          .insert([row]);
+
+        if (error) {
+          console.error('Supabase insert error:', error);
+          document.getElementById('submitError').style.display = 'block';
+          return;
+        }
+
+        const redirectTier = row.tier || '';
+        window.location.href = `payment.html?tier=${encodeURIComponent(redirectTier)}`;
+      });
+    });
+  </script>
 </body>
 </html>
