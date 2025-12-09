@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>E-LegalBoom – Entrepreneur Bundle Selection</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <style>
+      :root {
+        --eb-navy: #1e1e2f;
+        --eb-blue: #2b6cff;
+        --eb-blue-dark: #1e54cc;
+        --eb-accent: #ff7b2c;
+        --eb-bg1: #f0f5ff;
+        --eb-bg2: #e6edff;
+        --eb-card-bg: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background: linear-gradient(135deg, var(--eb-bg1), var(--eb-bg2));
+        color: #222;
+      }
+
+      header {
+        background: var(--eb-navy);
+        color: #fff;
+        padding: 14px 20px;
+      }
+
+      header .brand {
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+      }
+
+      header .tagline {
+        font-size: 0.8rem;
+        opacity: 0.8;
+      }
+
+      .page-wrap {
+        max-width: 1100px;
+        margin: 24px auto 40px;
+        padding: 0 16px 40px;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 1.8rem;
+        color: var(--eb-navy);
+      }
+
+      .page-intro {
+        max-width: 780px;
+        font-size: 0.95rem;
+        color: #444;
+        line-height: 1.5;
+      }
+
+      .page-intro strong {
+        color: var(--eb-navy);
+      }
+
+      .selection-summary {
+        margin-top: 14px;
+        font-size: 0.88rem;
+        color: #333;
+      }
+
+      .selection-summary strong {
+        color: var(--eb-blue-dark);
+      }
+
+      .layout-grid {
+        display: grid;
+        grid-template-columns: 3fr 1.3fr;
+        gap: 22px;
+        margin-top: 24px;
+        align-items: flex-start;
+      }
+
+      @media (max-width: 900px) {
+        .layout-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .bundle-card {
+        background: var(--eb-card-bg);
+        border-radius: 14px;
+        padding: 20px 18px 18px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.04);
+      }
+
+      .bundle-header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 10px;
+        margin-bottom: 8px;
+      }
+
+      .bundle-name {
+        margin: 0;
+        font-size: 1.1rem;
+        color: var(--eb-navy);
+      }
+
+      .bundle-pill {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 999px;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        background: var(--eb-accent);
+        color: #fff;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      .bundle-price-row {
+        margin-bottom: 6px;
+      }
+
+      .bundle-price-main {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--eb-blue);
+      }
+
+      .bundle-price-note {
+        font-size: 0.8rem;
+        color: #666;
+        margin-left: 4px;
+      }
+
+      .bundle-blurb {
+        font-size: 0.9rem;
+        color: #444;
+        margin: 6px 0 12px;
+      }
+
+      .doc-groups {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 14px;
+      }
+
+      .doc-group {
+        background: #f7f7ff;
+        border-radius: 10px;
+        padding: 12px 10px 10px;
+      }
+
+      .doc-group-title {
+        margin: 0 0 6px;
+        font-size: 0.92rem;
+        color: var(--eb-blue-dark);
+        font-weight: 600;
+      }
+
+      .doc-option-label {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        font-size: 0.86rem;
+        margin-bottom: 4px;
+        cursor: pointer;
+      }
+
+      .doc-option-label input[type="checkbox"] {
+        margin-top: 2px;
+        cursor: pointer;
+      }
+
+      .doc-option-title {
+        font-weight: 600;
+        color: #222;
+      }
+
+      .doc-option-note {
+        display: block;
+        font-weight: 400;
+        color: #555;
+      }
+
+      .selection-footer {
+        margin-top: 14px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .selection-count {
+        font-size: 0.86rem;
+        color: #333;
+      }
+
+      .selection-count strong {
+        color: var(--eb-blue-dark);
+      }
+
+      .btn-primary {
+        display: inline-block;
+        background: var(--eb-blue);
+        color: #fff;
+        padding: 10px 14px;
+        border-radius: 8px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 0.92rem;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: background 0.18s ease, transform 0.1s ease;
+      }
+
+      .btn-primary:hover {
+        background: var(--eb-blue-dark);
+        transform: translateY(-1px);
+      }
+
+      .btn-primary:disabled,
+      .btn-primary[disabled] {
+        background: #a5b5f0;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      /* Right column: 30-day pass hook */
+      .hook-card {
+        background: var(--eb-card-bg);
+        border-radius: 14px;
+        padding: 18px 16px 16px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.06);
+      }
+
+      .hook-title {
+        margin: 0 0 6px;
+        font-size: 1rem;
+        color: var(--eb-navy);
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 10px;
+      }
+
+      .hook-pill {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--eb-accent);
+        font-weight: 700;
+      }
+
+      .hook-price {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--eb-accent);
+        margin: 4px 0 4px;
+      }
+
+      .hook-text {
+        font-size: 0.86rem;
+        color: #444;
+        margin-bottom: 10px;
+      }
+
+      .hook-note {
+        font-size: 0.78rem;
+        color: #666;
+        margin-top: 4px;
+      }
+
+      .btn-secondary {
+        display: inline-block;
+        background: #ffffff;
+        color: var(--eb-blue-dark);
+        padding: 9px 12px;
+        border-radius: 8px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 600;
+        border: 1px solid var(--eb-blue-dark);
+        cursor: pointer;
+        transition: background 0.18s ease, color 0.18s ease, transform 0.1s ease;
+      }
+
+      .btn-secondary:hover {
+        background: var(--eb-blue-dark);
+        color: #fff;
+        transform: translateY(-1px);
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.4rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <div class="brand">E-LEGALBOOM</div>
+      <div class="tagline">Legal Confidence for Everyday Entrepreneurs</div>
+    </header>
+
+    <main class="page-wrap">
+      <h1>Entrepreneur Bundle – Choose Your 3 Documents</h1>
+      <p class="page-intro">
+        You’ve selected the <strong>Entrepreneur Bundle – $149</strong>. This
+        bundle gives you <strong>three coordinated legal documents</strong> for
+        one business. Choose up to three documents below. We’ll prepare them to
+        work together as a unified set.
+      </p>
+
+      <p class="selection-summary">
+        <strong>How this works:</strong> Select up to three documents from any
+        section. When you’re done, click
+        <strong>“Continue with These Documents”</strong> to move into the intake
+        form where we gather the details we need to prepare your documents.
+      </p>
+
+      <div class="layout-grid">
+        <!-- LEFT: Bundle document selection -->
+        <section class="bundle-card">
+          <div class="bundle-header-row">
+            <h2 class="bundle-name">Your Entrepreneur Bundle</h2>
+            <span class="bundle-pill">3 documents • $149</span>
+          </div>
+
+          <div class="bundle-price-row">
+            <span class="bundle-price-main">$149</span>
+            <span class="bundle-price-note">one-time bundle price</span>
+          </div>
+
+          <p class="bundle-blurb">
+            Mix and match from startup essentials, business foundation, and
+            advanced protection documents. You can select from across all three
+            levels as long as the total is <strong>no more than three</strong>.
+          </p>
+
+          <div class="doc-groups">
+            <!-- Group 1: Startup & Essentials (Tier 1 style) -->
+            <div class="doc-group">
+              <h3 class="doc-group-title">Startup &amp; Essentials</h3>
+
+              <label class="doc-option-label">
+                <input
+                  type="checkbox"
+                  name="bundleDoc"
+                  value="mutual_nda"
+                />
+                <span>
+                  <span class="doc-option-title">Mutual NDA</span>
+                  <span class="doc-option-note">
+                    Two-way non-disclosure agreement for sharing information.
+                  </span>
+                </span>
+              </label>
+
+              <label class="doc-option-label">
+                <input
+                  type="checkbox"
+                  name="bundleDoc"
+                  value="promissory_note"
+                />
+                <span>
+                  <span class="doc-option-title">Promissory Note</span>
+                  <span class="doc-option-note">
+                    Written promise to repay a loan on agreed terms.
+                  </span>
+                </span>
+              </label>
+
+              <label class="doc-option-label">
+                <input
+                  type="checkbox"
+                  name="bundleDoc"
+                  value="simple_services_agreement"
+                />
+                <span>
+                  <span class="doc-option-title">Simple Services Agreement</span>
+                  <span class="doc-option-note">
+                    Basic agreement for providing services to a client.
+                  </span>
+                </span>
+              </label>
+            </div>
+
+            <!-- Group 2: Business Foundation (Tier 2 style) -->
+            <div class="doc-group">
+              <h3 class="doc-group-title">Business Foundation</h3>
+
+              <label class="doc-option-label">
+                <input
+                  type="checkbox"
+                  name="bundleDoc"
+                  value="partnership_agreement"
+                />
+                <span>
+                  <span class="doc-option-title">Partnership Agreement</span>
+                  <span class="doc-option-note">
+                    Defines roles, money flow, and decision-making between
+                    partners.
+                  </span>
+                </span>
+              </label>
+
+              <label class="doc-option-label">
+                <input
+                  type="checkbox"
+                  name="bundleDoc"
+                  value="contractor_agreement"
+                />
+                <span>
+                  <span class="doc-option-title">
+                    Contractor/Subcontractor Agreement
+                  </span>
+                  <span class="doc-option-note">
+                    Clarifies scope, payment, and responsibilities for
+                    independent contractors.
+                  </span>
+                </span>
+              </label>
+
+              <label class="doc-option-label">
+                <input
+                  type="checkbox"
+                  name="bundleDoc"
+                  value="employment_agreement"
+                />
+                <span>
+                  <span class="doc-option-title">Employment Agreement</span>
+                  <span class="doc-option-note">
+                    Covers duties, compensation, and basic protections for a
+                    key hire.
+                  </span>
+                </span>
+              </label>
+            </div>
+
+            <!-- Group 3: Advanced Protection (Tier 3 style) -->
+            <div class="doc-group">
+              <h3 class="doc-group-title">Advanced Protection</h3>
+
+              <label class="doc-option-label">
+                <input
+                  type="checkbox"
+                  name="bundleDoc"
+                  value="multi_member_llc_operating_agreement"
+                />
+                <span>
+                  <span class="doc-option-title">
+                    Multi-Member LLC Operating Agreement
+                  </span>
+                  <span class="doc-option-note">
+                    Governance, voting, profit sharing, and exit terms for an
+                    LLC with more than one member.
+                  </span>
+                </span>
+              </label>
+
+              <label class="doc-option-label">
+                <input
+                  type="checkbox"
+                  name="bundleDoc"
+                  value="investor_equity_agreement"
+                />
+                <span>
+                  <span class="doc-option-title">Investor/Equity Agreement</span>
+                  <span class="doc-option-note">
+                    Terms for investors, ownership percentages, and how returns
+                    are handled.
+                  </span>
+                </span>
+              </label>
+
+              <label class="doc-option-label">
+                <input
+                  type="checkbox"
+                  name="bundleDoc"
+                  value="joint_venture_agreement"
+                />
+                <span>
+                  <span class="doc-option-title">Joint Venture Agreement</span>
+                  <span class="doc-option-note">
+                    Coordinated structure for collaborating with another
+                    business on a project or venture.
+                  </span>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <div class="selection-footer">
+            <div class="selection-count" id="selection-count">
+              You have selected <strong>0</strong> of 3 allowed documents.
+            </div>
+            <button id="continue-btn" class="btn-primary">
+              Continue with These Documents
+            </button>
+          </div>
+        </section>
+
+        <!-- RIGHT: 30-day pass hook -->
+        <aside class="hook-card">
+          <h2 class="hook-title">
+            30-Day Document Access Pass
+            <span class="hook-pill">Optional Add-On</span>
+          </h2>
+          <div class="hook-price">$1.99 • 30 days</div>
+          <p class="hook-text">
+            When this option is activated, you’ll receive a limited-time pass
+            giving you access to use eligible document templates for a full
+            30-day period. It’s designed for entrepreneurs who expect to handle
+            multiple agreements or adjustments in a short window.
+          </p>
+
+          <!-- TODO: Replace the # below with your actual $1.99 pay link URL -->
+          <a
+            href="#"
+            class="btn-secondary"
+            id="pass-link"
+          >
+            Activate 30-Day Access Pass – $1.99
+          </a>
+
+          <p class="hook-note">
+            You can add this pass now or return to it later once the feature is
+            fully live. Your bundle selection below will still move forward
+            normally, with or without the pass.
+          </p>
+        </aside>
+      </div>
+    </main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const MAX_DOCS = 3;
+        const checkboxes = Array.from(
+          document.querySelectorAll('input[name="bundleDoc"]')
+        );
+        const countEl = document.getElementById("selection-count");
+        const continueBtn = document.getElementById("continue-btn");
+
+        function updateSelectionState() {
+          const selected = checkboxes.filter((cb) => cb.checked);
+          const count = selected.length;
+
+          // Update count text
+          if (countEl) {
+            countEl.innerHTML =
+              'You have selected <strong>' +
+              count +
+              "</strong> of " +
+              MAX_DOCS +
+              " allowed documents.";
+          }
+
+          // Enable/disable further selection if at max
+          if (count >= MAX_DOCS) {
+            checkboxes.forEach((cb) => {
+              if (!cb.checked) {
+                cb.disabled = true;
+              }
+            });
+          } else {
+            checkboxes.forEach((cb) => {
+              cb.disabled = false;
+            });
+          }
+        }
+
+        checkboxes.forEach((cb) => {
+          cb.addEventListener("change", updateSelectionState);
+        });
+
+        updateSelectionState();
+
+        if (continueBtn) {
+          continueBtn.addEventListener("click", function () {
+            const selected = checkboxes
+              .filter((cb) => cb.checked)
+              .map((cb) => cb.value);
+
+            if (selected.length === 0) {
+              alert(
+                "Please select at least one document for your Entrepreneur Bundle."
+              );
+              return;
+            }
+
+            if (selected.length > MAX_DOCS) {
+              alert(
+                "You can select up to " +
+                  MAX_DOCS +
+                  " documents. Please deselect one before continuing."
+              );
+              return;
+            }
+
+            // Build query string for the intake page
+            const docsParam = encodeURIComponent(selected.join(","));
+
+            // If your intake file has a different name, update "intake.html" below
+            const nextUrl =
+              "intake.html?tier=BUNDLE&docs=" + docsParam;
+
+            window.location.href = nextUrl;
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
