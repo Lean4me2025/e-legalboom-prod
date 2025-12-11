@@ -642,8 +642,12 @@
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const params = new URLSearchParams(window.location.search);
+      const storedDocumentType = localStorage.getItem('document_type') || "";
       const docType = params.get("doc_type") || "";
       const tier = params.get("tier") || "";
+
+      // Final document type to save (bundle overrides everything)
+const documentTypeToSave = storedDocumentType || docType || "single";
 
       // Populate hidden fields
       const docTypeInput = document.getElementById("doc_type");
