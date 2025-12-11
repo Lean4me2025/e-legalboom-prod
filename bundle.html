@@ -246,6 +246,7 @@ ul.doc-list li{
   document.getElementById('getBundleBtn').onclick = () => {
     // Lock in bundle choice so intake / details / review can see it
     localStorage.setItem('selectedTier', 'Entrepreneur Bundle');
+    localStorage.setItem('document_type', 'bundle');
     localStorage.setItem('selectedDocument', 'Entrepreneur Bundle (All Documents)');
     window.location.href = 'intake.html?tier=BUNDLE';
   };
