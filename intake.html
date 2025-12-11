@@ -692,6 +692,8 @@ const documentTypeToSave = storedDocumentType || docType || "single";
           }
         });
 
+        dataPayload.document_type = documentTypeToSave;
+
         // Make sure doc_type and tier are included in the JSON blob as well
         dataPayload.doc_type = docType;
         dataPayload.tier = tier;
