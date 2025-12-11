@@ -1,1 +1,76 @@
+/**
+ * Document Generation Engine
+ * IllegalBoom.com
+ */
 
+import fs from "fs";
+import path from "path";
+import { createClient } from "@supabase/supabase-js";
+
+// --- CONFIG ---
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY;
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// --- MAIN FUNCTION ---
+export async function generateDocument(orderId) {
+  console.log("Starting document generation for order:", orderId);
+
+  // 1. Load order
+  const { data: order, error } = await supabase
+    .from("web_orders")
+    .select("*")
+    .eq("id", orderId)
+    .single();
+
+  if (error || !order) {
+    throw new Error("Order not found");
+  }
+
+  // 2. Load spec
+  const specPath = path.join(
+    process.cwd(),
+    "engine",
+    "specs",
+    `${order.doc_type}.json`
+  );
+
+  if (!fs.existsSync(specPath)) {
+    throw new Error(`Spec not found for doc_type: ${order.doc_type}`);
+  }
+
+  const spec = JSON.parse(fs.readFileSync(specPath, "utf8"));
+
+  // 3. Validate required fields
+  const missing = spec.required_fields.filter(
+    field => !order[field]
+  );
+
+  if (missing.length > 0) {
+    throw new Error(
+      `Missing required fields: ${missing.join(", ")}`
+    );
+  }
+
+  console.log("All required fields present.");
+
+  // 4. Prepare render payload
+  const renderData = {};
+
+  for (const [alias, sourceField] of Object.entries(spec.field_aliases)) {
+    renderData[alias] = order[sourceField] || "";
+  }
+
+  console.log("Render payload prepared:", renderData);
+
+  // 5. (Next step) Render HTML → PDF
+  // Placeholder for now
+
+  return {
+    status: "ready_for_render",
+    orderId,
+    doc_type: order.doc_type,
+    renderData
+  };
+}
