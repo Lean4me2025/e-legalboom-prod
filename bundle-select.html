@@ -1,145 +1,590 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Entrepreneur Bundle – Choose Your Documents</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Entrepreneur Bundle — Choose Your 3 Documents | E-LegalBoom</title>
+  <style>
+    :root{
+      --bg:#f4f7fb;
+      --card:#ffffff;
+      --ink:#1d2330;
+      --muted:#667085;
+      --brand:#1e1e2f;
+      --accent:#2f80ff;
+      --accent2:#ff7b2c;
+      --line:#e6eaf2;
+      --shadow:0 10px 26px rgba(16,24,40,.12);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      background:var(--bg);
+      color:var(--ink);
+    }
+    header{
+      background:var(--brand);
+      color:#fff;
+      padding:14px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      position:sticky;
+      top:0;
+      z-index:10;
+    }
+    header .left{
+      display:flex; gap:10px; align-items:center;
+    }
+    .logo{
+      width:34px;height:34px;border-radius:10px;
+      background:linear-gradient(135deg,var(--accent),#6aa6ff);
+      display:grid;place-items:center;
+      font-weight:800;
+    }
+    header .brand-title{
+      line-height:1.1;
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+    header nav a{
+      color:#fff;
+      text-decoration:none;
+      opacity:.9;
+      font-weight:600;
+    }
+    header nav a:hover{opacity:1;text-decoration:underline}
 
-<style>
-  :root{
-    --navy:#1e1e2f; --blue:#2b6cff; --blue2:#1e54cc; --accent:#ff7b2c;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0; font-family:system-ui,-apple-system; 
-    background:linear-gradient(135deg,#f0f5ff,#e6edff); color:#222
-  }
-  header{background:var(--navy); color:#fff; padding:14px 20px}
-  .brand{font-weight:700; letter-spacing:.08em; font-size:.9rem}
-  .tagline{opacity:.8; font-size:.8rem}
-  .page{max-width:1100px; margin:24px auto 40px; padding:0 16px}
-  h1{margin:0; color:var(--navy)}
-  .intro{max-width:760px; color:#444; font-size:.95rem; margin-top:6px}
-  .grid{display:grid; grid-template-columns:3fr 1.3fr; gap:22px; margin-top:24px}
-  @media (max-width:900px){.grid{grid-template-columns:1fr}}
-  .card{
-    background:#fff; border-radius:14px; padding:18px;
-    box-shadow:0 8px 20px rgba(0,0,0,.08)
-  }
-  .row{display:flex; justify-content:space-between; align-items:center; gap:10px}
-  .badge{background:var(--accent); color:#fff; border-radius:999px; padding:3px 10px; font-size:.7rem; letter-spacing:.08em}
-  .price{color:var(--blue); font-size:1.4rem; font-weight:700}
-  .note{font-size:.8rem; color:#666}
-  .group{background:#f7f7ff; border-radius:10px; padding:10px; margin-bottom:10px}
-  .group h3{margin:0 0 6px; color:var(--blue)}
-  label{display:flex; gap:8px; font-size:.86rem; margin-bottom:5px; cursor:pointer}
-  small{color:#666}
-  .footer{display:flex; justify-content:space-between; align-items:center; margin-top:14px; flex-wrap:wrap; gap:10px}
-  .count{font-size:.85rem}
-  .btn,button{
-    background:var(--blue); color:#fff; border:none; border-radius:8px;
-    padding:10px 14px; font-weight:600; text-decoration:none; cursor:pointer
-  }
-  .btn:hover,button:hover{background:var(--blue2)}
-  button:disabled{background:#9fb3ff; cursor:not-allowed}
-  aside .price{color:var(--accent)}
-  .btn-secondary{
-    background:#fff; color:var(--blue2); border:1px solid var(--blue2)
-  }
-  .btn-secondary:hover{background:var(--blue2); color:#fff}
-</style>
+    .wrap{
+      max-width:1100px;
+      margin:26px auto;
+      padding:0 16px 42px;
+    }
+
+    .hero h1{
+      margin:0 0 6px;
+      font-size:38px;
+      letter-spacing:-.6px;
+    }
+    .hero p{
+      margin:0;
+      color:var(--muted);
+      font-size:15px;
+    }
+
+    .grid{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns: 1fr 320px;
+      gap:18px;
+      align-items:start;
+    }
+    @media (max-width: 980px){
+      .grid{grid-template-columns:1fr}
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .bundle-top{
+      padding:18px 18px 14px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .bundle-top .price{
+      font-size:34px;
+      font-weight:900;
+      color:#2563eb;
+      line-height:1;
+    }
+    .bundle-top .price small{
+      font-size:14px;
+      font-weight:700;
+      color:var(--muted);
+      margin-left:6px;
+    }
+    .badge{
+      background:rgba(255,123,44,.14);
+      color:#b54708;
+      border:1px solid rgba(255,123,44,.35);
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.25px;
+      white-space:nowrap;
+    }
+    .bundle-sub{
+      padding:0 18px 16px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .section{
+      padding:14px 18px 2px;
+      border-top:1px solid var(--line);
+    }
+    .section:first-of-type{border-top:none}
+    .section h3{
+      margin:0 0 10px;
+      font-size:18px;
+      color:#2f5fd6;
+      letter-spacing:-.2px;
+    }
+
+    .doc{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      padding:10px 0;
+      border-top:1px dashed rgba(230,234,242,.9);
+    }
+    .doc:first-of-type{border-top:none}
+    .doc label{
+      display:flex;
+      gap:10px;
+      cursor:pointer;
+      width:100%;
+    }
+    input[type="checkbox"]{
+      width:18px;height:18px;margin-top:2px;
+      accent-color:var(--accent);
+    }
+    .doc .name{
+      font-weight:800;
+      margin:0;
+      font-size:14px;
+    }
+    .doc .desc{
+      margin:2px 0 0;
+      font-size:12px;
+      color:var(--muted);
+    }
+    .doc.disabled{
+      opacity:.55;
+    }
+
+    .footer-bar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:14px 18px;
+      border-top:1px solid var(--line);
+      background:linear-gradient(180deg,#fff,#fbfcff);
+    }
+    .count{
+      color:var(--muted);
+      font-weight:700;
+      font-size:13px;
+    }
+    .btn{
+      border:none;
+      cursor:pointer;
+      border-radius:12px;
+      padding:12px 14px;
+      font-weight:900;
+      letter-spacing:.2px;
+      transition:transform .04s ease, filter .12s ease, opacity .12s ease;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      min-width:220px;
+    }
+    .btn.primary{
+      background:var(--accent);
+      color:#fff;
+      box-shadow:0 10px 22px rgba(47,128,255,.25);
+    }
+    .btn.primary:active{transform:translateY(1px)}
+    .btn.primary[disabled]{
+      opacity:.45;
+      cursor:not-allowed;
+      box-shadow:none;
+    }
+
+    /* Right rail */
+    .rail{
+      padding:14px;
+    }
+    .rail h3{
+      margin:8px 0 8px;
+      font-size:18px;
+      letter-spacing:-.2px;
+    }
+    .rail .price-line{
+      display:flex;
+      align-items:baseline;
+      justify-content:space-between;
+      margin:6px 0 10px;
+      color:var(--muted);
+      font-size:13px;
+      font-weight:700;
+    }
+    .rail .total{
+      display:flex;
+      align-items:baseline;
+      justify-content:space-between;
+      padding-top:10px;
+      border-top:1px solid var(--line);
+      margin-top:10px;
+    }
+    .rail .total .big{
+      font-size:22px;
+      font-weight:1000;
+      color:#111827;
+    }
+    .rail .pass{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+      background:#fbfdff;
+      margin-top:10px;
+    }
+    .rail .pass .small{
+      margin:0;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.35;
+    }
+    .rail .pass .passbtn{
+      margin-top:10px;
+      width:100%;
+      background:#eef4ff;
+      color:#1f4dd6;
+      border:1px solid rgba(47,128,255,.25);
+      font-weight:900;
+      border-radius:12px;
+      padding:10px 12px;
+      cursor:pointer;
+    }
+    .rail .pass .passbtn.active{
+      background:rgba(47,128,255,.12);
+      border-color:rgba(47,128,255,.45);
+    }
+    .hint{
+      margin-top:10px;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.35;
+    }
+    .note{
+      margin-top:8px;
+      font-size:12px;
+      color:#b42318;
+      font-weight:800;
+      display:none;
+    }
+  </style>
 </head>
 
 <body>
 <header>
-  <div class="brand">E-LEGALBOOM</div>
-  <div class="tagline">Legal Confidence for Everyday Entrepreneurs</div>
+  <div class="left">
+    <div class="logo">e</div>
+    <div class="brand-title">
+      E-LegalBoom<br><span style="opacity:.85;font-weight:700;font-size:12px">Bundle Selection</span>
+    </div>
+  </div>
+  <nav><a href="/index.html">Home</a></nav>
 </header>
 
-<main class="page">
-<h1>Entrepreneur Bundle – Choose Your 3 Documents</h1>
-<p class="intro">
-You’ve selected the <strong>$149 Entrepreneur Bundle</strong>. Choose up to three documents from any section.
-We’ll prepare and align them as one coordinated legal package.
-</p>
-
-<div class="grid">
-
-<!-- LEFT: Bundle selection -->
-<section class="card">
-  <div class="row">
-    <h2>Your Bundle</h2>
-    <span class="badge">BEST VALUE</span>
-  </div>
-  <div class="price">$149 <span class="note">bundle</span></div>
-
-  <div class="group">
-    <h3>Startup & Essentials</h3>
-    <label><input type="checkbox" value="mutual_nda"> <span><strong>Mutual NDA</strong><br><small>Two-way confidentiality agreement.</small></span></label>
-    <label><input type="checkbox" value="promissory_note"> <span><strong>Promissory Note</strong></span></label>
-    <label><input type="checkbox" value="services_agreement"> <span><strong>Simple Services Agreement</strong></span></label>
+<div class="wrap">
+  <div class="hero">
+    <h1>Entrepreneur Bundle — Choose Your 3 Documents</h1>
+    <p>
+      You’ve selected the <strong>$149 Entrepreneur Bundle</strong>. Choose up to three documents from any section.
+      We’ll prepare and align them as one coordinated legal package.
+    </p>
   </div>
 
-  <div class="group">
-    <h3>Business Foundation</h3>
-    <label><input type="checkbox" value="partnership_agreement"> <span><strong>Partnership Agreement</strong></span></label>
-    <label><input type="checkbox" value="contractor_agreement"> <span><strong>Contractor Agreement</strong></span></label>
-    <label><input type="checkbox" value="employment_agreement"> <span><strong>Employment Agreement</strong></span></label>
+  <div class="grid">
+    <!-- LEFT: BUNDLE SELECT -->
+    <div class="card">
+      <div class="bundle-top">
+        <div>
+          <div class="price">$149 <small>bundle</small></div>
+          <div style="margin-top:6px;font-weight:900;color:#2f5fd6">Your Bundle</div>
+        </div>
+        <div class="badge">BEST VALUE</div>
+      </div>
+      <div class="bundle-sub">
+        Select <strong>up to 3</strong>. Your selection will carry into intake and your order record.
+      </div>
+
+      <!-- Startup & Essentials -->
+      <div class="section">
+        <h3>Startup &amp; Essentials</h3>
+
+        <div class="doc">
+          <label>
+            <input type="checkbox" class="docCheck" value="Mutual NDA" data-desc="Two-way confidentiality agreement." />
+            <div>
+              <p class="name">Mutual NDA</p>
+              <p class="desc">Two-way confidentiality agreement.</p>
+            </div>
+          </label>
+        </div>
+
+        <div class="doc">
+          <label>
+            <input type="checkbox" class="docCheck" value="Promissory Note" data-desc="Repayment terms for a loan between parties." />
+            <div>
+              <p class="name">Promissory Note</p>
+              <p class="desc">Repayment terms for a loan between parties.</p>
+            </div>
+          </label>
+        </div>
+
+        <div class="doc">
+          <label>
+            <input type="checkbox" class="docCheck" value="Simple Services Agreement" data-desc="Basic service scope, payment, and expectations." />
+            <div>
+              <p class="name">Simple Services Agreement</p>
+              <p class="desc">Basic service scope, payment, and expectations.</p>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Business Foundation -->
+      <div class="section">
+        <h3>Business Foundation</h3>
+
+        <div class="doc">
+          <label>
+            <input type="checkbox" class="docCheck" value="Partnership Agreement" data-desc="Defines ownership, roles, and profit splits." />
+            <div>
+              <p class="name">Partnership Agreement</p>
+              <p class="desc">Defines ownership, roles, and profit splits.</p>
+            </div>
+          </label>
+        </div>
+
+        <div class="doc">
+          <label>
+            <input type="checkbox" class="docCheck" value="Contractor Agreement" data-desc="Independent contractor scope, payment, and IP basics." />
+            <div>
+              <p class="name">Contractor Agreement</p>
+              <p class="desc">Independent contractor scope, payment, and IP basics.</p>
+            </div>
+          </label>
+        </div>
+
+        <div class="doc">
+          <label>
+            <input type="checkbox" class="docCheck" value="Employment Agreement" data-desc="Employment terms, duties, compensation, and confidentiality." />
+            <div>
+              <p class="name">Employment Agreement</p>
+              <p class="desc">Employment terms, duties, compensation, and confidentiality.</p>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Advanced Protection -->
+      <div class="section">
+        <h3>Advanced Protection</h3>
+
+        <div class="doc">
+          <label>
+            <input type="checkbox" class="docCheck" value="Multi-Member LLC Operating Agreement" data-desc="Rules, voting, distributions, and member rights." />
+            <div>
+              <p class="name">Multi-Member LLC Operating Agreement</p>
+              <p class="desc">Rules, voting, distributions, and member rights.</p>
+            </div>
+          </label>
+        </div>
+
+        <div class="doc">
+          <label>
+            <input type="checkbox" class="docCheck" value="Investor / Equity Agreement" data-desc="Investment terms, equity, and key protections." />
+            <div>
+              <p class="name">Investor / Equity Agreement</p>
+              <p class="desc">Investment terms, equity, and key protections.</p>
+            </div>
+          </label>
+        </div>
+
+        <div class="doc">
+          <label>
+            <input type="checkbox" class="docCheck" value="Joint Venture Agreement" data-desc="Defines JV scope, responsibilities, and profit share." />
+            <div>
+              <p class="name">Joint Venture Agreement</p>
+              <p class="desc">Defines JV scope, responsibilities, and profit share.</p>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="footer-bar">
+        <div class="count" id="countText">0 of 3 selected</div>
+        <button class="btn primary" id="continueBtn" disabled>
+          Continue With These Documents →
+        </button>
+      </div>
+    </div>
+
+    <!-- RIGHT: ACCESS PASS -->
+    <div class="card">
+      <div class="rail">
+        <h3>30-Day Document<br/>Access Pass</h3>
+        <div class="price-line">
+          <span><strong style="color:#b42318">$199</strong> • 30 days</span>
+          <span id="passStatus" style="font-weight:900;color:#667085">Optional</span>
+        </div>
+
+        <div class="pass">
+          <p class="small">
+            Optional add-on for short-term access to eligible templates during a 30-day window.
+          </p>
+          <button class="passbtn" id="togglePassBtn">Activate 30-Day Access — $199</button>
+          <p class="hint">
+            Bundle selection continues whether you add the pass or not.
+          </p>
+        </div>
+
+        <div class="total">
+          <div style="color:var(--muted);font-weight:800">Total Today</div>
+          <div class="big" id="totalToday">$149</div>
+        </div>
+
+        <div class="note" id="limitNote">Limit reached: you can only select 3 documents.</div>
+      </div>
+    </div>
   </div>
-
-  <div class="group">
-    <h3>Advanced Protection</h3>
-    <label><input type="checkbox" value="llc_operating_agreement"> <span><strong>Multi-Member LLC Operating Agreement</strong></span></label>
-    <label><input type="checkbox" value="investor_agreement"> <span><strong>Investor / Equity Agreement</strong></span></label>
-    <label><input type="checkbox" value="joint_venture"> <span><strong>Joint Venture Agreement</strong></span></label>
-  </div>
-
-  <div class="footer">
-    <span class="count" id="count">0 of 3 selected</span>
-    <button id="continue">Continue With These Documents</button>
-  </div>
-</section>
-
-<!-- RIGHT: $199 pass hook -->
-<aside class="card">
-  <h2>30-Day Document Access Pass</h2>
-  <div class="price">$199 <span class="note">• 30 days</span></div>
-  <p style="font-size:.86rem;color:#444">
-    Optional add-on for short-term access to eligible templates during a 30-day window.
-  </p>
-
-  <!-- REAL $199 LINK -->
-  <a class="btn btn-secondary" href="https://pay.elegalboom.org/c9c5e4f6-ac37-4fd3-98a8-a84">
-    Activate 30-Day Access – $199
-  </a>
-
-  <p class="note">Bundle selection continues whether you add the pass or not.</p>
-</aside>
-
 </div>
-</main>
 
 <script>
-  const MAX=3;
-  const boxes=[...document.querySelectorAll('input[type="checkbox"]')];
-  const count=document.getElementById('count');
-  const btn=document.getElementById('continue');
+  // ===== Configuration =====
+  const MAX_SELECTION = 3;
+  const BUNDLE_PRICE = 149;
+  const PASS_PRICE = 199;
+  const NEXT_PAGE = "/intake.html"; // change if needed
 
-  function update(){
-    const sel=boxes.filter(b=>b.checked);
-    count.innerHTML = sel.length + " of " + MAX + " selected";
-    boxes.forEach(b=>b.disabled = sel.length>=MAX && !b.checked);
-    btn.disabled = sel.length===0;
+  // ===== State =====
+  const checks = Array.from(document.querySelectorAll(".docCheck"));
+  const countText = document.getElementById("countText");
+  const continueBtn = document.getElementById("continueBtn");
+  const limitNote = document.getElementById("limitNote");
+
+  const togglePassBtn = document.getElementById("togglePassBtn");
+  const passStatus = document.getElementById("passStatus");
+  const totalToday = document.getElementById("totalToday");
+
+  let accessPassSelected = false;
+
+  // ===== Helpers =====
+  function getSelectedDocs(){
+    return checks.filter(c => c.checked).map(c => c.value);
   }
-  boxes.forEach(b=>b.addEventListener('change',update));
-  update();
 
-  document.getElementById('continue').onclick=()=> {
-    const sel=boxes.filter(b=>b.checked).map(b=>b.value);
-    const docs=encodeURIComponent(sel.join(','));
-    // Adjust file name if your intake page differs:
-    window.location.href="intake.html?tier=BUNDLE&docs="+docs;
-  };
+  function updateUI(){
+    const selected = getSelectedDocs();
+    const n = selected.length;
+
+    countText.textContent = `${n} of ${MAX_SELECTION} selected`;
+    continueBtn.disabled = !(n >= 1 && n <= MAX_SELECTION);
+
+    // Enforce max selection by disabling unchecked boxes when limit hit
+    const atLimit = n >= MAX_SELECTION;
+    limitNote.style.display = atLimit ? "block" : "none";
+
+    checks.forEach(c => {
+      if (!c.checked) {
+        c.disabled = atLimit;
+        c.closest(".doc").classList.toggle("disabled", atLimit);
+      } else {
+        c.disabled = false;
+        c.closest(".doc").classList.remove("disabled");
+      }
+    });
+
+    // total today
+    const total = BUNDLE_PRICE + (accessPassSelected ? PASS_PRICE : 0);
+    totalToday.textContent = `$${total}`;
+    passStatus.textContent = accessPassSelected ? "Added" : "Optional";
+  }
+
+  function persistSelection(){
+    const selectedDocs = getSelectedDocs();
+
+    const payload = {
+      product: "Entrepreneur Bundle",
+      tier: "Bundle",
+      bundle_price: BUNDLE_PRICE,
+      document_type: "BUNDLE",
+      document_types: selectedDocs,
+      doc_count: selectedDocs.length,
+      access_pass_selected: accessPassSelected,
+      access_pass_price: accessPassSelected ? PASS_PRICE : 0,
+      total_today: BUNDLE_PRICE + (accessPassSelected ? PASS_PRICE : 0),
+      created_at_client: new Date().toISOString()
+    };
+
+    sessionStorage.setItem("ELB_SELECTION", JSON.stringify(payload));
+  }
+
+  // ===== Events =====
+  checks.forEach(c => {
+    c.addEventListener("change", () => {
+      updateUI();
+      persistSelection();
+    });
+  });
+
+  togglePassBtn.addEventListener("click", () => {
+    accessPassSelected = !accessPassSelected;
+    togglePassBtn.classList.toggle("active", accessPassSelected);
+    togglePassBtn.textContent = accessPassSelected
+      ? "30-Day Access Added — $199 ✓"
+      : "Activate 30-Day Access — $199";
+
+    updateUI();
+    persistSelection();
+  });
+
+  continueBtn.addEventListener("click", () => {
+    const selectedDocs = getSelectedDocs();
+    if (selectedDocs.length < 1 || selectedDocs.length > MAX_SELECTION) return;
+
+    persistSelection();
+    window.location.href = NEXT_PAGE;
+  });
+
+  // ===== On load: restore prior state if user navigated back =====
+  (function init(){
+    const raw = sessionStorage.getItem("ELB_SELECTION");
+    if (raw) {
+      try {
+        const saved = JSON.parse(raw);
+        if (saved && saved.tier === "Bundle" && Array.isArray(saved.document_types)) {
+          // restore checks
+          const set = new Set(saved.document_types);
+          checks.forEach(c => c.checked = set.has(c.value));
+          // restore pass
+          accessPassSelected = !!saved.access_pass_selected;
+          togglePassBtn.classList.toggle("active", accessPassSelected);
+          togglePassBtn.textContent = accessPassSelected
+            ? "30-Day Access Added — $199 ✓"
+            : "Activate 30-Day Access — $199";
+        }
+      } catch(e){}
+    }
+    updateUI();
+    persistSelection();
+  })();
 </script>
 
 </body>
