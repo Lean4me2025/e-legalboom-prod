@@ -2,251 +2,145 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>E-LegalBoom | Secure Payment</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>E-LegalBoom — Secure Payment</title>
   <style>
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #f4f6fb;
-      margin: 0;
-      padding: 0;
-      color: #222;
+    :root{
+      --bg:#f4f7fb;
+      --card:#fff;
+      --ink:#1d2330;
+      --muted:#667085;
+      --brand:#1e1e2f;
+      --accent:#2f80ff;
+      --line:#e6eaf2;
+      --shadow:0 10px 26px rgba(16,24,40,.12);
+      --radius:16px;
+      --danger:#b42318;
     }
-
-    header {
-      background: #0d1b2a;
-      color: white;
-      padding: 14px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      background:var(--bg);
+      color:var(--ink);
     }
-
-    header h1 {
-      font-size: 18px;
-      margin: 0;
+    header{
+      background:var(--brand);
+      color:#fff;
+      padding:14px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      position:sticky;
+      top:0;
+      z-index:10;
     }
-
-    header a {
-      color: #cde1ff;
-      text-decoration: none;
-      font-weight: 600;
+    header .left{display:flex;gap:10px;align-items:center}
+    .logo{
+      width:34px;height:34px;border-radius:10px;
+      background:linear-gradient(135deg,var(--accent),#6aa6ff);
+      display:grid;place-items:center;
+      font-weight:900;
     }
+    header .brand-title{line-height:1.1;font-weight:900}
+    header nav a{color:#fff;text-decoration:none;opacity:.9;font-weight:700}
+    header nav a:hover{opacity:1;text-decoration:underline}
 
-    main {
-      max-width: 1150px;
-      margin: auto;
-      padding: 30px 20px;
+    .wrap{max-width:1100px;margin:26px auto;padding:0 16px 42px}
+    h1{margin:0 0 6px;font-size:28px;letter-spacing:-.3px}
+    .sub{margin:0;color:var(--muted);font-size:13px;line-height:1.35}
+
+    .grid{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:14px;
+      align-items:stretch;
     }
+    @media (max-width: 980px){ .grid{grid-template-columns:1fr 1fr} }
+    @media (max-width: 620px){ .grid{grid-template-columns:1fr} }
 
-    h2 {
-      margin-bottom: 8px;
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:14px;
+      display:flex;
+      flex-direction:column;
+      min-height:290px;
+      position:relative;
+      transition:transform .08s ease, border-color .12s ease, box-shadow .12s ease;
     }
-
-    .page-note {
-      margin-bottom: 25px;
-      color: #555;
+    .card.selected{
+      border:3px solid var(--accent);
+      box-shadow:0 14px 30px rgba(47,128,255,.22);
+      transform:translateY(-1px);
     }
+    .card .tier{font-weight:900;margin:0 0 6px;font-size:16px}
+    .card .title{font-weight:900;margin:0 0 8px;font-size:14px;color:#1f4dd6;min-height:34px}
+    .card .price{color:var(--danger);font-weight:1000;margin:0 0 8px}
+    .card .desc{color:var(--muted);font-size:12px;line-height:1.35;margin:0 0 12px;flex:1}
 
-    .card-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
+    .btn{
+      border:none;
+      cursor:pointer;
+      border-radius:12px;
+      padding:12px 14px;
+      font-weight:1000;
+      letter-spacing:.2px;
+      transition:transform .04s ease, opacity .12s ease, filter .12s ease;
+      width:100%;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      background:var(--accent);
+      color:#fff;
     }
+    .btn:active{transform:translateY(1px)}
+    .btn[disabled]{opacity:.45;cursor:not-allowed;background:#c7d5ff;color:#1e1e2f}
 
-    .tier-card {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-      border: 2px solid transparent;
-      position: relative;
-      transition: 0.2s;
+    .notice{
+      margin-top:14px;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px 14px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.4;
     }
+    .notice strong{color:#111827}
+    .warn{margin-top:10px;color:#b42318;font-weight:900;display:none}
+    .tiny-link{color:#1f4dd6;font-weight:900;text-decoration:none}
+    .tiny-link:hover{text-decoration:underline}
 
-    .tier-card.selected {
-      border-color: #2563eb;
-      box-shadow: 0 8px 18px rgba(37,99,235,0.25);
-      transform: translateY(-2px);
+    .passRow{
+      margin-top:10px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
     }
-
-    .selected-badge {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: #2563eb;
-      color: white;
-      font-size: 12px;
-      font-weight: bold;
-      padding: 4px 8px;
-      border-radius: 6px;
+    .btn.secondary{
+      background:#eef4ff;
+      color:#1f4dd6;
+      border:1px solid rgba(47,128,255,.25);
     }
-
-    .tier-tag {
-      font-size: 13px;
-      font-weight: 700;
-      color: #444;
-      margin-bottom: 6px;
-    }
-
-    .tier-price {
-      color: #c93333;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-
-    .tier-description {
-      font-size: 14px;
-      color: #555;
-      margin-bottom: 18px;
-    }
-
-    .btn-pay {
-      display: block;
-      text-align: center;
-      padding: 12px;
-      background: #2563eb;
-      color: white;
-      font-weight: bold;
-      border-radius: 8px;
-      text-decoration: none;
-      transition: 0.2s;
-    }
-
-    .btn-pay:hover {
-      background: #1e4ed8;
-    }
-
-    footer {
-      margin-top: 25px;
-      font-size: 14px;
-      color: #444;
-      text-align: center;
-    }
-
-    footer a {
-      color: #2563eb;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
   </style>
 </head>
 
 <body>
-
 <header>
-  <h1>E-LegalBoom</h1>
-  <a href="catalog.html">← Back to Catalog</a>
+  <div class="left">
+    <div class="logo">e</div>
+    <div class="brand-title">
+      E-LegalBoom<br><span style="opacity:.85;font-weight:700;font-size:12px">Secure Payment</span>
+    </div>
+  </div>
+  <nav><a href="/index.html">Home</a></nav>
 </header>
 
-<main>
-
-<h2>Confirm Your Tier & Complete Payment</h2>
-
-<p class="page-note">
-  Review your selected tier below. When ready, click the payment button on your tier to complete checkout.
-  We will automatically match your payment to your intake submission.
-</p>
-
-<div class="card-row">
-
-  <!-- Tier 1 -->
-  <div class="tier-card" data-tier="T1">
-    <div class="tier-tag">Tier One</div>
-    <h3>Startup & Essential Documents</h3>
-    <div class="tier-price">$39.00 – per document</div>
-    <div class="tier-description">
-      Best for one straightforward document such as an NDA, promissory note,
-      or single-member LLC agreement.
-    </div>
-    <a href="https://pay.elegalboom.org/e4b79a60-0fd7-431c-8bfc-ae0"
-       class="btn-pay"
-       target="_blank"
-       rel="noopener">
-      Pay for Tier One
-    </a>
-  </div>
-
-
-  <!-- Tier 2 -->
-  <div class="tier-card" data-tier="T2">
-    <div class="tier-tag">Tier Two</div>
-    <h3>Business Foundation</h3>
-    <div class="tier-price">$59.00 – per document</div>
-    <div class="tier-description">
-      For partnership agreements, two-member LLCs, employment contracts,
-      and core business relationships.
-    </div>
-    <a href="https://pay.elegalboom.org/aeda586f-65f5-4bf0-98f3-7a2"
-       class="btn-pay"
-       target="_blank"
-       rel="noopener">
-      Pay for Tier Two
-    </a>
-  </div>
-
-
-  <!-- Tier 3 -->
-  <div class="tier-card" data-tier="T3">
-    <div class="tier-tag">Tier Three</div>
-    <h3>Advanced Protection</h3>
-    <div class="tier-price">$99.00 – coordinated set</div>
-    <div class="tier-description">
-      For complex or coordinated structures where you need multiple documents aligned.
-    </div>
-    <a href="https://pay.elegalboom.org/71ca7144-e537-4fbd-823d-c10"
-       class="btn-pay"
-       target="_blank"
-       rel="noopener">
-      Pay for Tier Three
-    </a>
-  </div>
-
-
-  <!-- Bundle -->
-  <div class="tier-card" data-tier="BUNDLE">
-    <div class="tier-tag">Entrepreneur Bundle</div>
-    <h3>3 Coordinated Documents</h3>
-    <div class="tier-price">$149.00 – bundle</div>
-    <div class="tier-description">
-      For entrepreneurs wanting three coordinated legal documents prepared as a bundled set.
-    </div>
-    <a href="https://pay.elegalboom.org/55c7cd3d-1048-4b8c-aadb-843"
-       class="btn-pay"
-       target="_blank"
-       rel="noopener">
-      Pay for Bundle
-    </a>
-  </div>
-
-</div>
-
-<footer>
-  If your highlighted tier doesn’t match what you intended,  
-  <a href="catalog.html">return to the catalog</a> and select again.
-</footer>
-
-</main>
-
-<script>
-  // Highlight selected tier from URL
-  const params = new URLSearchParams(window.location.search);
-  const tier = params.get("tier");
-
-  if (tier) {
-    const card = document.querySelector(`.tier-card[data-tier="${tier}"]`);
-    if (card) {
-      card.classList.add("selected");
-
-      const badge = document.createElement("div");
-      badge.className = "selected-badge";
-      badge.innerText = "SELECTED";
-      card.appendChild(badge);
-    }
-  }
-</script>
-
-</body>
-</html>
+<div class="wrap">
+  <h1>
