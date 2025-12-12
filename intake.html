@@ -2,737 +2,687 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>E-LegalBoom | Intake Form</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>E-LegalBoom — Intake Form</title>
 
-  <!-- Main site stylesheet (existing) -->
-  <link rel="stylesheet" href="style.css" />
-
-  <!-- Supabase JS v2 -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <script>
-    // 🔑 REPLACE THESE WITH YOUR REAL VALUES
-    const SUPABASE_URL = "https://vvjbjfltqsivvxxifnvi.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";
-
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  </script>
-
-  <!-- Intake-page-specific styles (light, modern card look) -->
   <style>
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      margin: 0;
-      background: #f4f5fb;
-      color: #1f2933;
+    :root{
+      --bg:#f4f7fb;
+      --card:#ffffff;
+      --ink:#1d2330;
+      --muted:#667085;
+      --brand:#1e1e2f;
+      --accent:#2f80ff;
+      --line:#e6eaf2;
+      --shadow:0 10px 26px rgba(16,24,40,.12);
+      --radius:16px;
+      --danger:#b42318;
+      --ok:#027a48;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      background:var(--bg);
+      color:var(--ink);
+    }
+    header{
+      background:var(--brand);
+      color:#fff;
+      padding:14px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      position:sticky;
+      top:0;
+      z-index:10;
+    }
+    header .left{display:flex;gap:10px;align-items:center}
+    .logo{
+      width:34px;height:34px;border-radius:10px;
+      background:linear-gradient(135deg,var(--accent),#6aa6ff);
+      display:grid;place-items:center;
+      font-weight:900;
+    }
+    header .brand-title{line-height:1.1;font-weight:900}
+    header nav a{color:#fff;text-decoration:none;opacity:.9;font-weight:700}
+    header nav a:hover{opacity:1;text-decoration:underline}
+
+    .wrap{max-width:1100px;margin:26px auto;padding:0 16px 42px}
+
+    .topbar{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:14px;
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:14px;
+    }
+    .pill{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:8px 10px;
+      background:#fbfdff;
+      font-weight:900;
+      font-size:12px;
+      color:#111827;
+    }
+    .pill small{color:var(--muted);font-weight:800}
+    .alert{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.35;
+      max-width:680px;
+    }
+    .alert strong{color:#111827}
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      margin-bottom:14px;
+    }
+    .card .hd{
+      padding:14px 16px;
+      border-bottom:1px solid var(--line);
+      font-weight:1000;
+      color:#111827;
+      background:linear-gradient(180deg,#fff,#fbfcff);
+    }
+    .card .bd{padding:14px 16px}
+
+    .grid2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+    .grid3{
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap:12px;
+    }
+    @media (max-width: 900px){
+      .grid2,.grid3{grid-template-columns:1fr}
     }
 
-    .site-header {
-      background: #111827;
-      color: #f9fafb;
-      padding: 12px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    label{
+      font-size:12px;
+      font-weight:900;
+      color:#111827;
+      display:block;
+      margin-bottom:6px;
+    }
+    input, select, textarea{
+      width:100%;
+      padding:11px 12px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:#fff;
+      font-size:14px;
+      outline:none;
+    }
+    textarea{min-height:92px;resize:vertical}
+    .hint{
+      margin-top:6px;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.35;
     }
 
-    .site-header .brand {
-      font-weight: 700;
-      font-size: 1.1rem;
+    .chips{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:999px;
+      padding:9px 12px;
+      font-weight:900;
+      font-size:12px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .chip.active{
+      border-color:rgba(47,128,255,.45);
+      background:rgba(47,128,255,.10);
+      color:#1f4dd6;
     }
 
-    .site-header nav a {
-      color: #e5e7eb;
-      margin-left: 18px;
-      text-decoration: none;
-      font-size: 0.92rem;
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      padding:14px 16px;
+      border-top:1px solid var(--line);
+      background:linear-gradient(180deg,#fff,#fbfcff);
     }
+    .btn{
+      border:none;
+      cursor:pointer;
+      border-radius:12px;
+      padding:12px 14px;
+      font-weight:1000;
+      letter-spacing:.2px;
+      transition:transform .04s ease, opacity .12s ease;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      min-width:220px;
+    }
+    .btn.primary{
+      background:var(--accent);
+      color:#fff;
+      box-shadow:0 10px 22px rgba(47,128,255,.25);
+    }
+    .btn.secondary{
+      background:#eef4ff;
+      color:#1f4dd6;
+      border:1px solid rgba(47,128,255,.25);
+      min-width:160px;
+    }
+    .btn:active{transform:translateY(1px)}
+    .btn[disabled]{opacity:.55;cursor:not-allowed;box-shadow:none}
 
-    .site-header nav a:hover {
-      color: #ffffff;
-      text-decoration: underline;
+    .status{
+      font-size:12px;
+      font-weight:900;
+      color:var(--muted);
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
     }
+    .status .ok{color:var(--ok)}
+    .status .bad{color:var(--danger)}
+    .tiny-link{color:#1f4dd6;font-weight:900;text-decoration:none}
+    .tiny-link:hover{text-decoration:underline}
 
-    .intake-main {
-      padding: 24px 12px 40px;
-    }
-
-    .intake-container {
-      max-width: 960px;
-      margin: 0 auto;
-      background: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
-      padding: 28px 24px 32px;
-    }
-
-    .intake-header {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-
-    .intake-header h1 {
-      margin: 0 0 4px;
-      font-size: 1.6rem;
-    }
-
-    .intake-header p {
-      margin: 0;
-      font-size: 0.95rem;
-      color: #4b5563;
-      max-width: 520px;
-    }
-
-    .pill-row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 0.78rem;
-      background: #eef2ff;
-      color: #1f2937;
-      border: 1px solid #e5e7eb;
-    }
-
-    .pill-label {
-      font-weight: 600;
-      margin-right: 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      font-size: 0.72rem;
-      color: #4b5563;
-    }
-
-    .section {
-      background: #f9fafb;
-      border-radius: 12px;
-      padding: 16px 18px 18px;
-      margin-bottom: 16px;
-      border: 1px solid #e5e7eb;
-    }
-
-    .section h2 {
-      margin: 0 0 4px;
-      font-size: 1.02rem;
-    }
-
-    .section small {
-      font-size: 0.82rem;
-      color: #6b7280;
-    }
-
-    .field-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px 16px;
-      margin-top: 12px;
-    }
-
-    .field {
-      display: flex;
-      flex-direction: column;
-      font-size: 0.9rem;
-    }
-
-    .field label {
-      font-weight: 500;
-      margin-bottom: 4px;
-    }
-
-    .field span.hint {
-      font-size: 0.78rem;
-      color: #6b7280;
-      margin-top: 2px;
-    }
-
-    input[type="text"],
-    input[type="email"],
-    input[type="tel"],
-    select,
-    textarea {
-      border-radius: 8px;
-      border: 1px solid #d1d5db;
-      padding: 9px 10px;
-      font-size: 0.92rem;
-      outline: none;
-      transition: border-color 0.12s ease, box-shadow 0.12s ease;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: #2563eb;
-      box-shadow: 0 0 0 1px #2563eb22;
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 70px;
-    }
-
-    .pill-checkbox-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .pill-checkbox {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-    }
-
-    .pill-checkbox input {
-      position: absolute;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .pill-checkbox span {
-      border-radius: 999px;
-      border: 1px solid #d1d5db;
-      padding: 7px 12px;
-      font-size: 0.86rem;
-      background: #fff;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .pill-checkbox input:checked + span {
-      background: #2563eb;
-      color: #ffffff;
-      border-color: #2563eb;
-    }
-
-    .confirmations {
-      margin-top: 10px;
-      font-size: 0.85rem;
-    }
-
-    .confirmations label {
-      display: flex;
-      align-items: flex-start;
-      gap: 6px;
-      margin-top: 6px;
-    }
-
-    .confirmations input[type="checkbox"] {
-      margin-top: 2px;
-    }
-
-    .form-footer {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .btn-primary {
-      background: #2563eb;
-      color: #ffffff;
-      border: none;
-      border-radius: 999px;
-      padding: 11px 22px;
-      font-size: 0.98rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
-    }
-
-    .btn-primary:hover {
-      background: #1d4ed8;
-    }
-
-    .error-banner {
-      display: none;
-      margin-top: 10px;
-      padding: 8px 10px;
-      border-radius: 8px;
-      background: #fee2e2;
-      color: #991b1b;
-      font-size: 0.86rem;
-      border: 1px solid #fecaca;
-    }
-
-    .fine-print {
-      font-size: 0.78rem;
-      color: #6b7280;
-    }
-
-    @media (max-width: 640px) {
-      .intake-container {
-        border-radius: 0;
-        box-shadow: none;
-        padding: 20px 14px 28px;
-      }
-      .site-header {
-        padding-inline: 14px;
-      }
-    }
+    .req{color:var(--danger);font-weight:1000}
   </style>
+
+  <!-- Supabase JS (browser) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
-  <!-- Top nav -->
-  <header class="site-header">
-    <div class="brand">E-LegalBoom</div>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="catalog.html">Catalog</a>
-      <a href="bundle.html">Bundles</a>
-    </nav>
-  </header>
+<header>
+  <div class="left">
+    <div class="logo">e</div>
+    <div class="brand-title">
+      E-LegalBoom<br><span style="opacity:.85;font-weight:700;font-size:12px">Intake Form</span>
+    </div>
+  </div>
+  <nav><a href="/index.html">Home</a></nav>
+</header>
 
-  <main class="intake-main">
-    <div class="intake-container">
-      <div class="intake-header">
+<div class="wrap">
+
+  <!-- ====== CONFIG (ONLY EDIT HERE) ====== -->
+  <script>
+    // ✅ Paste your Supabase project settings here (Project URL + anon public key)
+    const SUPABASE_URL = "https://vvjbjfltqsivvxxifnvi.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";
+
+    // ✅ Your table name (based on your screenshot)
+    const TABLE_NAME = "document_requests";
+  </script>
+
+  <div class="topbar">
+    <div class="pill" id="selTierPill">Tier: <small id="selTier">—</small></div>
+    <div class="pill" id="selDocPill">Document(s): <small id="selDocs">—</small></div>
+    <div class="pill" id="selTotalPill">Total Today: <small id="selTotal">—</small></div>
+    <div class="alert" id="selAlert">
+      <strong>Tip:</strong> If this selection doesn’t look right, <a class="tiny-link" href="/catalog.html">return to the catalog</a> and select again.
+    </div>
+  </div>
+
+  <!-- 1. Contact Information -->
+  <div class="card">
+    <div class="hd">1. Contact Information</div>
+    <div class="bd">
+      <div class="hint" style="margin-top:-6px;margin-bottom:12px;">
+        Tell us who should be listed as the primary client or signing party.
+      </div>
+      <div class="grid3">
         <div>
-          <h1>Client Intake</h1>
-          <p>
-            Please complete this intake form. Your responses will be used to prepare the framework
-            of your legal document. You will review and approve the final version before it is used.
-          </p>
-          <p style="margin-top:4px;font-size:0.82rem;color:#6b7280;">
-            Fields marked with * are required. Some options (management, dispute resolution, non-compete, etc.)
-            may not apply to every document; you may leave them blank when not relevant.
-          </p>
+          <label for="full_name">Full Name <span class="req">*</span></label>
+          <input id="full_name" type="text" placeholder="Full name" required />
         </div>
-        <div class="pill-row">
-          <div class="pill" id="tierPill" style="display:none;">
-            <span class="pill-label">Tier</span>
-            <span id="tierLabel">T1</span>
-          </div>
-          <div class="pill" id="selectedDocPill" style="display:none;">
-            <span class="pill-label">Selected</span>
-            <span id="selectedDocTypeLabel">Document</span>
-          </div>
+        <div>
+          <label for="email">Email Address <span class="req">*</span></label>
+          <input id="email" type="email" placeholder="name@email.com" required />
+        </div>
+        <div>
+          <label for="phone">Phone (optional)</label>
+          <input id="phone" type="tel" placeholder="(555) 555-5555" />
+          <div class="hint">Helpful if we need a quick clarification.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Entity / Relationship Information -->
+  <div class="card">
+    <div class="hd">2. Entity / Relationship Information</div>
+    <div class="bd">
+      <div class="hint" style="margin-top:-6px;margin-bottom:12px;">
+        This identifies the business, trust, or relationship the document will cover.
+      </div>
+
+      <div class="grid3">
+        <div>
+          <label for="entity_type">Entity Type <span class="req">*</span></label>
+          <select id="entity_type" required>
+            <option value="">Select one…</option>
+            <option>Individual</option>
+            <option>Partnership</option>
+            <option>LLC (Single-Member)</option>
+            <option>LLC (Multi-Member)</option>
+            <option>Corporation</option>
+            <option>Nonprofit</option>
+            <option>Trust</option>
+            <option>Joint Venture</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="governing_state">Governing State <span class="req">*</span></label>
+          <select id="governing_state" required>
+            <option value="">Select state…</option>
+            <option>Alabama</option><option>Alaska</option><option>Arizona</option><option>Arkansas</option>
+            <option>California</option><option>Colorado</option><option>Connecticut</option><option>Delaware</option>
+            <option>Florida</option><option>Georgia</option><option>Hawaii</option><option>Idaho</option>
+            <option>Illinois</option><option>Indiana</option><option>Iowa</option><option>Kansas</option>
+            <option>Kentucky</option><option>Louisiana</option><option>Maine</option><option>Maryland</option>
+            <option>Massachusetts</option><option>Michigan</option><option>Minnesota</option><option>Mississippi</option>
+            <option>Missouri</option><option>Montana</option><option>Nebraska</option><option>Nevada</option>
+            <option>New Hampshire</option><option>New Jersey</option><option>New Mexico</option><option>New York</option>
+            <option>North Carolina</option><option>North Dakota</option><option>Ohio</option><option>Oklahoma</option>
+            <option>Oregon</option><option>Pennsylvania</option><option>Rhode Island</option><option>South Carolina</option>
+            <option>South Dakota</option><option>Tennessee</option><option>Texas</option><option>Utah</option>
+            <option>Vermont</option><option>Virginia</option><option>Washington</option><option>West Virginia</option>
+            <option>Wisconsin</option><option>Wyoming</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="entity_name">Business / Trust / Entity Name</label>
+          <input id="entity_name" type="text" placeholder="Entity name" />
         </div>
       </div>
 
-      <form id="intakeForm">
-        <!-- Hidden routing fields (for Supabase + payment routing) -->
-        <input type="hidden" id="doc_type" name="doc_type" />
-        <input type="hidden" id="tier" name="tier" />
-
-        <!-- 1. Contact Information -->
-        <section class="section">
-          <h2>1. Contact Information</h2>
-          <small>Tell us who should be listed as the primary client or signing party.</small>
-
-          <div class="field-row">
-            <div class="field">
-              <label for="customer_name">Full Name *</label>
-              <input type="text" id="customer_name" name="customer_name" required />
-            </div>
-
-            <div class="field">
-              <label for="customer_email">Email Address *</label>
-              <input type="email" id="customer_email" name="customer_email" required />
-            </div>
-
-            <div class="field">
-              <label for="phone">Phone (optional)</label>
-              <input type="tel" id="phone" name="phone" />
-              <span class="hint">Helpful if we need a quick clarification.</span>
-            </div>
-          </div>
-        </section>
-
-        <!-- 2. Entity / Relationship -->
-        <section class="section">
-          <h2>2. Entity / Relationship Information</h2>
-          <small>This identifies the business, trust, or relationship the document will cover.</small>
-
-          <div class="field-row">
-            <div class="field">
-              <label for="entity_type">Entity Type *</label>
-              <select id="entity_type" name="entity_type" required>
-                <option value="">Select one…</option>
-                <option value="individual">Individual</option>
-                <option value="partnership">Partnership</option>
-                <option value="llc">LLC</option>
-                <option value="corporation">Corporation</option>
-                <option value="trust">Trust</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="governing_state">Governing State *</label>
-              <select id="governing_state" name="governing_state" required>
-                <option value="">Select state…</option>
-                <option value="AL">Alabama</option>
-                <option value="AK">Alaska</option>
-                <option value="AZ">Arizona</option>
-                <option value="AR">Arkansas</option>
-                <option value="CA">California</option>
-                <option value="CO">Colorado</option>
-                <option value="CT">Connecticut</option>
-                <option value="DE">Delaware</option>
-                <option value="FL">Florida</option>
-                <option value="GA">Georgia</option>
-                <option value="HI">Hawaii</option>
-                <option value="ID">Idaho</option>
-                <option value="IL">Illinois</option>
-                <option value="IN">Indiana</option>
-                <option value="IA">Iowa</option>
-                <option value="KS">Kansas</option>
-                <option value="KY">Kentucky</option>
-                <option value="LA">Louisiana</option>
-                <option value="ME">Maine</option>
-                <option value="MD">Maryland</option>
-                <option value="MA">Massachusetts</option>
-                <option value="MI">Michigan</option>
-                <option value="MN">Minnesota</option>
-                <option value="MS">Mississippi</option>
-                <option value="MO">Missouri</option>
-                <option value="MT">Montana</option>
-                <option value="NE">Nebraska</option>
-                <option value="NV">Nevada</option>
-                <option value="NH">New Hampshire</option>
-                <option value="NJ">New Jersey</option>
-                <option value="NM">New Mexico</option>
-                <option value="NY">New York</option>
-                <option value="NC">North Carolina</option>
-                <option value="ND">North Dakota</option>
-                <option value="OH">Ohio</option>
-                <option value="OK">Oklahoma</option>
-                <option value="OR">Oregon</option>
-                <option value="PA">Pennsylvania</option>
-                <option value="RI">Rhode Island</option>
-                <option value="SC">South Carolina</option>
-                <option value="SD">South Dakota</option>
-                <option value="TN">Tennessee</option>
-                <option value="TX">Texas</option>
-                <option value="UT">Utah</option>
-                <option value="VT">Vermont</option>
-                <option value="VA">Virginia</option>
-                <option value="WA">Washington</option>
-                <option value="WV">West Virginia</option>
-                <option value="WI">Wisconsin</option>
-                <option value="WY">Wyoming</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="entity_name">Business / Trust / Entity Name</label>
-              <input type="text" id="entity_name" name="entity_name" />
-            </div>
-          </div>
-
-          <div class="field" style="margin-top:12px;">
-            <label for="other_parties">
-              Names of Other Parties / Members / Trustees / Partners (comma-separated)
-            </label>
-            <input type="text" id="other_parties" name="other_parties" />
-          </div>
-        </section>
-
-        <!-- 3. Ownership, Management & Options -->
-        <section class="section">
-          <h2>3. Ownership, Management & Options</h2>
-          <small>Answer what applies. You may leave non-relevant items blank.</small>
-
-          <div class="field-row">
-            <div class="field">
-              <label for="ownership_split">Ownership / Capital Split</label>
-              <input
-                type="text"
-                id="ownership_split"
-                name="ownership_split"
-                placeholder="Example: 60% / 40% between two partners"
-              />
-              <span class="hint">Short description of how ownership or capital is divided.</span>
-            </div>
-
-            <div class="field">
-              <label for="profit_loss_split">Profit &amp; Loss Split</label>
-              <input
-                type="text"
-                id="profit_loss_split"
-                name="profit_loss_split"
-                placeholder="If different from ownership split"
-              />
-            </div>
-          </div>
-
-          <div class="field-row">
-            <div class="field">
-              <label for="management_model">Management Model</label>
-              <select id="management_model" name="management_model">
-                <option value="">Select one…</option>
-                <option value="managing_partner">Managing partner / manager-managed</option>
-                <option value="vote_based">Vote-based authority</option>
-                <option value="equal_authority">Equal authority</option>
-                <option value="other">Other / custom (describe in notes)</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="decision_rules">Decision Rules</label>
-              <input
-                type="text"
-                id="decision_rules"
-                name="decision_rules"
-                placeholder="Example: majority vote, unanimous for major changes"
-              />
-            </div>
-          </div>
-
-          <div class="field-row">
-            <div class="field">
-              <label for="dissolution_terms">Exit / Dissolution Terms</label>
-              <textarea
-                id="dissolution_terms"
-                name="dissolution_terms"
-                placeholder="If someone wants to leave, sell, or wind down, what should happen?"
-              ></textarea>
-            </div>
-
-            <div class="field">
-              <label for="transfer_rules">Transfer / Sale of Interests</label>
-              <textarea
-                id="transfer_rules"
-                name="transfer_rules"
-                placeholder="Any rules for selling or transferring ownership interests?"
-              ></textarea>
-            </div>
-          </div>
-
-          <div class="field-row">
-            <div class="field">
-              <label>Non-compete / Non-solicit?</label>
-              <select id="non_compete_option" name="non_compete_option">
-                <option value="">No preference / not needed</option>
-                <option value="light">Light protection (basic non-solicit)</option>
-                <option value="standard">Standard non-compete &amp; non-solicit</option>
-                <option value="strong">Stronger restrictions requested</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label>Dispute Resolution Preference</label>
-              <select id="dispute_method" name="dispute_method">
-                <option value="">No preference / not sure</option>
-                <option value="mediation">Mediation first</option>
-                <option value="arbitration">Binding arbitration</option>
-                <option value="court">Court / litigation</option>
-                <option value="step_process">
-                  Step process (mediation → arbitration / court)
-                </option>
-              </select>
-            </div>
-          </div>
-
-          <div class="field" style="margin-top:12px;">
-            <label>Capital Types (check all that may apply)</label>
-            <div class="pill-checkbox-row">
-              <label class="pill-checkbox">
-                <input type="checkbox" name="capital_types" value="cash" />
-                <span>Cash</span>
-              </label>
-              <label class="pill-checkbox">
-                <input type="checkbox" name="capital_types" value="property" />
-                <span>Property / equipment</span>
-              </label>
-              <label class="pill-checkbox">
-                <input type="checkbox" name="capital_types" value="services" />
-                <span>Services / sweat equity</span>
-              </label>
-              <label class="pill-checkbox">
-                <input type="checkbox" name="capital_types" value="cryptocurrency" />
-                <span>Cryptocurrency</span>
-              </label>
-              <label class="pill-checkbox">
-                <input type="checkbox" name="capital_types" value="other" />
-                <span>Other</span>
-              </label>
-            </div>
-          </div>
-
-          <div class="field" style="margin-top:12px;">
-            <label>Optional Legal Clauses (check any you’d like us to consider)</label>
-            <div class="pill-checkbox-row">
-              <label class="pill-checkbox">
-                <input type="checkbox" name="special_clauses" value="buy_sell" />
-                <span>Buy-Sell / Exit terms</span>
-              </label>
-              <label class="pill-checkbox">
-                <input type="checkbox" name="special_clauses" value="ip" />
-                <span>Intellectual Property ownership</span>
-              </label>
-              <label class="pill-checkbox">
-                <input type="checkbox" name="special_clauses" value="confidentiality" />
-                <span>Confidentiality / trade secrets</span>
-              </label>
-              <label class="pill-checkbox">
-                <input type="checkbox" name="special_clauses" value="custom" />
-                <span>Custom clause (describe in notes)</span>
-              </label>
-            </div>
-          </div>
-        </section>
-
-        <!-- 4. Special Instructions & Confirmations -->
-        <section class="section">
-          <h2>4. Special Instructions & Confirmations</h2>
-
-          <div class="field">
-            <label for="special_notes">Special Instructions or Notes</label>
-            <textarea
-              id="special_notes"
-              name="special_notes"
-              placeholder="Anything else we should know about this document or situation?"
-            ></textarea>
-          </div>
-
-          <div class="confirmations">
-            <label>
-              <input type="checkbox" name="confirm_accuracy" required />
-              <span>
-                I confirm that the information provided is accurate to the best of my knowledge.*
-              </span>
-            </label>
-
-            <label>
-              <input type="checkbox" name="confirm_no_legal_advice" required />
-              <span>
-                I understand this is not legal advice and no attorney-client relationship is created
-                through E-LegalBoom.*
-              </span>
-            </label>
-          </div>
-
-          <div class="form-footer">
-            <button type="submit" class="btn-primary">
-              Submit &amp; Continue to Payment
-            </button>
-            <div class="fine-print">
-              You will not be charged on this page. We’ll guide you through payment after you review
-              your summary.
-            </div>
-          </div>
-
-          <div id="submitError" class="error-banner">
-            There was an error submitting your intake. Please try again. If the problem continues,
-            contact support.
-          </div>
-        </section>
-      </form>
+      <div style="margin-top:12px;">
+        <label for="other_parties">
+          Names of Other Parties / Members / Trustees / Partners (comma-separated)
+        </label>
+        <input id="other_parties" type="text" placeholder="e.g., Alex Smith, Jordan Lee" />
+      </div>
     </div>
-  </main>
+  </div>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const params = new URLSearchParams(window.location.search);
-      const storedDocumentType = localStorage.getItem('document_type') || "";
-      const docType = params.get("doc_type") || "";
-      const tier = params.get("tier") || "";
+  <!-- 3. Ownership, Management & Options -->
+  <div class="card">
+    <div class="hd">3. Ownership, Management &amp; Options</div>
+    <div class="bd">
+      <div class="hint" style="margin-top:-6px;margin-bottom:12px;">
+        Answer what applies. You may leave non-relevant items blank.
+      </div>
 
-      // Final document type to save (bundle overrides everything)
-const documentTypeToSave = storedDocumentType || docType || "single";
+      <div class="grid2">
+        <div>
+          <label for="ownership_split">Ownership / Capital Split</label>
+          <input id="ownership_split" type="text" placeholder="e.g., 60% / 40%" />
+          <div class="hint">Short description of how ownership or capital is divided.</div>
+        </div>
+        <div>
+          <label for="profit_loss_split">Profit &amp; Loss Split</label>
+          <input id="profit_loss_split" type="text" placeholder="e.g., 50% / 50%" />
+        </div>
+      </div>
 
-      // Populate hidden fields
-      const docTypeInput = document.getElementById("doc_type");
-      const tierInput = document.getElementById("tier");
-      if (docTypeInput) docTypeInput.value = docType;
-      if (tierInput) tierInput.value = tier;
+      <div class="grid2" style="margin-top:12px;">
+        <div>
+          <label for="management_model">Management Model</label>
+          <select id="management_model">
+            <option value="">Select…</option>
+            <option>Member-managed</option>
+            <option>Manager-managed</option>
+            <option>Managing partner / manager-managed</option>
+            <option>Board-managed</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div>
+          <label for="decision_rules">Decision Rules</label>
+          <input id="decision_rules" type="text" placeholder="e.g., majority vote, unanimous for major changes" />
+        </div>
+      </div>
 
-      // Show chips
-      const tierPill = document.getElementById("tierPill");
-      const tierLabel = document.getElementById("tierLabel");
-      if (tier && tierPill && tierLabel) {
-        tierLabel.textContent = tier;
-        tierPill.style.display = "inline-flex";
-      }
+      <div class="grid2" style="margin-top:12px;">
+        <div>
+          <label for="exit_terms">Exit / Dissolution Terms</label>
+          <textarea id="exit_terms" placeholder="If someone wants to leave, sell, or wind down, what should happen?"></textarea>
+        </div>
+        <div>
+          <label for="transfer_terms">Transfer / Sale of Interests</label>
+          <textarea id="transfer_terms" placeholder="Any rules for selling or transferring ownership interests?"></textarea>
+        </div>
+      </div>
 
-      const docPill = document.getElementById("selectedDocPill");
-      const docLabel = document.getElementById("selectedDocTypeLabel");
-      if (docType && docPill && docLabel) {
-        docLabel.textContent = docType.replace(/_/g, " ");
-        docPill.style.display = "inline-flex";
-      }
+      <div class="grid2" style="margin-top:12px;">
+        <div>
+          <label for="non_compete">Non-compete / Non-solicit?</label>
+          <select id="non_compete">
+            <option value="">Select…</option>
+            <option>No preference / not needed</option>
+            <option>Yes — include a non-compete</option>
+            <option>Yes — include a non-solicit</option>
+            <option>Yes — include both</option>
+          </select>
+        </div>
+        <div>
+          <label for="dispute_resolution">Dispute Resolution Preference</label>
+          <select id="dispute_resolution">
+            <option value="">Select…</option>
+            <option>No preference / not sure</option>
+            <option>Mediation</option>
+            <option>Arbitration</option>
+            <option>Court / litigation</option>
+          </select>
+        </div>
+      </div>
 
-      const form = document.getElementById("intakeForm");
-      const errorBanner = document.getElementById("submitError");
+      <div style="margin-top:14px;">
+        <label>Capital Types (check all that may apply)</label>
+        <div class="chips" id="capitalChips">
+          <div class="chip" data-value="Cash">Cash</div>
+          <div class="chip" data-value="Property / equipment">Property / equipment</div>
+          <div class="chip" data-value="Services / sweat equity">Services / sweat equity</div>
+          <div class="chip" data-value="Cryptocurrency">Cryptocurrency</div>
+          <div class="chip" data-value="Other">Other</div>
+        </div>
+      </div>
 
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        if (errorBanner) errorBanner.style.display = "none";
+      <div style="margin-top:14px;">
+        <label>Optional Legal Clauses (check any you’d like us to consider)</label>
+        <div class="chips" id="clauseChips">
+          <div class="chip" data-value="Buy-sell / exit terms">Buy-sell / exit terms</div>
+          <div class="chip" data-value="Intellectual Property ownership">Intellectual Property ownership</div>
+          <div class="chip" data-value="Confidentiality / trade secrets">Confidentiality / trade secrets</div>
+          <div class="chip" data-value="Custom clause (describe in notes)">Custom clause (describe in notes)</div>
+        </div>
+      </div>
+    </div>
 
-        const formData = new FormData(form);
+    <div class="actions">
+      <div class="status" id="statusLine">
+        Status: <span id="statusText">Ready</span>
+      </div>
 
-        // Build full JSON payload (includes every field)
-        const dataPayload = {};
-        formData.forEach((value, key) => {
-          if (dataPayload[key] !== undefined) {
-            if (!Array.isArray(dataPayload[key])) {
-              dataPayload[key] = [dataPayload[key]];
-            }
-            dataPayload[key].push(value);
-          } else {
-            dataPayload[key] = value;
-          }
-        });
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn secondary" type="button" onclick="window.location.href='/catalog.html'">
+          ← Back to Catalog
+        </button>
+        <button class="btn primary" id="submitBtn" type="button">
+          Submit Intake &amp; Continue to Payment →
+        </button>
+      </div>
+    </div>
+  </div>
 
-        dataPayload.document_type = documentTypeToSave;
+  <!-- 4. Special Instructions -->
+  <div class="card">
+    <div class="hd">4. Special Instructions &amp; Confirmations</div>
+    <div class="bd">
+      <label for="notes">Special Instructions or Notes</label>
+      <textarea id="notes" placeholder="Anything else we should know?"></textarea>
+      <div class="hint">
+        Note: This site provides document preparation support. It is not a substitute for legal advice.
+      </div>
+    </div>
+  </div>
 
-        // Make sure doc_type and tier are included in the JSON blob as well
-        dataPayload.doc_type = docType;
-        dataPayload.tier = tier;
+</div>
 
-        // Top-level columns (only those that exist in public.document_requests)
-        const row = {
-          doc_type: docType || null,
-          customer_name: formData.get("customer_name") || null,
-          customer_email: formData.get("customer_email") || null,
-          entity_type: formData.get("entity_type") || null,
-          entity_name: formData.get("entity_name") || null,
-          governing_state: formData.get("governing_state") || null,
-          status: "intake_submitted",
-          data: dataPayload
-        };
+<script>
+  // ========= Helpers =========
 
-        try {
-          const { error } = await supabaseClient
-            .from("document_requests")
-            .insert([row]);
+  function setStatus(kind, msg){
+    const el = document.getElementById("statusText");
+    el.textContent = msg;
+    el.className = "";
+    if (kind === "ok") el.classList.add("ok");
+    if (kind === "bad") el.classList.add("bad");
+  }
 
-          if (error) {
-            console.error("Supabase insert error:", error);
-            if (errorBanner) errorBanner.style.display = "block";
-            return;
-          }
-
-          // On success → send to payment, with tier highlighted if available
-          const redirectTier = tier || "";
-          const url =
-            "payment.html" +
-            (redirectTier ? `?tier=${encodeURIComponent(redirectTier)}` : "");
-          window.location.href = url;
-        } catch (err) {
-          console.error("Unexpected error submitting intake:", err);
-          if (errorBanner) errorBanner.style.display = "block";
-        }
-      });
+  function toggleChipGroup(containerId){
+    const container = document.getElementById(containerId);
+    container.addEventListener("click", (e) => {
+      const chip = e.target.closest(".chip");
+      if (!chip) return;
+      chip.classList.toggle("active");
     });
-  </script>
+  }
+
+  function getActiveChips(containerId){
+    return Array.from(document.querySelectorAll(`#${containerId} .chip.active`))
+      .map(ch => ch.getAttribute("data-value"));
+  }
+
+  // Convert display names to snake_case (matches your Supabase values like promissory_note)
+  function toSnake(s){
+    return (s || "")
+      .toString()
+      .trim()
+      .toLowerCase()
+      .replace(/&/g, "and")
+      .replace(/[^\w\s]/g, "")
+      .replace(/\s+/g, "_");
+  }
+
+  function normalizeTier(raw){
+    const t = (raw || "").toString().trim().toUpperCase();
+    if (t === "T1" || t.includes("TIER 1") || t.includes("TIER ONE")) return "T1";
+    if (t === "T2" || t.includes("TIER 2") || t.includes("TIER TWO")) return "T2";
+    if (t === "T3" || t.includes("TIER 3") || t.includes("TIER THREE")) return "T3";
+    if (t.includes("BUNDLE")) return "BUNDLE";
+    if (t.includes("ENTREPRENEUR")) return "BUNDLE";
+    return t || "UNKNOWN";
+  }
+
+  // Pull selection from sessionStorage (new + fallback)
+  function getSelection(){
+    // New flow: ELB_SELECTION
+    const raw = sessionStorage.getItem("ELB_SELECTION");
+    if (raw) {
+      try {
+        const sel = JSON.parse(raw);
+        const tier = normalizeTier(sel.tier || sel.tier_key || sel.tierName || "");
+        const docs = Array.isArray(sel.document_types) ? sel.document_types : [];
+        const docType = sel.document_type || (docs[0] || "");
+        const total = sel.total_today || sel.bundle_price || sel.total || "";
+        const pass = !!sel.access_pass_selected;
+        return {
+          source: "ELB_SELECTION",
+          tier,
+          document_type: docType,
+          document_types: docs,
+          total_today: total,
+          access_pass_selected: pass
+        };
+      } catch(e) {}
+    }
+
+    // Fallback keys you may have used before
+    const tier = normalizeTier(sessionStorage.getItem("tier") || "");
+    const docType = sessionStorage.getItem("doc_type") || sessionStorage.getItem("document_type") || "";
+    return {
+      source: "fallback",
+      tier: tier || "UNKNOWN",
+      document_type: docType,
+      document_types: docType ? [docType] : [],
+      total_today: "",
+      access_pass_selected: false
+    };
+  }
+
+  function renderSelection(sel){
+    document.getElementById("selTier").textContent = sel.tier || "—";
+
+    const prettyDocs =
+      (sel.tier === "BUNDLE" && sel.document_types && sel.document_types.length)
+        ? sel.document_types.join(", ")
+        : (sel.document_type || "—");
+
+    document.getElementById("selDocs").textContent = prettyDocs || "—";
+    document.getElementById("selTotal").textContent = sel.total_today ? `$${sel.total_today}` : "—";
+  }
+
+  function validateRequired(){
+    const fullName = document.getElementById("full_name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const entityType = document.getElementById("entity_type").value.trim();
+    const governingState = document.getElementById("governing_state").value.trim();
+
+    if (!fullName) return "Full Name is required.";
+    if (!email) return "Email is required.";
+    if (!entityType) return "Entity Type is required.";
+    if (!governingState) return "Governing State is required.";
+    return "";
+  }
+
+  // ========= Init =========
+  toggleChipGroup("capitalChips");
+  toggleChipGroup("clauseChips");
+
+  const selection = getSelection();
+  renderSelection(selection);
+
+  // If selection is unknown, warn user (but still allow intake if you want)
+  if (!selection.tier || selection.tier === "UNKNOWN") {
+    setStatus("bad", "No tier detected — please return to catalog and select.");
+  }
+
+  // ========= Submit =========
+  document.getElementById("submitBtn").addEventListener("click", async () => {
+    const err = validateRequired();
+    if (err) {
+      setStatus("bad", err);
+      alert(err);
+      return;
+    }
+
+    if (!SUPABASE_URL.includes("http") || SUPABASE_ANON_KEY.includes("PASTE_")) {
+      alert("Supabase is not configured in intake.html yet. Paste SUPABASE_URL and SUPABASE_ANON_KEY at the top of the file.");
+      return;
+    }
+
+    const submitBtn = document.getElementById("submitBtn");
+    submitBtn.disabled = true;
+    setStatus("", "Submitting…");
+
+    try {
+      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      // Build tier + doc_type column safely (never NULL)
+      const sel = getSelection();
+      const tier = normalizeTier(sel.tier);
+
+      // Determine doc_type column:
+      // - Bundle => "bundle"
+      // - Otherwise => snake_case of doc name
+      let docTypeColumn = "";
+      let selectedDocs = [];
+
+      if (tier === "BUNDLE") {
+        docTypeColumn = "bundle";
+        selectedDocs = (sel.document_types || []).map(toSnake).filter(Boolean);
+      } else {
+        const single = sel.document_type || (sel.document_types && sel.document_types[0]) || "";
+        docTypeColumn = toSnake(single) || "unknown";
+        selectedDocs = docTypeColumn ? [docTypeColumn] : [];
+      }
+
+      // Collect form fields
+      const payload = {
+        // Selection spine
+        tier,
+        doc_type: docTypeColumn, // kept in JSON too (you already had this pattern)
+        selected_docs: selectedDocs,
+
+        // Contact
+        full_name: document.getElementById("full_name").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+
+        // Entity / relationship
+        entity_type: document.getElementById("entity_type").value.trim(),
+        governing_state: document.getElementById("governing_state").value.trim(),
+        entity_name: document.getElementById("entity_name").value.trim(),
+        other_parties: document.getElementById("other_parties").value.trim(),
+
+        // Ownership / options
+        ownership_split: document.getElementById("ownership_split").value.trim(),
+        profit_loss_split: document.getElementById("profit_loss_split").value.trim(),
+        management_model: document.getElementById("management_model").value.trim(),
+        decision_rules: document.getElementById("decision_rules").value.trim(),
+        exit_terms: document.getElementById("exit_terms").value.trim(),
+        transfer_terms: document.getElementById("transfer_terms").value.trim(),
+        non_compete: document.getElementById("non_compete").value.trim(),
+        dispute_resolution: document.getElementById("dispute_resolution").value.trim(),
+
+        // Chips
+        capital_types: getActiveChips("capitalChips"),
+        optional_clauses: getActiveChips("clauseChips"),
+
+        // Notes
+        notes: document.getElementById("notes").value.trim(),
+
+        // Client timestamp
+        created_at_client: new Date().toISOString()
+      };
+
+      // Write to Supabase: column doc_type + jsonb data
+      const row = {
+        doc_type: docTypeColumn, // <-- THIS is the table column that was NULL for bundles before
+        data: payload
+      };
+
+      const { error } = await supabase.from(TABLE_NAME).insert([row]);
+      if (error) throw error;
+
+      // Persist a clean selection for payment highlighting
+      const nextSel = {
+        tier: tier === "BUNDLE" ? "BUNDLE" : tier,
+        document_type: tier === "BUNDLE" ? "bundle" : docTypeColumn,
+        document_types: tier === "BUNDLE" ? selectedDocs : [docTypeColumn],
+        doc_count: tier === "BUNDLE" ? selectedDocs.length : 1
+      };
+      sessionStorage.setItem("ELB_SELECTION", JSON.stringify(nextSel));
+
+      setStatus("ok", "Saved. Redirecting to payment…");
+      window.location.href = "/payment.html";
+
+    } catch (e) {
+      console.error(e);
+      setStatus("bad", "Save failed. Please try again.");
+      alert("There was a problem saving your intake. Please try again.");
+      submitBtn.disabled = false;
+    }
+  });
+</script>
+
 </body>
 </html>
