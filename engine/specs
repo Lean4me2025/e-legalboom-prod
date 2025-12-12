@@ -1,1 +1,70 @@
+{
+  "doc_type": "llc_single_member",
+  "tier": "T1",
+  "title": "Single-Member LLC Operating Agreement",
+  "template_file": "llc_single_member.html",
 
+  "required_fields": [
+    "tier",
+    "doc_type",
+    "effective_date",
+    "governing_law_state",
+    "party1_name",
+    "party1_address",
+    "business_purpose_text",
+    "signer1_name"
+  ],
+
+  "optional_fields": [
+    "client_business_name",
+    "client_address_line1",
+    "client_address_line2",
+    "client_city",
+    "client_state",
+    "client_postal_code",
+    "client_country",
+
+    "term_type",
+    "term_start_date",
+    "term_end_date",
+    "term_period_description",
+    "renewal_terms",
+
+    "dispute_resolution_text"
+  ],
+
+  "field_aliases": {
+    "agreement_title": "title",
+
+    "effective_date": "effective_date",
+    "governing_state": "governing_law_state",
+    "dispute_resolution": "dispute_resolution_text",
+
+    "member_name": "party1_name",
+    "member_address": "party1_address",
+
+    "llc_name": "client_business_name",
+    "llc_address_line1": "client_address_line1",
+    "llc_address_line2": "client_address_line2",
+    "llc_city": "client_city",
+    "llc_state": "client_state",
+    "llc_postal_code": "client_postal_code",
+    "llc_country": "client_country",
+
+    "business_purpose": "business_purpose_text",
+
+    "term_type": "term_type",
+    "term_start_date": "term_start_date",
+    "term_end_date": "term_end_date",
+    "term_period_description": "term_period_description",
+    "renewal_terms": "renewal_terms",
+
+    "signature_member_name": "signer1_name",
+    "signature_member_title": "signer1_title"
+  },
+
+  "render": {
+    "date_format": "MMMM D, YYYY",
+    "empty_fallback": ""
+  }
+}
