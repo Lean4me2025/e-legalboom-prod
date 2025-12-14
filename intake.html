@@ -3,686 +3,251 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>E-LegalBoom — Intake Form</title>
+  <title>E-LegalBoom – Intake</title>
 
   <style>
-    :root{
-      --bg:#f4f7fb;
-      --card:#ffffff;
-      --ink:#1d2330;
-      --muted:#667085;
-      --brand:#1e1e2f;
-      --accent:#2f80ff;
-      --line:#e6eaf2;
-      --shadow:0 10px 26px rgba(16,24,40,.12);
-      --radius:16px;
-      --danger:#b42318;
-      --ok:#027a48;
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:#f5f7fb; color:#111; }
+    header { background:#111827; color:#fff; padding:16px 18px; }
+    header .brand { font-weight:800; letter-spacing:.02em; }
+    .wrap { max-width: 980px; margin: 18px auto; padding: 0 16px 36px; }
+    .pills { display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
+    .pill { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18); padding:8px 12px; border-radius:999px; font-weight:700; }
+    .pill span { font-weight:800; color:#ffd08a; }
+    .card { background:#fff; border:1px solid #e6e8ee; border-radius:14px; padding:16px; box-shadow: 0 6px 20px rgba(17,24,39,.06); }
+    .grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+    @media (max-width: 760px){ .grid { grid-template-columns: 1fr; } }
+    label { display:block; font-size:13px; font-weight:700; margin: 10px 0 6px; color:#334155; }
+    input, select, textarea {
+      width:100%; padding:12px 12px; border-radius:10px; border:1px solid #d7dce6; background:#fff;
+      font-size:15px; outline:none;
     }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-      background:var(--bg);
-      color:var(--ink);
+    input:focus, select:focus, textarea:focus { border-color:#60a5fa; box-shadow: 0 0 0 4px rgba(96,165,250,.18); }
+    .status { margin: 10px 0 0; font-weight:800; }
+    .status.ok { color:#166534; }
+    .status.bad { color:#b42318; }
+    .actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+    .btn {
+      border:0; cursor:pointer; font-weight:900; padding:12px 14px; border-radius:12px;
+      background:#ff7b2c; color:#111827;
     }
-    header{
-      background:var(--brand);
-      color:#fff;
-      padding:14px 18px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      position:sticky;
-      top:0;
-      z-index:10;
-    }
-    header .left{display:flex;gap:10px;align-items:center}
-    .logo{
-      width:34px;height:34px;border-radius:10px;
-      background:linear-gradient(135deg,var(--accent),#6aa6ff);
-      display:grid;place-items:center;
-      font-weight:900;
-    }
-    header .brand-title{line-height:1.1;font-weight:900}
-    header nav a{color:#fff;text-decoration:none;opacity:.9;font-weight:700}
-    header nav a:hover{opacity:1;text-decoration:underline}
-
-    .wrap{max-width:1100px;margin:26px auto;padding:0 16px 42px}
-
-    .topbar{
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:14px;
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:space-between;
-      margin-bottom:14px;
-    }
-    .pill{
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      border:1px solid var(--line);
-      border-radius:999px;
-      padding:8px 10px;
-      background:#fbfdff;
-      font-weight:900;
-      font-size:12px;
-      color:#111827;
-    }
-    .pill small{color:var(--muted);font-weight:800}
-    .alert{
-      font-size:12px;
-      color:var(--muted);
-      line-height:1.35;
-      max-width:680px;
-    }
-    .alert strong{color:#111827}
-
-    .card{
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-      margin-bottom:14px;
-    }
-    .card .hd{
-      padding:14px 16px;
-      border-bottom:1px solid var(--line);
-      font-weight:1000;
-      color:#111827;
-      background:linear-gradient(180deg,#fff,#fbfcff);
-    }
-    .card .bd{padding:14px 16px}
-
-    .grid2{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px;
-    }
-    .grid3{
-      display:grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap:12px;
-    }
-    @media (max-width: 900px){
-      .grid2,.grid3{grid-template-columns:1fr}
-    }
-
-    label{
-      font-size:12px;
-      font-weight:900;
-      color:#111827;
-      display:block;
-      margin-bottom:6px;
-    }
-    input, select, textarea{
-      width:100%;
-      padding:11px 12px;
-      border:1px solid var(--line);
-      border-radius:12px;
-      background:#fff;
-      font-size:14px;
-      outline:none;
-    }
-    textarea{min-height:92px;resize:vertical}
-    .hint{
-      margin-top:6px;
-      font-size:12px;
-      color:var(--muted);
-      line-height:1.35;
-    }
-
-    .chips{display:flex;gap:8px;flex-wrap:wrap}
-    .chip{
-      border:1px solid var(--line);
-      background:#fff;
-      border-radius:999px;
-      padding:9px 12px;
-      font-weight:900;
-      font-size:12px;
-      cursor:pointer;
-      user-select:none;
-    }
-    .chip.active{
-      border-color:rgba(47,128,255,.45);
-      background:rgba(47,128,255,.10);
-      color:#1f4dd6;
-    }
-
-    .actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:space-between;
-      padding:14px 16px;
-      border-top:1px solid var(--line);
-      background:linear-gradient(180deg,#fff,#fbfcff);
-    }
-    .btn{
-      border:none;
-      cursor:pointer;
-      border-radius:12px;
-      padding:12px 14px;
-      font-weight:1000;
-      letter-spacing:.2px;
-      transition:transform .04s ease, opacity .12s ease;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      min-width:220px;
-    }
-    .btn.primary{
-      background:var(--accent);
-      color:#fff;
-      box-shadow:0 10px 22px rgba(47,128,255,.25);
-    }
-    .btn.secondary{
-      background:#eef4ff;
-      color:#1f4dd6;
-      border:1px solid rgba(47,128,255,.25);
-      min-width:160px;
-    }
-    .btn:active{transform:translateY(1px)}
-    .btn[disabled]{opacity:.55;cursor:not-allowed;box-shadow:none}
-
-    .status{
-      font-size:12px;
-      font-weight:900;
-      color:var(--muted);
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-    .status .ok{color:var(--ok)}
-    .status .bad{color:var(--danger)}
-    .tiny-link{color:#1f4dd6;font-weight:900;text-decoration:none}
-    .tiny-link:hover{text-decoration:underline}
-
-    .req{color:var(--danger);font-weight:1000}
+    .btn.secondary { background:#111827; color:#fff; }
+    .small { font-size:12px; color:#64748b; margin-top:6px; }
+    .divider { height:1px; background:#e6e8ee; margin: 14px 0; }
+    .danger { background:#fff1f2; border:1px solid #fecdd3; padding:10px 12px; border-radius:12px; color:#9f1239; font-weight:800; }
   </style>
 
-  <!-- Supabase JS (browser) -->
+  <!-- Supabase JS (CDN) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
-<header>
-  <div class="left">
-    <div class="logo">e</div>
-    <div class="brand-title">
-      E-LegalBoom<br><span style="opacity:.85;font-weight:700;font-size:12px">Intake Form</span>
+  <header>
+    <div class="brand">E-LegalBoom</div>
+    <div class="pills">
+      <div class="pill">Tier: <span id="tierLabel">UNKNOWN</span></div>
+      <div class="pill">Document(s): <span id="docLabel">—</span></div>
+      <div class="pill">Request UUID: <span id="uuidLabel">—</span></div>
+    </div>
+    <div id="tierStatus" class="status bad">Status: Detecting tier…</div>
+  </header>
+
+  <div class="wrap">
+    <div class="card">
+      <h2 style="margin:0 0 6px;">Intake Information</h2>
+      <div class="small">Fill this out once. We’ll use it to generate your document as soon as payment is confirmed.</div>
+
+      <div class="divider"></div>
+
+      <form id="intakeForm">
+        <div class="grid">
+          <div>
+            <label for="firstName">First Name</label>
+            <input id="firstName" name="first_name" autocomplete="given-name" required />
+          </div>
+          <div>
+            <label for="lastName">Last Name</label>
+            <input id="lastName" name="last_name" autocomplete="family-name" required />
+          </div>
+          <div>
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required />
+          </div>
+          <div>
+            <label for="phone">Phone</label>
+            <input id="phone" name="phone" autocomplete="tel" />
+          </div>
+          <div>
+            <label for="jurisdiction">Preferred Jurisdiction (State)</label>
+            <input id="jurisdiction" name="preferred_jurisdiction" placeholder="CA, FL, TX…" />
+          </div>
+          <div>
+            <label for="urgency">Urgency</label>
+            <select id="urgency" name="urgency">
+              <option value="normal">normal</option>
+              <option value="rush">rush</option>
+            </select>
+          </div>
+        </div>
+
+        <label for="notes">Notes (optional)</label>
+        <textarea id="notes" name="notes" rows="3" placeholder="Anything important we should know?"></textarea>
+
+        <div class="divider"></div>
+
+        <div id="errorBox" class="danger" style="display:none;"></div>
+
+        <div class="actions">
+          <button class="btn" type="submit" id="submitBtn">Submit Intake & Continue</button>
+          <button class="btn secondary" type="button" id="backBtn">Back to Catalog</button>
+        </div>
+
+        <div class="small">
+          If the Tier/Document shows UNKNOWN, go back and select again. We keep everything consistent across pages.
+        </div>
+      </form>
     </div>
   </div>
-  <nav><a href="/index.html">Home</a></nav>
-</header>
 
-<div class="wrap">
-
-  <!-- ====== CONFIG (ONLY EDIT HERE) ====== -->
   <script>
-    // ✅ Paste your Supabase project settings here (Project URL + anon public key)
+    // === CONFIG: set these two ===
     const SUPABASE_URL = "https://vvjbjfltqsivvxxifnvi.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";
 
-    // ✅ Your table name (based on your screenshot)
-    const TABLE_NAME = "document_requests";
-  </script>
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  <div class="topbar">
-    <div class="pill" id="selTierPill">Tier: <small id="selTier">—</small></div>
-    <div class="pill" id="selDocPill">Document(s): <small id="selDocs">—</small></div>
-    <div class="pill" id="selTotalPill">Total Today: <small id="selTotal">—</small></div>
-    <div class="alert" id="selAlert">
-      <strong>Tip:</strong> If this selection doesn’t look right, <a class="tiny-link" href="/catalog.html">return to the catalog</a> and select again.
-    </div>
-  </div>
+    function getSelection() {
+      const params = new URLSearchParams(window.location.search);
 
-  <!-- 1. Contact Information -->
-  <div class="card">
-    <div class="hd">1. Contact Information</div>
-    <div class="bd">
-      <div class="hint" style="margin-top:-6px;margin-bottom:12px;">
-        Tell us who should be listed as the primary client or signing party.
-      </div>
-      <div class="grid3">
-        <div>
-          <label for="full_name">Full Name <span class="req">*</span></label>
-          <input id="full_name" type="text" placeholder="Full name" required />
-        </div>
-        <div>
-          <label for="email">Email Address <span class="req">*</span></label>
-          <input id="email" type="email" placeholder="name@email.com" required />
-        </div>
-        <div>
-          <label for="phone">Phone (optional)</label>
-          <input id="phone" type="tel" placeholder="(555) 555-5555" />
-          <div class="hint">Helpful if we need a quick clarification.</div>
-        </div>
-      </div>
-    </div>
-  </div>
+      const tier =
+        params.get("tier") ||
+        localStorage.getItem("tier") ||
+        "";
 
-  <!-- 2. Entity / Relationship Information -->
-  <div class="card">
-    <div class="hd">2. Entity / Relationship Information</div>
-    <div class="bd">
-      <div class="hint" style="margin-top:-6px;margin-bottom:12px;">
-        This identifies the business, trust, or relationship the document will cover.
-      </div>
+      const docType =
+        params.get("type") ||
+        params.get("doc_type") ||
+        localStorage.getItem("doc_type") ||
+        "";
 
-      <div class="grid3">
-        <div>
-          <label for="entity_type">Entity Type <span class="req">*</span></label>
-          <select id="entity_type" required>
-            <option value="">Select one…</option>
-            <option>Individual</option>
-            <option>Partnership</option>
-            <option>LLC (Single-Member)</option>
-            <option>LLC (Multi-Member)</option>
-            <option>Corporation</option>
-            <option>Nonprofit</option>
-            <option>Trust</option>
-            <option>Joint Venture</option>
-            <option>Other</option>
-          </select>
-        </div>
+      // Persist so payment.html can read it too
+      if (tier) localStorage.setItem("tier", tier);
+      if (docType) localStorage.setItem("doc_type", docType);
 
-        <div>
-          <label for="governing_state">Governing State <span class="req">*</span></label>
-          <select id="governing_state" required>
-            <option value="">Select state…</option>
-            <option>Alabama</option><option>Alaska</option><option>Arizona</option><option>Arkansas</option>
-            <option>California</option><option>Colorado</option><option>Connecticut</option><option>Delaware</option>
-            <option>Florida</option><option>Georgia</option><option>Hawaii</option><option>Idaho</option>
-            <option>Illinois</option><option>Indiana</option><option>Iowa</option><option>Kansas</option>
-            <option>Kentucky</option><option>Louisiana</option><option>Maine</option><option>Maryland</option>
-            <option>Massachusetts</option><option>Michigan</option><option>Minnesota</option><option>Mississippi</option>
-            <option>Missouri</option><option>Montana</option><option>Nebraska</option><option>Nevada</option>
-            <option>New Hampshire</option><option>New Jersey</option><option>New Mexico</option><option>New York</option>
-            <option>North Carolina</option><option>North Dakota</option><option>Ohio</option><option>Oklahoma</option>
-            <option>Oregon</option><option>Pennsylvania</option><option>Rhode Island</option><option>South Carolina</option>
-            <option>South Dakota</option><option>Tennessee</option><option>Texas</option><option>Utah</option>
-            <option>Vermont</option><option>Virginia</option><option>Washington</option><option>West Virginia</option>
-            <option>Wisconsin</option><option>Wyoming</option>
-          </select>
-        </div>
+      return { tier, docType };
+    }
 
-        <div>
-          <label for="entity_name">Business / Trust / Entity Name</label>
-          <input id="entity_name" type="text" placeholder="Entity name" />
-        </div>
-      </div>
+    function setStatus(ok, msg) {
+      const el = document.getElementById("tierStatus");
+      el.className = "status " + (ok ? "ok" : "bad");
+      el.textContent = msg;
+    }
 
-      <div style="margin-top:12px;">
-        <label for="other_parties">
-          Names of Other Parties / Members / Trustees / Partners (comma-separated)
-        </label>
-        <input id="other_parties" type="text" placeholder="e.g., Alex Smith, Jordan Lee" />
-      </div>
-    </div>
-  </div>
+    function showError(msg) {
+      const box = document.getElementById("errorBox");
+      box.style.display = "block";
+      box.textContent = msg;
+    }
 
-  <!-- 3. Ownership, Management & Options -->
-  <div class="card">
-    <div class="hd">3. Ownership, Management &amp; Options</div>
-    <div class="bd">
-      <div class="hint" style="margin-top:-6px;margin-bottom:12px;">
-        Answer what applies. You may leave non-relevant items blank.
-      </div>
+    function hideError() {
+      const box = document.getElementById("errorBox");
+      box.style.display = "none";
+      box.textContent = "";
+    }
 
-      <div class="grid2">
-        <div>
-          <label for="ownership_split">Ownership / Capital Split</label>
-          <input id="ownership_split" type="text" placeholder="e.g., 60% / 40%" />
-          <div class="hint">Short description of how ownership or capital is divided.</div>
-        </div>
-        <div>
-          <label for="profit_loss_split">Profit &amp; Loss Split</label>
-          <input id="profit_loss_split" type="text" placeholder="e.g., 50% / 50%" />
-        </div>
-      </div>
+    // Init header display
+    const { tier, docType } = getSelection();
+    document.getElementById("tierLabel").textContent = tier || "UNKNOWN";
+    document.getElementById("docLabel").textContent = docType || "—";
 
-      <div class="grid2" style="margin-top:12px;">
-        <div>
-          <label for="management_model">Management Model</label>
-          <select id="management_model">
-            <option value="">Select…</option>
-            <option>Member-managed</option>
-            <option>Manager-managed</option>
-            <option>Managing partner / manager-managed</option>
-            <option>Board-managed</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div>
-          <label for="decision_rules">Decision Rules</label>
-          <input id="decision_rules" type="text" placeholder="e.g., majority vote, unanimous for major changes" />
-        </div>
-      </div>
+    if (!tier) setStatus(false, "Status: No tier detected — please return to catalog and select.");
+    else setStatus(true, `Status: Tier detected (${tier}).`);
 
-      <div class="grid2" style="margin-top:12px;">
-        <div>
-          <label for="exit_terms">Exit / Dissolution Terms</label>
-          <textarea id="exit_terms" placeholder="If someone wants to leave, sell, or wind down, what should happen?"></textarea>
-        </div>
-        <div>
-          <label for="transfer_terms">Transfer / Sale of Interests</label>
-          <textarea id="transfer_terms" placeholder="Any rules for selling or transferring ownership interests?"></textarea>
-        </div>
-      </div>
-
-      <div class="grid2" style="margin-top:12px;">
-        <div>
-          <label for="non_compete">Non-compete / Non-solicit?</label>
-          <select id="non_compete">
-            <option value="">Select…</option>
-            <option>No preference / not needed</option>
-            <option>Yes — include a non-compete</option>
-            <option>Yes — include a non-solicit</option>
-            <option>Yes — include both</option>
-          </select>
-        </div>
-        <div>
-          <label for="dispute_resolution">Dispute Resolution Preference</label>
-          <select id="dispute_resolution">
-            <option value="">Select…</option>
-            <option>No preference / not sure</option>
-            <option>Mediation</option>
-            <option>Arbitration</option>
-            <option>Court / litigation</option>
-          </select>
-        </div>
-      </div>
-
-      <div style="margin-top:14px;">
-        <label>Capital Types (check all that may apply)</label>
-        <div class="chips" id="capitalChips">
-          <div class="chip" data-value="Cash">Cash</div>
-          <div class="chip" data-value="Property / equipment">Property / equipment</div>
-          <div class="chip" data-value="Services / sweat equity">Services / sweat equity</div>
-          <div class="chip" data-value="Cryptocurrency">Cryptocurrency</div>
-          <div class="chip" data-value="Other">Other</div>
-        </div>
-      </div>
-
-      <div style="margin-top:14px;">
-        <label>Optional Legal Clauses (check any you’d like us to consider)</label>
-        <div class="chips" id="clauseChips">
-          <div class="chip" data-value="Buy-sell / exit terms">Buy-sell / exit terms</div>
-          <div class="chip" data-value="Intellectual Property ownership">Intellectual Property ownership</div>
-          <div class="chip" data-value="Confidentiality / trade secrets">Confidentiality / trade secrets</div>
-          <div class="chip" data-value="Custom clause (describe in notes)">Custom clause (describe in notes)</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="actions">
-      <div class="status" id="statusLine">
-        Status: <span id="statusText">Ready</span>
-      </div>
-
-      <div style="display:flex;gap:10px;flex-wrap:wrap;">
-        <button class="btn secondary" type="button" onclick="window.location.href='/catalog.html'">
-          ← Back to Catalog
-        </button>
-        <button class="btn primary" id="submitBtn" type="button">
-          Submit Intake &amp; Continue to Payment →
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 4. Special Instructions -->
-  <div class="card">
-    <div class="hd">4. Special Instructions &amp; Confirmations</div>
-    <div class="bd">
-      <label for="notes">Special Instructions or Notes</label>
-      <textarea id="notes" placeholder="Anything else we should know?"></textarea>
-      <div class="hint">
-        Note: This site provides document preparation support. It is not a substitute for legal advice.
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<script>
-  // ========= Helpers =========
-
-  function setStatus(kind, msg){
-    const el = document.getElementById("statusText");
-    el.textContent = msg;
-    el.className = "";
-    if (kind === "ok") el.classList.add("ok");
-    if (kind === "bad") el.classList.add("bad");
-  }
-
-  function toggleChipGroup(containerId){
-    const container = document.getElementById(containerId);
-    container.addEventListener("click", (e) => {
-      const chip = e.target.closest(".chip");
-      if (!chip) return;
-      chip.classList.toggle("active");
+    // Back button
+    document.getElementById("backBtn").addEventListener("click", () => {
+      window.location.href = "catalog.html";
     });
-  }
 
-  function getActiveChips(containerId){
-    return Array.from(document.querySelectorAll(`#${containerId} .chip.active`))
-      .map(ch => ch.getAttribute("data-value"));
-  }
+    // Submit handler
+    document.getElementById("intakeForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      hideError();
 
-  // Convert display names to snake_case (matches your Supabase values like promissory_note)
-  function toSnake(s){
-    return (s || "")
-      .toString()
-      .trim()
-      .toLowerCase()
-      .replace(/&/g, "and")
-      .replace(/[^\w\s]/g, "")
-      .replace(/\s+/g, "_");
-  }
-
-  function normalizeTier(raw){
-    const t = (raw || "").toString().trim().toUpperCase();
-    if (t === "T1" || t.includes("TIER 1") || t.includes("TIER ONE")) return "T1";
-    if (t === "T2" || t.includes("TIER 2") || t.includes("TIER TWO")) return "T2";
-    if (t === "T3" || t.includes("TIER 3") || t.includes("TIER THREE")) return "T3";
-    if (t.includes("BUNDLE")) return "BUNDLE";
-    if (t.includes("ENTREPRENEUR")) return "BUNDLE";
-    return t || "UNKNOWN";
-  }
-
-  // Pull selection from sessionStorage (new + fallback)
-  function getSelection(){
-    // New flow: ELB_SELECTION
-    const raw = sessionStorage.getItem("ELB_SELECTION");
-    if (raw) {
-      try {
-        const sel = JSON.parse(raw);
-        const tier = normalizeTier(sel.tier || sel.tier_key || sel.tierName || "");
-        const docs = Array.isArray(sel.document_types) ? sel.document_types : [];
-        const docType = sel.document_type || (docs[0] || "");
-        const total = sel.total_today || sel.bundle_price || sel.total || "";
-        const pass = !!sel.access_pass_selected;
-        return {
-          source: "ELB_SELECTION",
-          tier,
-          document_type: docType,
-          document_types: docs,
-          total_today: total,
-          access_pass_selected: pass
-        };
-      } catch(e) {}
-    }
-
-    // Fallback keys you may have used before
-    const tier = normalizeTier(sessionStorage.getItem("tier") || "");
-    const docType = sessionStorage.getItem("doc_type") || sessionStorage.getItem("document_type") || "";
-    return {
-      source: "fallback",
-      tier: tier || "UNKNOWN",
-      document_type: docType,
-      document_types: docType ? [docType] : [],
-      total_today: "",
-      access_pass_selected: false
-    };
-  }
-
-  function renderSelection(sel){
-    document.getElementById("selTier").textContent = sel.tier || "—";
-
-    const prettyDocs =
-      (sel.tier === "BUNDLE" && sel.document_types && sel.document_types.length)
-        ? sel.document_types.join(", ")
-        : (sel.document_type || "—");
-
-    document.getElementById("selDocs").textContent = prettyDocs || "—";
-    document.getElementById("selTotal").textContent = sel.total_today ? `$${sel.total_today}` : "—";
-  }
-
-  function validateRequired(){
-    const fullName = document.getElementById("full_name").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const entityType = document.getElementById("entity_type").value.trim();
-    const governingState = document.getElementById("governing_state").value.trim();
-
-    if (!fullName) return "Full Name is required.";
-    if (!email) return "Email is required.";
-    if (!entityType) return "Entity Type is required.";
-    if (!governingState) return "Governing State is required.";
-    return "";
-  }
-
-  // ========= Init =========
-  toggleChipGroup("capitalChips");
-  toggleChipGroup("clauseChips");
-
-  const selection = getSelection();
-  renderSelection(selection);
-
-  // If selection is unknown, warn user (but still allow intake if you want)
-  if (!selection.tier || selection.tier === "UNKNOWN") {
-    setStatus("bad", "No tier detected — please return to catalog and select.");
-  }
-
-  // ========= Submit =========
-  document.getElementById("submitBtn").addEventListener("click", async () => {
-    const err = validateRequired();
-    if (err) {
-      setStatus("bad", err);
-      alert(err);
-      return;
-    }
-
-    if (!SUPABASE_URL.includes("http") || SUPABASE_ANON_KEY.includes("PASTE_")) {
-      alert("Supabase is not configured in intake.html yet. Paste SUPABASE_URL and SUPABASE_ANON_KEY at the top of the file.");
-      return;
-    }
-
-    const submitBtn = document.getElementById("submitBtn");
-    submitBtn.disabled = true;
-    setStatus("", "Submitting…");
-
-    try {
-      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-      // Build tier + doc_type column safely (never NULL)
-      const sel = getSelection();
-      const tier = normalizeTier(sel.tier);
-
-      // Determine doc_type column:
-      // - Bundle => "bundle"
-      // - Otherwise => snake_case of doc name
-      let docTypeColumn = "";
-      let selectedDocs = [];
-
-      if (tier === "BUNDLE") {
-        docTypeColumn = "bundle";
-        selectedDocs = (sel.document_types || []).map(toSnake).filter(Boolean);
-      } else {
-        const single = sel.document_type || (sel.document_types && sel.document_types[0]) || "";
-        docTypeColumn = toSnake(single) || "unknown";
-        selectedDocs = docTypeColumn ? [docTypeColumn] : [];
+      const { tier, docType } = getSelection();
+      if (!tier || !docType) {
+        showError("Missing Tier or Document selection. Please go back to the catalog, select a tier and document, then return.");
+        return;
       }
 
-      // Collect form fields
-      const payload = {
-        // Selection spine
-        tier,
-        doc_type: docTypeColumn, // kept in JSON too (you already had this pattern)
-        selected_docs: selectedDocs,
+      const submitBtn = document.getElementById("submitBtn");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Submitting…";
 
-        // Contact
-        full_name: document.getElementById("full_name").value.trim(),
-        email: document.getElementById("email").value.trim(),
-        phone: document.getElementById("phone").value.trim(),
+      try {
+        // Collect form values
+        const first_name = document.getElementById("firstName").value.trim();
+        const last_name  = document.getElementById("lastName").value.trim();
+        const email      = document.getElementById("email").value.trim();
+        const phone      = document.getElementById("phone").value.trim();
+        const preferred_jurisdiction = document.getElementById("jurisdiction").value.trim();
+        const urgency    = document.getElementById("urgency").value;
+        const notes      = document.getElementById("notes").value.trim();
 
-        // Entity / relationship
-        entity_type: document.getElementById("entity_type").value.trim(),
-        governing_state: document.getElementById("governing_state").value.trim(),
-        entity_name: document.getElementById("entity_name").value.trim(),
-        other_parties: document.getElementById("other_parties").value.trim(),
+        // 1) Insert into public.requests
+        // IMPORTANT: adjust column names here if your table uses different ones.
+        const { data: reqRows, error: reqErr } = await sb
+          .from("requests")
+          .insert([{
+            first_name,
+            last_name,
+            email,
+            phone,
+            preferred_jurisdiction,
+            urgency,
+            doc_type: docType,
+            tier: tier,
+            payment_status: "pending",
+            status: "intake_received",
+            notes
+          }])
+          .select("request_uuid")
+          .single();
 
-        // Ownership / options
-        ownership_split: document.getElementById("ownership_split").value.trim(),
-        profit_loss_split: document.getElementById("profit_loss_split").value.trim(),
-        management_model: document.getElementById("management_model").value.trim(),
-        decision_rules: document.getElementById("decision_rules").value.trim(),
-        exit_terms: document.getElementById("exit_terms").value.trim(),
-        transfer_terms: document.getElementById("transfer_terms").value.trim(),
-        non_compete: document.getElementById("non_compete").value.trim(),
-        dispute_resolution: document.getElementById("dispute_resolution").value.trim(),
+        if (reqErr) throw reqErr;
 
-        // Chips
-        capital_types: getActiveChips("capitalChips"),
-        optional_clauses: getActiveChips("clauseChips"),
+        const request_uuid = reqRows?.request_uuid;
+        document.getElementById("uuidLabel").textContent = request_uuid || "—";
+        if (!request_uuid) throw new Error("No request_uuid returned from insert.");
 
-        // Notes
-        notes: document.getElementById("notes").value.trim(),
+        // Persist UUID for downstream use
+        localStorage.setItem("request_uuid", request_uuid);
 
-        // Client timestamp
-        created_at_client: new Date().toISOString()
-      };
+        // 2) Insert into public.document_requests (one row for this doc type)
+        const { error: docErr } = await sb
+          .from("document_requests")
+          .insert([{
+            request_uuid,
+            doc_type: docType,
+            urgency
+          }]);
 
-      // Write to Supabase: column doc_type + jsonb data
-      const row = {
-        doc_type: docTypeColumn, // <-- THIS is the table column that was NULL for bundles before
-        data: payload
-      };
+        if (docErr) throw docErr;
 
-      const { error } = await supabase.from(TABLE_NAME).insert([row]);
-      if (error) throw error;
+        // 3) Redirect to payment with tier + doc type + request_uuid
+        const url = new URL("payment.html", window.location.origin);
+        url.searchParams.set("tier", tier);
+        url.searchParams.set("type", docType);
+        url.searchParams.set("request_uuid", request_uuid);
 
-      // Persist a clean selection for payment highlighting
-      const nextSel = {
-        tier: tier === "BUNDLE" ? "BUNDLE" : tier,
-        document_type: tier === "BUNDLE" ? "bundle" : docTypeColumn,
-        document_types: tier === "BUNDLE" ? selectedDocs : [docTypeColumn],
-        doc_count: tier === "BUNDLE" ? selectedDocs.length : 1
-      };
-      sessionStorage.setItem("ELB_SELECTION", JSON.stringify(nextSel));
+        window.location.href = url.toString();
 
-      setStatus("ok", "Saved. Redirecting to payment…");
-      window.location.href = "/payment.html";
-
-    } catch (e) {
-      console.error(e);
-      setStatus("bad", "Save failed. Please try again.");
-      alert("There was a problem saving your intake. Please try again.");
-      submitBtn.disabled = false;
-    }
-  });
-</script>
-
+      } catch (err) {
+        console.error(err);
+        showError("Submit failed: " + (err?.message || "Unknown error"));
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit Intake & Continue";
+      }
+    });
+  </script>
 </body>
 </html>
