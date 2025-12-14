@@ -8,35 +8,42 @@
   <style>
     body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:#f5f7fb; color:#111; }
     header { background:#111827; color:#fff; padding:16px 18px; }
-    header .brand { font-weight:800; letter-spacing:.02em; }
-    .wrap { max-width: 980px; margin: 18px auto; padding: 0 16px 36px; }
-    .pills { display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
-    .pill { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18); padding:8px 12px; border-radius:999px; font-weight:700; }
-    .pill span { font-weight:800; color:#ffd08a; }
+    header .brand { font-weight:900; letter-spacing:.02em; }
+    .wrap { max-width: 1100px; margin: 18px auto; padding: 0 16px 40px; }
+    .pills { display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    .pill { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18); padding:8px 12px; border-radius:999px; font-weight:800; }
+    .pill span { font-weight:900; color:#ffd08a; }
+    .status { margin: 10px 0 0; font-weight:900; }
+    .status.ok { color:#86efac; }
+    .status.bad { color:#fecaca; }
+
     .card { background:#fff; border:1px solid #e6e8ee; border-radius:14px; padding:16px; box-shadow: 0 6px 20px rgba(17,24,39,.06); }
+    .card h2 { margin:0 0 6px; }
+    .small { font-size:12px; color:#64748b; margin-top:6px; }
+    .divider { height:1px; background:#e6e8ee; margin: 14px 0; }
+
+    .sectionTitle { margin: 4px 0 10px; font-size: 15px; font-weight: 950; color:#0f172a; }
     .grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
-    @media (max-width: 760px){ .grid { grid-template-columns: 1fr; } }
-    label { display:block; font-size:13px; font-weight:700; margin: 10px 0 6px; color:#334155; }
+    @media (max-width: 900px){ .grid { grid-template-columns: 1fr; } }
+
+    label { display:block; font-size:13px; font-weight:850; margin: 10px 0 6px; color:#334155; }
     input, select, textarea {
       width:100%; padding:12px 12px; border-radius:10px; border:1px solid #d7dce6; background:#fff;
       font-size:15px; outline:none;
     }
     input:focus, select:focus, textarea:focus { border-color:#60a5fa; box-shadow: 0 0 0 4px rgba(96,165,250,.18); }
-    .status { margin: 10px 0 0; font-weight:800; }
-    .status.ok { color:#166534; }
-    .status.bad { color:#b42318; }
+    textarea { resize: vertical; }
+
     .actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
-    .btn {
-      border:0; cursor:pointer; font-weight:900; padding:12px 14px; border-radius:12px;
-      background:#ff7b2c; color:#111827;
-    }
+    .btn { border:0; cursor:pointer; font-weight:950; padding:12px 14px; border-radius:12px; background:#ff7b2c; color:#111827; }
     .btn.secondary { background:#111827; color:#fff; }
-    .small { font-size:12px; color:#64748b; margin-top:6px; }
-    .divider { height:1px; background:#e6e8ee; margin: 14px 0; }
-    .danger { background:#fff1f2; border:1px solid #fecdd3; padding:10px 12px; border-radius:12px; color:#9f1239; font-weight:800; }
+    .btn:disabled { opacity:.6; cursor:not-allowed; }
+    .danger { background:#fff1f2; border:1px solid #fecdd3; padding:10px 12px; border-radius:12px; color:#9f1239; font-weight:900; display:none; }
+    .okbox { background:#ecfdf5; border:1px solid #bbf7d0; padding:10px 12px; border-radius:12px; color:#166534; font-weight:900; display:none; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
   </style>
 
-  <!-- Supabase JS (CDN) -->
+  <!-- Supabase JS -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
@@ -48,196 +55,419 @@
       <div class="pill">Document(s): <span id="docLabel">—</span></div>
       <div class="pill">Request UUID: <span id="uuidLabel">—</span></div>
     </div>
-    <div id="tierStatus" class="status bad">Status: Detecting tier…</div>
+    <div id="tierStatus" class="status bad">Status: Detecting selection…</div>
   </header>
 
   <div class="wrap">
     <div class="card">
-      <h2 style="margin:0 0 6px;">Intake Information</h2>
-      <div class="small">Fill this out once. We’ll use it to generate your document as soon as payment is confirmed.</div>
+      <h2>Full Intake</h2>
+      <div class="small">
+        This intake captures everything needed to generate your document(s). Your selection is carried forward automatically.
+      </div>
 
       <div class="divider"></div>
 
+      <div id="errorBox" class="danger"></div>
+      <div id="okBox" class="okbox"></div>
+
       <form id="intakeForm">
+
+        <!-- Customer -->
+        <div class="sectionTitle">Customer</div>
         <div class="grid">
           <div>
-            <label for="firstName">First Name</label>
-            <input id="firstName" name="first_name" autocomplete="given-name" required />
+            <label for="first_name">First Name</label>
+            <input id="first_name" autocomplete="given-name" required />
           </div>
           <div>
-            <label for="lastName">Last Name</label>
-            <input id="lastName" name="last_name" autocomplete="family-name" required />
+            <label for="last_name">Last Name</label>
+            <input id="last_name" autocomplete="family-name" required />
           </div>
           <div>
             <label for="email">Email</label>
-            <input id="email" name="email" type="email" autocomplete="email" required />
+            <input id="email" type="email" autocomplete="email" required />
           </div>
           <div>
             <label for="phone">Phone</label>
-            <input id="phone" name="phone" autocomplete="tel" />
-          </div>
-          <div>
-            <label for="jurisdiction">Preferred Jurisdiction (State)</label>
-            <input id="jurisdiction" name="preferred_jurisdiction" placeholder="CA, FL, TX…" />
-          </div>
-          <div>
-            <label for="urgency">Urgency</label>
-            <select id="urgency" name="urgency">
-              <option value="normal">normal</option>
-              <option value="rush">rush</option>
-            </select>
+            <input id="phone" autocomplete="tel" />
           </div>
         </div>
-
-        <label for="notes">Notes (optional)</label>
-        <textarea id="notes" name="notes" rows="3" placeholder="Anything important we should know?"></textarea>
 
         <div class="divider"></div>
 
-        <div id="errorBox" class="danger" style="display:none;"></div>
+        <!-- Address / Jurisdiction -->
+        <div class="sectionTitle">Address & Jurisdiction</div>
+        <div class="grid">
+          <div>
+            <label for="addr1">Street Address</label>
+            <input id="addr1" autocomplete="street-address" />
+          </div>
+          <div>
+            <label for="addr2">Address Line 2</label>
+            <input id="addr2" />
+          </div>
+          <div>
+            <label for="city">City</label>
+            <input id="city" autocomplete="address-level2" />
+          </div>
+          <div>
+            <label for="state">State</label>
+            <input id="state" autocomplete="address-level1" placeholder="CA" />
+          </div>
+          <div>
+            <label for="zip">Zip</label>
+            <input id="zip" autocomplete="postal-code" />
+          </div>
+          <div>
+            <label for="preferred_jurisdiction">Preferred Jurisdiction (State)</label>
+            <input id="preferred_jurisdiction" placeholder="CA, FL, TX…" />
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Business / Entity -->
+        <div class="sectionTitle">Business / Entity (if applicable)</div>
+        <div class="grid">
+          <div>
+            <label for="business_name">Business / Entity Name</label>
+            <input id="business_name" />
+          </div>
+          <div>
+            <label for="entity_type">Entity Type</label>
+            <select id="entity_type">
+              <option value="">—</option>
+              <option>LLC</option>
+              <option>Corporation</option>
+              <option>Partnership</option>
+              <option>Sole Proprietor</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div>
+            <label for="formation_state">State of Formation</label>
+            <input id="formation_state" placeholder="CA" />
+          </div>
+          <div>
+            <label for="effective_date">Effective Date</label>
+            <input id="effective_date" type="date" />
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Parties -->
+        <div class="sectionTitle">Parties</div>
+        <div class="small">Enter the parties involved (minimum 2). If a party is a company, use the company name.</div>
+
+        <div class="grid" style="margin-top:10px;">
+          <div>
+            <label for="p1_name">Party 1 – Name</label>
+            <input id="p1_name" required />
+          </div>
+          <div>
+            <label for="p1_role">Party 1 – Role</label>
+            <select id="p1_role" required>
+              <option value="">—</option>
+              <option>Disclosing Party</option>
+              <option>Receiving Party</option>
+              <option>Seller</option>
+              <option>Buyer</option>
+              <option>Client</option>
+              <option>Contractor</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div>
+            <label for="p1_address">Party 1 – Address</label>
+            <input id="p1_address" />
+          </div>
+          <div>
+            <label for="p1_email">Party 1 – Email (optional)</label>
+            <input id="p1_email" type="email" />
+          </div>
+        </div>
+
+        <div class="grid" style="margin-top:10px;">
+          <div>
+            <label for="p2_name">Party 2 – Name</label>
+            <input id="p2_name" required />
+          </div>
+          <div>
+            <label for="p2_role">Party 2 – Role</label>
+            <select id="p2_role" required>
+              <option value="">—</option>
+              <option>Disclosing Party</option>
+              <option>Receiving Party</option>
+              <option>Seller</option>
+              <option>Buyer</option>
+              <option>Client</option>
+              <option>Contractor</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div>
+            <label for="p2_address">Party 2 – Address</label>
+            <input id="p2_address" />
+          </div>
+          <div>
+            <label for="p2_email">Party 2 – Email (optional)</label>
+            <input id="p2_email" type="email" />
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Document Details -->
+        <div class="sectionTitle">Document Details</div>
+        <div class="grid">
+          <div>
+            <label for="urgency">Urgency</label>
+            <select id="urgency">
+              <option value="normal" selected>normal</option>
+              <option value="rush">rush</option>
+            </select>
+          </div>
+          <div>
+            <label for="delivery_pref">Delivery Preference</label>
+            <select id="delivery_pref">
+              <option value="email" selected>Email</option>
+              <option value="download">Download link</option>
+              <option value="both">Both</option>
+            </select>
+          </div>
+          <div style="grid-column: 1 / -1;">
+            <label for="special_terms">Special Terms / Key Points</label>
+            <textarea id="special_terms" rows="4" placeholder="Put any key terms here (amounts, dates, obligations, etc.)."></textarea>
+          </div>
+        </div>
+
+        <div class="divider"></div>
 
         <div class="actions">
-          <button class="btn" type="submit" id="submitBtn">Submit Intake & Continue</button>
-          <button class="btn secondary" type="button" id="backBtn">Back to Catalog</button>
+          <button class="btn" type="submit" id="submitBtn">Submit Full Intake & Continue</button>
+          <button class="btn secondary" type="button" id="backBtn">Back</button>
         </div>
 
         <div class="small">
-          If the Tier/Document shows UNKNOWN, go back and select again. We keep everything consistent across pages.
+          If Tier or Document shows UNKNOWN, go back and re-select. This page expects <span class="mono">tier</span> and <span class="mono">type</span> to come from your Tier page flow.
         </div>
       </form>
     </div>
   </div>
 
   <script>
-    // === CONFIG: set these two ===
+    // ==========================
+    // CONFIG (YOU SET THESE TWO)
+    // ==========================
     const SUPABASE_URL = "https://vvjbjfltqsivvxxifnvi.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";
-
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // --------------------------
+    // Helpers
+    // --------------------------
+    const $ = (id) => document.getElementById(id);
+
+    function setStatus(ok, msg) {
+      const el = $("tierStatus");
+      el.className = "status " + (ok ? "ok" : "bad");
+      el.textContent = msg;
+    }
+
+    function showError(msg) {
+      const box = $("errorBox");
+      box.style.display = "block";
+      box.textContent = msg;
+      $("okBox").style.display = "none";
+    }
+
+    function showOk(msg) {
+      const box = $("okBox");
+      box.style.display = "block";
+      box.textContent = msg;
+      $("errorBox").style.display = "none";
+    }
 
     function getSelection() {
       const params = new URLSearchParams(window.location.search);
+      const tier = params.get("tier") || localStorage.getItem("tier") || "";
+      const docType = params.get("type") || params.get("doc_type") || localStorage.getItem("doc_type") || "";
 
-      const tier =
-        params.get("tier") ||
-        localStorage.getItem("tier") ||
-        "";
-
-      const docType =
-        params.get("type") ||
-        params.get("doc_type") ||
-        localStorage.getItem("doc_type") ||
-        "";
-
-      // Persist so payment.html can read it too
+      // Persist to storage so downstream pages can use it even if URL loses it
       if (tier) localStorage.setItem("tier", tier);
       if (docType) localStorage.setItem("doc_type", docType);
 
       return { tier, docType };
     }
 
-    function setStatus(ok, msg) {
-      const el = document.getElementById("tierStatus");
-      el.className = "status " + (ok ? "ok" : "bad");
-      el.textContent = msg;
+    function buildIntakePayload() {
+      return {
+        customer: {
+          first_name: $("first_name").value.trim(),
+          last_name: $("last_name").value.trim(),
+          email: $("email").value.trim(),
+          phone: $("phone").value.trim()
+        },
+        address: {
+          addr1: $("addr1").value.trim(),
+          addr2: $("addr2").value.trim(),
+          city: $("city").value.trim(),
+          state: $("state").value.trim(),
+          zip: $("zip").value.trim(),
+          preferred_jurisdiction: $("preferred_jurisdiction").value.trim()
+        },
+        business: {
+          business_name: $("business_name").value.trim(),
+          entity_type: $("entity_type").value,
+          formation_state: $("formation_state").value.trim(),
+          effective_date: $("effective_date").value
+        },
+        parties: [
+          {
+            name: $("p1_name").value.trim(),
+            role: $("p1_role").value,
+            address: $("p1_address").value.trim(),
+            email: $("p1_email").value.trim()
+          },
+          {
+            name: $("p2_name").value.trim(),
+            role: $("p2_role").value,
+            address: $("p2_address").value.trim(),
+            email: $("p2_email").value.trim()
+          }
+        ],
+        document: {
+          urgency: $("urgency").value,
+          delivery_pref: $("delivery_pref").value,
+          special_terms: $("special_terms").value.trim()
+        },
+        meta: {
+          captured_at: new Date().toISOString(),
+          user_agent: navigator.userAgent
+        }
+      };
     }
 
-    function showError(msg) {
-      const box = document.getElementById("errorBox");
-      box.style.display = "block";
-      box.textContent = msg;
-    }
+    // --------------------------
+    // Init (show tier/doc on page)
+    // --------------------------
+    (function init() {
+      const { tier, docType } = getSelection();
+      $("tierLabel").textContent = tier || "UNKNOWN";
+      $("docLabel").textContent = docType || "—";
 
-    function hideError() {
-      const box = document.getElementById("errorBox");
-      box.style.display = "none";
-      box.textContent = "";
-    }
+      if (!tier || !docType) {
+        setStatus(false, "Status: No tier/doc detected — please return and select Tier + Document.");
+      } else {
+        setStatus(true, `Status: Detected (${tier}) • ${docType}`);
+      }
 
-    // Init header display
-    const { tier, docType } = getSelection();
-    document.getElementById("tierLabel").textContent = tier || "UNKNOWN";
-    document.getElementById("docLabel").textContent = docType || "—";
+      $("backBtn").addEventListener("click", () => history.back());
+    })();
 
-    if (!tier) setStatus(false, "Status: No tier detected — please return to catalog and select.");
-    else setStatus(true, `Status: Tier detected (${tier}).`);
-
-    // Back button
-    document.getElementById("backBtn").addEventListener("click", () => {
-      window.location.href = "catalog.html";
-    });
-
-    // Submit handler
-    document.getElementById("intakeForm").addEventListener("submit", async (e) => {
+    // --------------------------
+    // Submit (requests + document_requests)
+    // --------------------------
+    $("intakeForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      hideError();
+      $("errorBox").style.display = "none";
+      $("okBox").style.display = "none";
 
       const { tier, docType } = getSelection();
       if (!tier || !docType) {
-        showError("Missing Tier or Document selection. Please go back to the catalog, select a tier and document, then return.");
+        showError("Missing Tier or Document selection. Please go back and select again.");
         return;
       }
 
-      const submitBtn = document.getElementById("submitBtn");
+      // Basic required fields check
+      if (!$("first_name").value.trim() || !$("last_name").value.trim() || !$("email").value.trim()) {
+        showError("First name, last name, and email are required.");
+        return;
+      }
+      if (!$("p1_name").value.trim() || !$("p2_name").value.trim()) {
+        showError("Party 1 and Party 2 names are required.");
+        return;
+      }
+      if (!$("p1_role").value || !$("p2_role").value) {
+        showError("Party 1 and Party 2 roles are required.");
+        return;
+      }
+
+      const submitBtn = $("submitBtn");
       submitBtn.disabled = true;
       submitBtn.textContent = "Submitting…";
 
       try {
-        // Collect form values
-        const first_name = document.getElementById("firstName").value.trim();
-        const last_name  = document.getElementById("lastName").value.trim();
-        const email      = document.getElementById("email").value.trim();
-        const phone      = document.getElementById("phone").value.trim();
-        const preferred_jurisdiction = document.getElementById("jurisdiction").value.trim();
-        const urgency    = document.getElementById("urgency").value;
-        const notes      = document.getElementById("notes").value.trim();
+        const payload = buildIntakePayload();
 
-        // 1) Insert into public.requests
-        // IMPORTANT: adjust column names here if your table uses different ones.
-        const { data: reqRows, error: reqErr } = await sb
+        // Build a safe core insert for requests (columns we’ve been using)
+        // NOTE: This does NOT include "notes" so you won't hit that schema-cache error again.
+        const coreRequestRow = {
+          first_name: payload.customer.first_name,
+          last_name: payload.customer.last_name,
+          email: payload.customer.email,
+          phone: payload.customer.phone,
+          preferred_jurisdiction: payload.address.preferred_jurisdiction,
+          urgency: payload.document.urgency,
+          doc_type: docType,
+          tier: tier,
+          payment_status: "pending",
+          status: "intake_received"
+        };
+
+        // Try to include intake_payload IF your table has it.
+        // If it doesn't, we retry automatically without it.
+        let inserted;
+        let reqErr;
+
+        // Attempt #1: with intake_payload
+        ({ data: inserted, error: reqErr } = await sb
           .from("requests")
-          .insert([{
-            first_name,
-            last_name,
-            email,
-            phone,
-            preferred_jurisdiction,
-            urgency,
-            doc_type: docType,
-            tier: tier,
-            payment_status: "pending",
-            status: "intake_received",
-            notes
-          }])
+          .insert([{ ...coreRequestRow, intake_payload: payload }])
           .select("request_uuid")
-          .single();
+          .single()
+        );
+
+        // If intake_payload column doesn't exist, retry without it
+        if (reqErr && (String(reqErr.message || "").toLowerCase().includes("intake_payload")
+                      || String(reqErr.message || "").toLowerCase().includes("schema cache")
+                      || String(reqErr.details || "").toLowerCase().includes("intake_payload"))) {
+
+          ({ data: inserted, error: reqErr } = await sb
+            .from("requests")
+            .insert([coreRequestRow])
+            .select("request_uuid")
+            .single()
+          );
+        }
 
         if (reqErr) throw reqErr;
 
-        const request_uuid = reqRows?.request_uuid;
-        document.getElementById("uuidLabel").textContent = request_uuid || "—";
-        if (!request_uuid) throw new Error("No request_uuid returned from insert.");
+        const request_uuid = inserted?.request_uuid;
+        if (!request_uuid) throw new Error("Insert succeeded but no request_uuid returned.");
 
-        // Persist UUID for downstream use
+        $("uuidLabel").textContent = request_uuid;
         localStorage.setItem("request_uuid", request_uuid);
 
-        // 2) Insert into public.document_requests (one row for this doc type)
+        // Insert one document request line item
         const { error: docErr } = await sb
           .from("document_requests")
           .insert([{
             request_uuid,
             doc_type: docType,
-            urgency
+            urgency: payload.document.urgency
           }]);
 
         if (docErr) throw docErr;
 
-        // 3) Redirect to payment with tier + doc type + request_uuid
+        showOk(`Saved. Request UUID: ${request_uuid}`);
+
+        // Redirect to payment with selection + UUID
         const url = new URL("payment.html", window.location.origin);
         url.searchParams.set("tier", tier);
         url.searchParams.set("type", docType);
         url.searchParams.set("request_uuid", request_uuid);
-
         window.location.href = url.toString();
 
       } catch (err) {
@@ -245,7 +475,7 @@
         showError("Submit failed: " + (err?.message || "Unknown error"));
       } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = "Submit Intake & Continue";
+        submitBtn.textContent = "Submit Full Intake & Continue";
       }
     });
   </script>
