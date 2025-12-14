@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>{{agreement_title}}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    /* PDF-friendly styling */
+    :root{
+      --text:#111;
+      --muted:#555;
+      --rule:#d9d9d9;
+      --accent:#1e3a8a;
+    }
+    body{
+      font-family: "Times New Roman", Times, serif;
+      color: var(--text);
+      margin: 48px;
+      line-height: 1.35;
+      font-size: 12pt;
+    }
+    h1{
+      font-size: 18pt;
+      text-align: center;
+      margin: 0 0 10px 0;
+      letter-spacing: 0.2px;
+    }
+    .sub{
+      text-align:center;
+      color:var(--muted);
+      margin-bottom: 18px;
+      font-size: 11pt;
+    }
+    .rule{border-top:1px solid var(--rule); margin: 16px 0;}
+    h2{
+      font-size: 13pt;
+      margin: 16px 0 8px;
+      color: var(--accent);
+      page-break-after: avoid;
+    }
+    p{ margin: 0 0 10px; }
+    ul{ margin: 0 0 10px 18px; }
+    li{ margin: 0 0 6px; }
+    .box{
+      border: 1px solid var(--rule);
+      padding: 12px 14px;
+      border-radius: 8px;
+      margin: 12px 0;
+    }
+    .kv{
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 6px 12px;
+      font-size: 11.5pt;
+    }
+    .k{ color: var(--muted); }
+    .sig{
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .sig .line{
+      border-top: 1px solid #000;
+      margin-top: 36px;
+      padding-top: 6px;
+      font-size: 11pt;
+    }
+    .foot{
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 10.5pt;
+    }
+    .pagebreak{ page-break-before: always; }
+  </style>
+</head>
+
+<body>
+  <h1>{{agreement_title}}</h1>
+  <div class="sub">
+    Effective Date: <strong>{{effective_date}}</strong> &nbsp;•&nbsp;
+    Governing Law: <strong>{{governing_state}}</strong>
+  </div>
+
+  <div class="rule"></div>
+
+  <div class="box">
+    <div class="kv">
+      <div class="k">LLC Name</div><div>{{llc_name}}</div>
+      <div class="k">LLC Address</div>
+      <div>
+        {{llc_address_line1}} {{llc_address_line2}}<br/>
+        {{llc_city}}, {{llc_state}} {{llc_postal_code}}<br/>
+        {{llc_country}}
+      </div>
+
+      <div class="k">Member</div><div>{{member_name}}</div>
+      <div class="k">Member Address</div><div>{{member_address}}</div>
+    </div>
+  </div>
+
+  <h2>1. Formation and Purpose</h2>
+  <p>
+    This Single-Member Limited Liability Company Operating Agreement (the “Agreement”) is entered into by
+    <strong>{{member_name}}</strong> (the “Member”) for the company identified above (the “Company”).
+  </p>
+  <p>
+    The purpose of the Company is:
+  </p>
+  <div class="box">
+    <p style="margin:0;"><em>{{business_purpose}}</em></p>
+  </div>
+
+  <h2>2. Term</h2>
+  <p>
+    The Company begins on the Effective Date and continues as follows:
+  </p>
+  <ul>
+    <li><strong>Term Type:</strong> {{term_type}}</li>
+    <li><strong>Term Start Date:</strong> {{term_start_date}}</li>
+    <li><strong>Term End Date:</strong> {{term_end_date}}</li>
+    <li><strong>Term Notes:</strong> {{term_period_description}}</li>
+    <li><strong>Renewal Terms:</strong> {{renewal_terms}}</li>
+  </ul>
+  <p class="foot">
+    If any term fields are blank, the Company is understood to be ongoing until dissolved under this Agreement or applicable law.
+  </p>
+
+  <h2>3. Member Ownership and Capital</h2>
+  <p>
+    The Member owns one hundred percent (100%) of the Company. The Member may contribute capital, property,
+    or services as the Member determines and may record such contributions in the Company’s records.
+  </p>
+
+  <h2>4. Management</h2>
+  <p>
+    The Company is managed by the Member. The Member has full authority to act on behalf of the Company,
+    including signing contracts, opening accounts, hiring service providers, and taking actions consistent with the Company’s purpose.
+  </p>
+
+  <h2>5. Profits, Losses, and Distributions</h2>
+  <p>
+    Profits and losses will be allocated to the Member. The Member may take distributions at any time,
+    subject to maintaining sufficient funds to satisfy Company obligations.
+  </p>
+
+  <h2>6. Records and Banking</h2>
+  <p>
+    The Company will maintain reasonable business records and may maintain a separate bank account.
+    Company and personal funds should be kept separate to preserve limited liability protections.
+  </p>
+
+  <h2>7. Liability and Indemnification</h2>
+  <p>
+    To the fullest extent permitted by law, the Member is not personally liable for Company debts solely by reason of being a member.
+    The Company will indemnify the Member for actions taken in good faith on behalf of the Company.
+  </p>
+
+  <h2>8. Taxes</h2>
+  <p>
+    Unless otherwise elected, the Company will be treated as a disregarded entity for federal tax purposes,
+    and Company income and expenses will be reported by the Member. The Member may elect a different tax classification if desired.
+  </p>
+
+  <h2>9. Dissolution</h2>
+  <p>
+    The Company may be dissolved by the Member. Upon dissolution, the Company will pay liabilities,
+    then distribute remaining assets to the Member.
+  </p>
+
+  <h2>10. Governing Law and Disputes</h2>
+  <p>
+    This Agreement is governed by the laws of <strong>{{governing_state}}</strong>, without regard to conflict-of-law principles.
+  </p>
+  <p>
+    Dispute Resolution: <em>{{dispute_resolution}}</em>
+  </p>
+
+  <div class="rule"></div>
+
+  <h2>Signatures</h2>
+
+  <div class="sig">
+    <div>
+      <div class="line">
+        {{signature_member_name}}<br/>
+        {{signature_member_title}}
+      </div>
+    </div>
+    <div>
+      <div class="line">
+        Date: ______________________
+      </div>
+    </div>
+  </div>
+
+  <p class="foot">
+    Note: This template is provided for informational purposes and is not legal advice. Laws vary by jurisdiction.
+    Consider review by a qualified attorney in {{governing_state}}.
+  </p>
+</body>
+</html>
