@@ -1,150 +1,232 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>E-LegalBoom — Intake</title>
-
+  <title>E-LegalBoom • Intake</title>
   <style>
-    :root{
-      --bg:#f5f7fb; --ink:#0f172a; --muted:#64748b; --card:#ffffff; --line:#e6e8ee;
-      --brand:#111827; --accent:#ff7b2c; --pill:#ffd08a; --shadow:0 6px 20px rgba(17,24,39,.06);
-      --focus:0 0 0 4px rgba(96,165,250,.18); --radius:14px;
+    /* Your existing CSS styles here */
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: #f5f7fb;
+      color: #111827;
     }
-    *{ box-sizing:border-box; }
-    body{ margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; background:var(--bg); color:var(--ink); }
-    header{ background:var(--brand); color:#fff; padding:16px 18px; }
-    .brand{ font-weight:950; letter-spacing:.02em; }
-    .toprow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
-    .pill{ background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18); padding:8px 12px; border-radius:999px; font-weight:900; }
-    .pill span{ color:var(--pill); }
-    .status{ margin-top:10px; font-weight:950; }
-    .status.ok{ color:#86efac; }
-    .status.bad{ color:#fecaca; }
-
-    .wrap{ max-width:1150px; margin:18px auto; padding:0 16px 44px; }
-    .card{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); }
-    .card h2{ margin:0; }
-    .sub{ margin-top:6px; color:var(--muted); font-size:13px; }
-    .divider{ height:1px; background:var(--line); margin:14px 0; }
-
-    .grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-    @media (max-width: 900px){ .grid{ grid-template-columns:1fr; } }
-
-    .sectionTitle{ margin:4px 0 10px; font-size:15px; font-weight:950; color:#0f172a; display:flex; align-items:center; gap:10px; }
-    .tag{ font-size:12px; padding:4px 8px; border-radius:999px; border:1px solid var(--line); color:#334155; background:#f8fafc; font-weight:900; }
-    label{ display:block; font-size:13px; font-weight:900; margin:10px 0 6px; color:#334155; }
-    input, select, textarea{
-      width:100%; padding:12px 12px; border-radius:12px; border:1px solid #d7dce6; background:#fff;
-      font-size:15px; outline:none;
+    header {
+      background: #1e1e2f;
+      color: #fff;
+      padding: 16px 24px;
     }
-    input:focus, select:focus, textarea:focus{ border-color:#60a5fa; box-shadow:var(--focus); }
-    textarea{ resize:vertical; min-height:96px; }
-
-    .metaHint{ font-size:12px; color:var(--muted); margin-top:6px; }
-    .req{ color:#dc2626; font-weight:950; margin-left:6px; }
-    .small{ font-size:12px; color:var(--muted); margin-top:10px; }
-
-    .bar{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
-    .btn{
-      border:0; cursor:pointer; font-weight:950; padding:12px 14px; border-radius:12px;
-      background:var(--accent); color:#111827;
+    .brand {
+      font-weight: 800;
+      letter-spacing: 0.03em;
     }
-    .btn.secondary{ background:#111827; color:#fff; }
-    .btn.ghost{ background:#eef2ff; color:#111827; }
-    .btn:disabled{ opacity:.6; cursor:not-allowed; }
-    .danger{ background:#fff1f2; border:1px solid #fecdd3; padding:10px 12px; border-radius:12px; color:#9f1239; font-weight:900; display:none; white-space:pre-wrap; }
-    .okbox{ background:#ecfdf5; border:1px solid #bbf7d0; padding:10px 12px; border-radius:12px; color:#166534; font-weight:900; display:none; white-space:pre-wrap; }
-    .warn{ background:#fff7ed; border:1px solid #fed7aa; padding:10px 12px; border-radius:12px; color:#9a3412; font-weight:900; display:none; white-space:pre-wrap; }
-
-    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    main {
+      max-width: 900px;
+      margin: 32px auto;
+      padding: 0 20px 40px;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    h1 {
+      margin-top: 0;
+    }
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .status .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .status .dot.ok { background: #10b981; }
+    .status .dot.warn { background: #f59e0b; }
+    .status .dot.bad { background: #ef4444; }
+    .hidden {
+      display: none;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 860px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .btn {
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .btn.primary {
+      background: #ff7b2c;
+      color: #fff;
+    }
+    .btn.ghost {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      color: #111827;
+    }
+    .small {
+      font-size: 13px;
+      color: #6b7280;
+    }
   </style>
-
+  <!-- Supabase client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-
 <body>
   <header>
     <div class="brand">E-LegalBoom</div>
-    <div class="toprow">
-      <div class="pill">Tier: <span id="tierLabel">UNKNOWN</span></div>
-      <div class="pill">Doc Type: <span id="docTypeLabel">UNKNOWN</span></div>
-      <div class="pill">IDLS: <span id="idlsLabel">IDLS_v1</span></div>
-      <div class="pill">Request UUID: <span id="uuidLabel">—</span></div>
-    </div>
-    <div id="statusLine" class="status bad">Status: loading…</div>
   </header>
-
-  <div class="wrap">
+  <main>
     <div class="card">
-      <h2>Intake</h2>
-      <div class="sub">
-        Built from the locked Field Registry (Core 85% + Doc Addendum). Each field has a <b>field_id</b>, <b>field_key</b>, and <b>label</b> for IDLS coordinate mapping.
-      </div>
-
-      <div class="divider"></div>
-
-      <div id="errorBox" class="danger"></div>
-      <div id="warnBox" class="warn"></div>
-      <div id="okBox" class="okbox"></div>
-
-      <form id="intakeForm">
-        <div id="coreContainer"></div>
-        <div id="addendumContainer"></div>
-
-        <div class="divider"></div>
-
-        <div class="bar">
-          <button class="btn" id="submitBtn" type="submit">Submit Intake</button>
-          <button class="btn secondary" id="backBtn" type="button">Back</button>
-          <button class="btn ghost" id="goSelectBtn" type="button">Go to Selection</button>
+      <h1>Intake</h1>
+      <div class="status">
+        <div class="dot warn" id="statusDot"></div>
+        <div>
+          <strong id="statusTitle">Loading…</strong>
+          <div class="small" id="statusDetail">Resolving selection and loading registry.</div>
         </div>
-
-        <div class="small">
-          This page accepts URL params like <span class="mono">?tier=1&doc_type=promissory_note</span>.
-          If URL params are missing, it will try localStorage. If still missing, it will still render the form but warn you.
+      </div>
+      <div class="panel error hidden" id="errorPanel">
+        <strong>Error:</strong>
+        <p id="errorHuman" class="small">—</p>
+        <pre id="errorTech" class="small">—</pre>
+      </div>
+      <form id="intakeForm" class="hidden">
+        <div id="fields" class="grid"></div>
+        <div class="btnrow">
+          <button type="submit" class="btn primary">Submit Intake</button>
+          <a href="catalog.html" class="btn ghost">Back to Catalog</a>
+        </div>
+        <div class="small" style="margin-top:10px;">
+          Debug: <span id="debugLine" class="mono">—</span>
         </div>
       </form>
     </div>
-  </div>
-
+  </main>
   <script>
-    /************************************************************
-     * CONFIG — put your real values here (can be left blank)
-     ************************************************************/
-    const SUPABASE_URL = "https://vvjbjfltqsivvxxifnvi.supabase.co";      
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q"; 
-    /************************************************************
-     * LOCKED FIELD REGISTRY (same as your current one)
-     ************************************************************/
-    const FIELD_REGISTRY = {
-      core: [
-        { field_id:1001, field_key:"customer_name", label:"Customer Name", doc_code:"C001", description:"Primary customer / initiating party", type:"text", required:true, section:"Customer" },
-        { field_id:1002, field_key:"customer_email", label:"Customer Email", doc_code:"C002", description:"Email for delivery and notices", type:"email", required:true, section:"Customer" },
-        { field_id:1003, field_key:"customer_phone", label:"Customer Phone", doc_code:"C003", description:"Contact phone number", type:"tel", required:false, section:"Customer" },
+    (function () {
+      // Config and constants
+      const SUPABASE_URL = window.SUPABASE_URL || "https://vvjbjfltqsivvxxifnvi.supabase.co";
+      const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";
 
-        { field_id:1004, field_key:"party_a_name", label:"Party A Name", doc_code:"P001", description:"First contracting party", type:"text", required:true, section:"Parties" },
-        { field_id:1005, field_key:"party_b_name", label:"Party B Name", doc_code:"P002", description:"Second contracting party", type:"text", required:true, section:"Parties" },
-        { field_id:1006, field_key:"party_a_address", label:"Party A Address", doc_code:"P003", description:"Legal address of Party A", type:"textarea", required:false, section:"Parties" },
-        { field_id:1007, field_key:"party_b_address", label:"Party B Address", doc_code:"P004", description:"Legal address of Party B", type:"textarea", required:false, section:"Parties" },
+      const TABLE_CORE = "field_registry";
+      const TABLE_DOC = "doc_field_registry";
 
-        { field_id:1010, field_key:"entity_name", label:"Entity / Partnership Name", doc_code:"E001", description:"Legal name of partnership", type:"text", required:true, section:"Entity" },
-        { field_id:1011, field_key:"governing_state", label:"Governing State", doc_code:"E002", description:"State governing the agreement", type:"select_state", required:true, section:"Entity" },
-        { field_id:1012, field_key:"effective_date", label:"Effective Date", doc_code:"E003", description:"Agreement effective date", type:"date", required:false, section:"Entity" },
+      // Helpers
+      function normalizeTier(raw) {
+        const t = (raw || "").toLowerCase().trim();
+        if (["1","2","3","bundle"].includes(t)) return t;
+        if (["t1","tier1","tier one"].includes(t)) return "1";
+        if (["t2","tier2","tier two"].includes(t)) return "2";
+        if (["t3","tier3","tier three"].includes(t)) return "3";
+        if (["tb","bundle"].includes(t)) return "bundle";
+        return "";
+      }
 
-        { field_id:1020, field_key:"confidentiality", label:"Confidentiality", doc_code:"G001", description:"Confidentiality obligations (summary)", type:"textarea", required:false, section:"Clauses" },
-        { field_id:1021, field_key:"non_compete", label:"Non-Compete", doc_code:"G002", description:"Non-compete applicability (summary)", type:"textarea", required:false, section:"Clauses" },
-        { field_id:1022, field_key:"dispute_resolution", label:"Dispute Resolution", doc_code:"G003", description:"Arbitration/venue selection", type:"textarea", required:false, section:"Clauses" },
-        { field_id:1023, field_key:"amendments", label:"Amendments", doc_code:"G004", description:"How agreement may be amended", type:"textarea", required:false, section:"Clauses" },
-        { field_id:1024, field_key:"severability", label:"Severability", doc_code:"G005", description:"Severability provision", type:"textarea", required:false, section:"Clauses" },
+      function readDocType() {
+        return (new URLSearchParams(window.location.search).get("doc_type") || "").trim();
+      }
 
-        { field_id:1030, field_key:"management_structure", label:"Management Structure", doc_code:"O001", description:"How partnership is managed", type:"textarea", required:false, section:"Operations" },
-        { field_id:1031, field_key:"decision_threshold", label:"Decision Threshold", doc_code:"O002", description:"Voting/approval rules", type:"textarea", required:false, section:"Operations" },
-        { field_id:1032, field_key:"dissolution_terms", label:"Dissolution Terms", doc_code:"O003", description:"Conditions for dissolution", type:"textarea", required:false, section:"Operations" },
-        { field_id:1033, field_key:"transfer_restrictions", label:"Transfer Restrictions", doc_code:"O004", description:"Assignment/transfer limits", type:"textarea", required:false, section:"Operations" },
+      function setStatus(mode, title, detail) {
+        const dot = document.getElementById("statusDot");
+        const statusTitle = document.getElementById("statusTitle");
+        const statusDetail = document.getElementById("statusDetail");
+        dot.className = "dot " + mode;
+        statusTitle.textContent = title;
+        statusDetail.textContent = detail || "";
+      }
 
-        { field_id:1099, field_key:"special_notes", label:"Special Notes", doc_code:"N001", description:"Anything else you want included", type:"textarea", required:false, section:"Notes" },
-      ],
-      partnership_addendum: [
-        { field_id:2001, field_key:"ownership_split", label:"Ownership Split (%)", doc_code:"P101", description:"Percentage ownership per partner", type:"text", required:false, section:"Partnership Addendum" },
-        { field_id:2002, field_key:"capital_contributions", label:"Capital Contributions", doc_code:"P102", description:"Initial contributions (cash/property/crypto)", type
+      function fail(human, tech) {
+        setStatus("bad", "Error", human);
+        document.getElementById("errorPanel").classList.remove("hidden");
+        document.getElementById("errorHuman").textContent = human;
+        document.getElementById("errorTech").textContent = tech || "";
+        document.getElementById("intakeForm").classList.add("hidden");
+      }
+
+      // Main logic
+      const qs = new URLSearchParams(window.location.search);
+      const rawTier = qs.get("tier") || "";
+      const tier = normalizeTier(rawTier);
+      const doc_type = readDocType();
+      const idls = qs.get("type") || "IDLS_v1";
+
+      // Update debug line and labels
+      document.getElementById("debugLine").textContent = JSON.stringify({ tier, doc_type, idls });
+
+      if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+        fail("Supabase configuration missing.", "Check SUPABASE_URL / SUPABASE_ANON_KEY.");
+        return;
+      }
+      if (!tier || !doc_type) {
+        fail("Invalid tier or document type.", `Received tier="${rawTier}", doc_type="${doc_type}"`);
+        return;
+      }
+
+      setStatus("warn", "Loading", "Fetching registry…");
+      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      async function loadIntakeFields() {
+        try {
+          const core = await supabase.from(TABLE_CORE)
+            .select("*")
+            .eq("idls_type", idls)
+            .order("sort_order", { ascending: true });
+
+          const doc = await supabase.from(TABLE_DOC)
+            .select("*")
+            .eq("idls_type", idls)
+            .eq("tier", tier)
+            .eq("doc_type", doc_type)
+            .order("sort_order", { ascending: true });
+
+          if (core.error || doc.error) {
+            throw core.error || doc.error;
+          }
+
+          const fields = [...(core.data || []), ...(doc.data || [])];
+          if (fields.length === 0) {
+            fail("No fields returned.", "Registry query returned zero rows.");
+            return;
+          }
+
+          const fieldsContainer = document.getElementById("fields");
+          fieldsContainer.innerHTML = "";
+          fields.forEach(f => {
+            const div = document.createElement("div");
+            const label = document.createElement("label");
+            label.textContent = f.label || f.field_key;
+            const input = document.createElement(f.input_type === "textarea" ? "textarea" : "input");
+            input.name = f.field_key;
+            input.required = !!f.required;
+            div.appendChild(label);
+            div.appendChild(input);
+            fieldsContainer.appendChild(div);
+          });
+
+          document.getElementById("intakeForm").classList.remove("hidden");
+          setStatus("ok", "Ready", "Intake loaded.");
+        } catch (e) {
+          fail("Failed to load registry.", e.message || String(e));
+        }
+      }
+
+      loadIntakeFields();
+    })();
+  </script>
+</body>
+</html>
