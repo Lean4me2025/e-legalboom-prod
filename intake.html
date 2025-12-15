@@ -7,19 +7,9 @@
 
   <style>
     :root{
-      --bg:#f5f7fb;
-      --ink:#0f172a;
-      --muted:#64748b;
-      --card:#ffffff;
-      --line:#e6e8ee;
-      --brand:#111827;
-      --accent:#ff7b2c;
-      --ok:#166534;
-      --bad:#b42318;
-      --pill:#ffd08a;
-      --shadow:0 6px 20px rgba(17,24,39,.06);
-      --focus:0 0 0 4px rgba(96,165,250,.18);
-      --radius:14px;
+      --bg:#f5f7fb; --ink:#0f172a; --muted:#64748b; --card:#ffffff; --line:#e6e8ee;
+      --brand:#111827; --accent:#ff7b2c; --pill:#ffd08a; --shadow:0 6px 20px rgba(17,24,39,.06);
+      --focus:0 0 0 4px rgba(96,165,250,.18); --radius:14px;
     }
     *{ box-sizing:border-box; }
     body{ margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; background:var(--bg); color:var(--ink); }
@@ -61,9 +51,11 @@
       background:var(--accent); color:#111827;
     }
     .btn.secondary{ background:#111827; color:#fff; }
+    .btn.ghost{ background:#eef2ff; color:#111827; }
     .btn:disabled{ opacity:.6; cursor:not-allowed; }
     .danger{ background:#fff1f2; border:1px solid #fecdd3; padding:10px 12px; border-radius:12px; color:#9f1239; font-weight:900; display:none; white-space:pre-wrap; }
     .okbox{ background:#ecfdf5; border:1px solid #bbf7d0; padding:10px 12px; border-radius:12px; color:#166534; font-weight:900; display:none; white-space:pre-wrap; }
+    .warn{ background:#fff7ed; border:1px solid #fed7aa; padding:10px 12px; border-radius:12px; color:#9a3412; font-weight:900; display:none; white-space:pre-wrap; }
 
     .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
   </style>
@@ -80,7 +72,7 @@
       <div class="pill">IDLS: <span id="idlsLabel">IDLS_v1</span></div>
       <div class="pill">Request UUID: <span id="uuidLabel">—</span></div>
     </div>
-    <div id="statusLine" class="status bad">Status: waiting for selection…</div>
+    <div id="statusLine" class="status bad">Status: loading…</div>
   </header>
 
   <div class="wrap">
@@ -93,6 +85,7 @@
       <div class="divider"></div>
 
       <div id="errorBox" class="danger"></div>
+      <div id="warnBox" class="warn"></div>
       <div id="okBox" class="okbox"></div>
 
       <form id="intakeForm">
@@ -104,10 +97,12 @@
         <div class="bar">
           <button class="btn" id="submitBtn" type="submit">Submit Intake</button>
           <button class="btn secondary" id="backBtn" type="button">Back</button>
+          <button class="btn ghost" id="goSelectBtn" type="button">Go to Selection</button>
         </div>
 
         <div class="small">
-          Tip: this page expects selection values via URL params like <span class="mono">?tier=1&doc_type=partnership</span> (or <span class="mono">type=IDLS_v1</span>). It will also use localStorage if the URL loses them.
+          This page accepts URL params like <span class="mono">?tier=1&doc_type=promissory_note</span>.
+          If URL params are missing, it will try localStorage. If still missing, it will still render the form but warn you.
         </div>
       </form>
     </div>
@@ -115,430 +110,41 @@
 
   <script>
     /************************************************************
-     * CONFIG — paste your Supabase values
+     * CONFIG — put your real values here (can be left blank)
      ************************************************************/
-    const SUPABASE_URL = "PASTE_YOUR_SUPABASE_URL_HERE";
-    const SUPABASE_ANON_KEY = "PASTE_YOUR_SUPABASE_ANON_KEY_HERE";
-    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
+    const SUPABASE_URL = "https://vvjbjfltqsivvxxifnvi.supabase.co";      
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q"; 
     /************************************************************
-     * LOCKED FIELD REGISTRY (Draft v1 — can expand as you paste
-     * your full master table later. IDs preserved.)
+     * LOCKED FIELD REGISTRY (same as your current one)
      ************************************************************/
     const FIELD_REGISTRY = {
       core: [
-        // Identity / customer
         { field_id:1001, field_key:"customer_name", label:"Customer Name", doc_code:"C001", description:"Primary customer / initiating party", type:"text", required:true, section:"Customer" },
         { field_id:1002, field_key:"customer_email", label:"Customer Email", doc_code:"C002", description:"Email for delivery and notices", type:"email", required:true, section:"Customer" },
         { field_id:1003, field_key:"customer_phone", label:"Customer Phone", doc_code:"C003", description:"Contact phone number", type:"tel", required:false, section:"Customer" },
 
-        // Parties
         { field_id:1004, field_key:"party_a_name", label:"Party A Name", doc_code:"P001", description:"First contracting party", type:"text", required:true, section:"Parties" },
         { field_id:1005, field_key:"party_b_name", label:"Party B Name", doc_code:"P002", description:"Second contracting party", type:"text", required:true, section:"Parties" },
         { field_id:1006, field_key:"party_a_address", label:"Party A Address", doc_code:"P003", description:"Legal address of Party A", type:"textarea", required:false, section:"Parties" },
         { field_id:1007, field_key:"party_b_address", label:"Party B Address", doc_code:"P004", description:"Legal address of Party B", type:"textarea", required:false, section:"Parties" },
 
-        // Entity / governing
         { field_id:1010, field_key:"entity_name", label:"Entity / Partnership Name", doc_code:"E001", description:"Legal name of partnership", type:"text", required:true, section:"Entity" },
         { field_id:1011, field_key:"governing_state", label:"Governing State", doc_code:"E002", description:"State governing the agreement", type:"select_state", required:true, section:"Entity" },
         { field_id:1012, field_key:"effective_date", label:"Effective Date", doc_code:"E003", description:"Agreement effective date", type:"date", required:false, section:"Entity" },
 
-        // General clauses / terms
         { field_id:1020, field_key:"confidentiality", label:"Confidentiality", doc_code:"G001", description:"Confidentiality obligations (summary)", type:"textarea", required:false, section:"Clauses" },
         { field_id:1021, field_key:"non_compete", label:"Non-Compete", doc_code:"G002", description:"Non-compete applicability (summary)", type:"textarea", required:false, section:"Clauses" },
         { field_id:1022, field_key:"dispute_resolution", label:"Dispute Resolution", doc_code:"G003", description:"Arbitration/venue selection", type:"textarea", required:false, section:"Clauses" },
         { field_id:1023, field_key:"amendments", label:"Amendments", doc_code:"G004", description:"How agreement may be amended", type:"textarea", required:false, section:"Clauses" },
         { field_id:1024, field_key:"severability", label:"Severability", doc_code:"G005", description:"Severability provision", type:"textarea", required:false, section:"Clauses" },
 
-        // Operations / lifecycle
         { field_id:1030, field_key:"management_structure", label:"Management Structure", doc_code:"O001", description:"How partnership is managed", type:"textarea", required:false, section:"Operations" },
         { field_id:1031, field_key:"decision_threshold", label:"Decision Threshold", doc_code:"O002", description:"Voting/approval rules", type:"textarea", required:false, section:"Operations" },
         { field_id:1032, field_key:"dissolution_terms", label:"Dissolution Terms", doc_code:"O003", description:"Conditions for dissolution", type:"textarea", required:false, section:"Operations" },
         { field_id:1033, field_key:"transfer_restrictions", label:"Transfer Restrictions", doc_code:"O004", description:"Assignment/transfer limits", type:"textarea", required:false, section:"Operations" },
 
-        // Notes (useful to IDLS content blocks if you want)
         { field_id:1099, field_key:"special_notes", label:"Special Notes", doc_code:"N001", description:"Anything else you want included", type:"textarea", required:false, section:"Notes" },
       ],
-
-      // Partnership / IDLS_v1 addendum
       partnership_addendum: [
         { field_id:2001, field_key:"ownership_split", label:"Ownership Split (%)", doc_code:"P101", description:"Percentage ownership per partner", type:"text", required:false, section:"Partnership Addendum" },
-        { field_id:2002, field_key:"capital_contributions", label:"Capital Contributions", doc_code:"P102", description:"Initial contributions (cash/property/crypto)", type:"textarea", required:false, section:"Partnership Addendum" },
-        { field_id:2003, field_key:"profit_loss_split", label:"Profit & Loss Allocation", doc_code:"P103", description:"Allocation of profits/losses", type:"textarea", required:false, section:"Partnership Addendum" },
-        { field_id:2004, field_key:"capital_accounts", label:"Capital Accounts", doc_code:"P104", description:"Capital account handling", type:"textarea", required:false, section:"Partnership Addendum" },
-
-        { field_id:2010, field_key:"management_duties", label:"Management Duties", doc_code:"P201", description:"Specific management obligations", type:"textarea", required:false, section:"Partnership Addendum" },
-        { field_id:2011, field_key:"withdrawal_terms", label:"Withdrawal Terms", doc_code:"P202", description:"Partner withdrawal rules", type:"textarea", required:false, section:"Partnership Addendum" },
-        { field_id:2012, field_key:"buyout_terms", label:"Buyout Terms", doc_code:"P203", description:"Buyout mechanics", type:"textarea", required:false, section:"Partnership Addendum" },
-        { field_id:2013, field_key:"non_compete_scope", label:"Non-Compete Scope", doc_code:"P204", description:"Scope of non-compete if enabled", type:"textarea", required:false, section:"Partnership Addendum" },
-      ]
-    };
-
-    /************************************************************
-     * Utilities
-     ************************************************************/
-    const $ = (id) => document.getElementById(id);
-
-    const US_STATES = [
-      "", "AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME",
-      "MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI",
-      "SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"
-    ];
-
-    function showError(msg){
-      $("errorBox").style.display = "block";
-      $("errorBox").textContent = msg;
-      $("okBox").style.display = "none";
-    }
-    function showOk(msg){
-      $("okBox").style.display = "block";
-      $("okBox").textContent = msg;
-      $("errorBox").style.display = "none";
-    }
-    function setStatus(ok, msg){
-      const el = $("statusLine");
-      el.className = "status " + (ok ? "ok" : "bad");
-      el.textContent = msg;
-    }
-
-    function getSelection(){
-      const params = new URLSearchParams(window.location.search);
-
-      // Tier
-      const tier = params.get("tier") || localStorage.getItem("tier") || "";
-
-      // Document type: support multiple param names
-      // We treat IDLS_v1 as partnership by default unless explicitly overridden.
-      const doc_type =
-        params.get("doc_type") ||
-        params.get("document") ||
-        params.get("type") ||
-        localStorage.getItem("doc_type") ||
-        "";
-
-      // normalize: if doc_type looks like "IDLS_v1", bind to partnership for addendum visibility
-      const normalized_doc =
-        (doc_type && doc_type.toLowerCase() === "idls_v1") ? "partnership" : doc_type;
-
-      if (tier) localStorage.setItem("tier", tier);
-      if (normalized_doc) localStorage.setItem("doc_type", normalized_doc);
-
-      return { tier, doc_type_raw: doc_type, doc_type: normalized_doc };
-    }
-
-    function buildFieldInput(field){
-      const id = `f_${field.field_id}`;
-      const reqStar = field.required ? `<span class="req">*</span>` : "";
-      const desc = field.description ? `<div class="metaHint">${field.doc_code} • ${field.field_key} • ${field.description}</div>` :
-                                       `<div class="metaHint">${field.doc_code} • ${field.field_key}</div>`;
-
-      let inputHtml = "";
-
-      if (field.type === "textarea"){
-        inputHtml = `<textarea id="${id}" ${field.required ? "required" : ""}></textarea>`;
-      } else if (field.type === "date"){
-        inputHtml = `<input id="${id}" type="date" ${field.required ? "required" : ""} />`;
-      } else if (field.type === "email"){
-        inputHtml = `<input id="${id}" type="email" autocomplete="email" ${field.required ? "required" : ""} />`;
-      } else if (field.type === "tel"){
-        inputHtml = `<input id="${id}" type="tel" autocomplete="tel" ${field.required ? "required" : ""} />`;
-      } else if (field.type === "select_state"){
-        const opts = US_STATES.map(s => `<option value="${s}">${s || "— Select —"}</option>`).join("");
-        inputHtml = `<select id="${id}" ${field.required ? "required" : ""}>${opts}</select>`;
-      } else {
-        inputHtml = `<input id="${id}" type="text" ${field.required ? "required" : ""} />`;
-      }
-
-      return `
-        <div>
-          <label for="${id}">${field.label}${reqStar}</label>
-          ${inputHtml}
-          ${desc}
-        </div>
-      `;
-    }
-
-    function renderSections(containerId, fields, title, tagText){
-      const grouped = {};
-      for (const f of fields){
-        grouped[f.section] = grouped[f.section] || [];
-        grouped[f.section].push(f);
-      }
-
-      let html = "";
-      const sections = Object.keys(grouped);
-
-      for (const sec of sections){
-        html += `
-          <div class="divider"></div>
-          <div class="sectionTitle">${sec} <span class="tag">${tagText}</span></div>
-          <div class="grid">
-            ${grouped[sec].map(buildFieldInput).join("")}
-          </div>
-        `;
-      }
-
-      const wrap = `
-        <div>
-          <div class="sectionTitle">${title} <span class="tag">${tagText}</span></div>
-          ${html}
-        </div>
-      `;
-      document.getElementById(containerId).innerHTML = wrap;
-    }
-
-    function collectValues(fields){
-      const out = {};
-      for (const f of fields){
-        const id = `f_${f.field_id}`;
-        const el = document.getElementById(id);
-        if (!el) continue;
-        out[f.field_key] = (el.value ?? "").toString().trim();
-      }
-      return out;
-    }
-
-    // Adaptive insert: strips unknown columns if Supabase complains about schema cache
-    async function insertAdaptive({ table, row, selectColumns=null, maxPasses=20 }){
-      let working = { ...row };
-      let lastErr = null;
-
-      for (let pass = 0; pass < maxPasses; pass++){
-        const q = sb.from(table).insert([working]);
-        const q2 = selectColumns ? q.select(selectColumns).single() : q;
-
-        const { data, error } = await q2;
-
-        if (!error) return { data, used: working };
-
-        lastErr = error;
-
-        const msg = String(error.message || "");
-        const m = msg.match(/Could not find the '([^']+)' column of '([^']+)' in the schema cache/i)
-               || msg.match(/Could not find the ([a-zA-Z0-9_]+) column/i);
-
-        if (m){
-          const missing = m[1];
-          if (missing && Object.prototype.hasOwnProperty.call(working, missing)){
-            delete working[missing];
-            continue;
-          }
-        }
-
-        // Some errors are "schema cache" but formatted differently
-        // Try to detect "column <x> does not exist"
-        const m2 = msg.match(/column "([^"]+)" of relation "[^"]+" does not exist/i);
-        if (m2){
-          const missing = m2[1];
-          if (missing && Object.prototype.hasOwnProperty.call(working, missing)){
-            delete working[missing];
-            continue;
-          }
-        }
-
-        // If it isn't a missing-column error, stop
-        break;
-      }
-
-      return { data: null, used: null, error: lastErr };
-    }
-
-    // Try multiple candidate payload columns (no guessing what your schema uses)
-    function buildRequestRow(selection, coreValues, addendumValues){
-      // A single canonical payload used by IDLS later (field_id mapping lives in registry)
-      const payload = {
-        registry_version: "v1_locked",
-        idls_version: "IDLS_v1",
-        doc_type: selection.doc_type || "",
-        tier: selection.tier || "",
-        captured_at: new Date().toISOString(),
-        core: coreValues,
-        addendum: addendumValues
-      };
-
-      // Minimal "header-ish" columns that commonly exist
-      // (adaptive insert will remove any that don't exist)
-      const header = {
-        first_name: (coreValues.customer_name || "").split(" ")[0] || "",
-        last_name: (coreValues.customer_name || "").split(" ").slice(1).join(" ") || "",
-        email: coreValues.customer_email || "",
-        phone: coreValues.customer_phone || "",
-        tier: selection.tier || "",
-        doc_type: selection.doc_type || "",
-        governing_state: coreValues.governing_state || "",
-        entity_name: coreValues.entity_name || "",
-      };
-
-      // Candidate payload columns we might have in your requests table:
-      const payloadCandidates = ["intake_payload","request_payload","payload","data","form_data","intake","values"];
-
-      // We'll return a row that includes *all* candidate columns pointing to the same payload
-      // Adaptive insert will delete the ones that don't exist.
-      const row = { ...header };
-      for (const c of payloadCandidates){
-        row[c] = payload;
-      }
-      return row;
-    }
-
-    function buildDocumentRequestRow(request_uuid, selection){
-      // Candidate columns seen in various setups; adaptive insert will drop unknown.
-      const row = {
-        request_uuid,
-        doc_type: selection.doc_type || "",
-        document_type: selection.doc_type || "",
-        document_class_id: selection.doc_type || "",
-        idls_version: "IDLS_v1",
-        template_version: "v1",
-        created_by: "intake",
-      };
-      return row;
-    }
-
-    /************************************************************
-     * Init & Render
-     ************************************************************/
-    const selection = getSelection();
-
-    // Display selection
-    $("tierLabel").textContent = selection.tier || "UNKNOWN";
-    $("docTypeLabel").textContent = selection.doc_type || (selection.doc_type_raw || "UNKNOWN");
-
-    // Determine if partnership addendum should render
-    const isPartnership = (selection.doc_type || "").toLowerCase() === "partnership";
-
-    if (!selection.tier || !selection.doc_type){
-      setStatus(false, "Status: Missing tier/doc selection — go back and select Tier + Document.");
-    } else {
-      setStatus(true, `Status: Ready • Tier=${selection.tier} • Doc=${selection.doc_type}`);
-    }
-
-    // Render Core + Addendum
-    renderSections("coreContainer", FIELD_REGISTRY.core, "Core Intake (85%)", "CORE");
-
-    if (isPartnership){
-      renderSections("addendumContainer", FIELD_REGISTRY.partnership_addendum, "Document Addendum (15%) — Partnership", "ADDENDUM");
-    } else {
-      document.getElementById("addendumContainer").innerHTML = `
-        <div class="divider"></div>
-        <div class="sectionTitle">Document Addendum <span class="tag">ADDENDUM</span></div>
-        <div class="sub">No addendum fields are defined for doc_type <b>${selection.doc_type || "UNKNOWN"}</b> in this build.</div>
-      `;
-    }
-
-    // Back button
-    $("backBtn").addEventListener("click", () => history.back());
-
-    /************************************************************
-     * Submit
-     ************************************************************/
-    $("intakeForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      $("errorBox").style.display = "none";
-      $("okBox").style.display = "none";
-
-      if (!selection.tier || !selection.doc_type){
-        showError("Missing Tier or Document selection. Please go back and select again.");
-        return;
-      }
-
-      const coreValues = collectValues(FIELD_REGISTRY.core);
-      const addendumValues = isPartnership ? collectValues(FIELD_REGISTRY.partnership_addendum) : {};
-
-      // Basic required checks (from registry)
-      for (const f of FIELD_REGISTRY.core){
-        if (f.required){
-          const v = coreValues[f.field_key];
-          if (!v){
-            showError(`Missing required field: ${f.label} (${f.doc_code} / ${f.field_key})`);
-            return;
-          }
-        }
-      }
-      if (isPartnership){
-        for (const f of FIELD_REGISTRY.partnership_addendum){
-          if (f.required){
-            const v = addendumValues[f.field_key];
-            if (!v){
-              showError(`Missing required field: ${f.label} (${f.doc_code} / ${f.field_key})`);
-              return;
-            }
-          }
-        }
-      }
-
-      const btn = $("submitBtn");
-      btn.disabled = true;
-      btn.textContent = "Submitting…";
-
-      try {
-        // Insert into requests (adaptive, schema-safe)
-        const requestRow = buildRequestRow(selection, coreValues, addendumValues);
-
-        const ins1 = await insertAdaptive({
-          table: "requests",
-          row: requestRow,
-          selectColumns: "request_uuid"
-        });
-
-        if (ins1.error){
-          throw new Error(
-            "Requests insert failed.\n\n" +
-            (ins1.error.message || "Unknown error") +
-            (ins1.error.details ? "\n" + ins1.error.details : "")
-          );
-        }
-
-        const request_uuid = ins1.data?.request_uuid || null;
-        if (!request_uuid){
-          // If your table uses a different PK name, we still persist a local UUID for linkage,
-          // but we prefer DB request_uuid when available.
-          // We'll generate a fallback and proceed to document_requests insert (it may fail if FK enforced).
-          const fallback = crypto.randomUUID();
-          $("uuidLabel").textContent = fallback;
-          localStorage.setItem("request_uuid", fallback);
-          showOk("Saved request (no request_uuid returned from DB).");
-        } else {
-          $("uuidLabel").textContent = request_uuid;
-          localStorage.setItem("request_uuid", request_uuid);
-
-          // Try insert into document_requests (adaptive, if table exists)
-          const docRow = buildDocumentRequestRow(request_uuid, selection);
-          const ins2 = await insertAdaptive({
-            table: "document_requests",
-            row: docRow,
-            selectColumns: null
-          });
-
-          // If document_requests fails, we do NOT block intake (your rule: capture first)
-          if (ins2.error){
-            showOk(
-              `Request saved (request_uuid=${request_uuid}).\n` +
-              `Note: document_requests insert did not complete (this does not block intake).\n` +
-              `Reason: ${ins2.error.message || "Unknown error"}`
-            );
-          } else {
-            showOk(`Request saved (request_uuid=${request_uuid}). Document request queued.`);
-          }
-        }
-
-        // Redirect forward if you have a payment page; keep it gentle (no payment logic).
-        // If your flow uses a different next step, change below safely later.
-        const nextUrl = new URL("payment.html", window.location.origin);
-        nextUrl.searchParams.set("tier", selection.tier);
-        nextUrl.searchParams.set("doc_type", selection.doc_type);
-        const rq = localStorage.getItem("request_uuid");
-        if (rq) nextUrl.searchParams.set("request_uuid", rq);
-        window.location.href = nextUrl.toString();
-
-      } catch (err) {
-        console.error(err);
-        showError(String(err.message || err));
-      } finally {
-        btn.disabled = false;
-        btn.textContent = "Submit Intake";
-      }
-    });
-  </script>
-</body>
-</html>
+        { field_id:2002, field_key:"capital_contributions", label:"Capital Contributions", doc_code:"P102", description:"Initial contributions (cash/property/crypto)", type
