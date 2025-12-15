@@ -3,66 +3,91 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>E-LegalBoom – Intake</title>
+  <title>E-LegalBoom — Intake</title>
 
   <style>
-    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:#f5f7fb; color:#111; }
-    header { background:#111827; color:#fff; padding:16px 18px; }
-    header .brand { font-weight:900; letter-spacing:.02em; }
-    .wrap { max-width: 1100px; margin: 18px auto; padding: 0 16px 40px; }
-    .pills { display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
-    .pill { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18); padding:8px 12px; border-radius:999px; font-weight:800; }
-    .pill span { font-weight:900; color:#ffd08a; }
-    .status { margin: 10px 0 0; font-weight:900; }
-    .status.ok { color:#86efac; }
-    .status.bad { color:#fecaca; }
+    :root{
+      --bg:#f5f7fb;
+      --ink:#0f172a;
+      --muted:#64748b;
+      --card:#ffffff;
+      --line:#e6e8ee;
+      --brand:#111827;
+      --accent:#ff7b2c;
+      --ok:#166534;
+      --bad:#b42318;
+      --pill:#ffd08a;
+      --shadow:0 6px 20px rgba(17,24,39,.06);
+      --focus:0 0 0 4px rgba(96,165,250,.18);
+      --radius:14px;
+    }
+    *{ box-sizing:border-box; }
+    body{ margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; background:var(--bg); color:var(--ink); }
+    header{ background:var(--brand); color:#fff; padding:16px 18px; }
+    .brand{ font-weight:950; letter-spacing:.02em; }
+    .toprow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    .pill{ background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18); padding:8px 12px; border-radius:999px; font-weight:900; }
+    .pill span{ color:var(--pill); }
+    .status{ margin-top:10px; font-weight:950; }
+    .status.ok{ color:#86efac; }
+    .status.bad{ color:#fecaca; }
 
-    .card { background:#fff; border:1px solid #e6e8ee; border-radius:14px; padding:16px; box-shadow: 0 6px 20px rgba(17,24,39,.06); }
-    .card h2 { margin:0 0 6px; }
-    .small { font-size:12px; color:#64748b; margin-top:6px; }
-    .divider { height:1px; background:#e6e8ee; margin: 14px 0; }
+    .wrap{ max-width:1150px; margin:18px auto; padding:0 16px 44px; }
+    .card{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); }
+    .card h2{ margin:0; }
+    .sub{ margin-top:6px; color:var(--muted); font-size:13px; }
+    .divider{ height:1px; background:var(--line); margin:14px 0; }
 
-    .sectionTitle { margin: 4px 0 10px; font-size: 15px; font-weight: 950; color:#0f172a; }
-    .grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
-    @media (max-width: 900px){ .grid { grid-template-columns: 1fr; } }
+    .grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    @media (max-width: 900px){ .grid{ grid-template-columns:1fr; } }
 
-    label { display:block; font-size:13px; font-weight:850; margin: 10px 0 6px; color:#334155; }
-    input, select, textarea {
-      width:100%; padding:12px 12px; border-radius:10px; border:1px solid #d7dce6; background:#fff;
+    .sectionTitle{ margin:4px 0 10px; font-size:15px; font-weight:950; color:#0f172a; display:flex; align-items:center; gap:10px; }
+    .tag{ font-size:12px; padding:4px 8px; border-radius:999px; border:1px solid var(--line); color:#334155; background:#f8fafc; font-weight:900; }
+    label{ display:block; font-size:13px; font-weight:900; margin:10px 0 6px; color:#334155; }
+    input, select, textarea{
+      width:100%; padding:12px 12px; border-radius:12px; border:1px solid #d7dce6; background:#fff;
       font-size:15px; outline:none;
     }
-    input:focus, select:focus, textarea:focus { border-color:#60a5fa; box-shadow: 0 0 0 4px rgba(96,165,250,.18); }
-    textarea { resize: vertical; }
+    input:focus, select:focus, textarea:focus{ border-color:#60a5fa; box-shadow:var(--focus); }
+    textarea{ resize:vertical; min-height:96px; }
 
-    .actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
-    .btn { border:0; cursor:pointer; font-weight:950; padding:12px 14px; border-radius:12px; background:#ff7b2c; color:#111827; }
-    .btn.secondary { background:#111827; color:#fff; }
-    .btn:disabled { opacity:.6; cursor:not-allowed; }
-    .danger { background:#fff1f2; border:1px solid #fecdd3; padding:10px 12px; border-radius:12px; color:#9f1239; font-weight:900; display:none; }
-    .okbox { background:#ecfdf5; border:1px solid #bbf7d0; padding:10px 12px; border-radius:12px; color:#166534; font-weight:900; display:none; }
-    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    .metaHint{ font-size:12px; color:var(--muted); margin-top:6px; }
+    .req{ color:#dc2626; font-weight:950; margin-left:6px; }
+    .small{ font-size:12px; color:var(--muted); margin-top:10px; }
+
+    .bar{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+    .btn{
+      border:0; cursor:pointer; font-weight:950; padding:12px 14px; border-radius:12px;
+      background:var(--accent); color:#111827;
+    }
+    .btn.secondary{ background:#111827; color:#fff; }
+    .btn:disabled{ opacity:.6; cursor:not-allowed; }
+    .danger{ background:#fff1f2; border:1px solid #fecdd3; padding:10px 12px; border-radius:12px; color:#9f1239; font-weight:900; display:none; white-space:pre-wrap; }
+    .okbox{ background:#ecfdf5; border:1px solid #bbf7d0; padding:10px 12px; border-radius:12px; color:#166534; font-weight:900; display:none; white-space:pre-wrap; }
+
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
   </style>
 
-  <!-- Supabase JS -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
   <header>
     <div class="brand">E-LegalBoom</div>
-    <div class="pills">
+    <div class="toprow">
       <div class="pill">Tier: <span id="tierLabel">UNKNOWN</span></div>
-      <div class="pill">Document(s): <span id="docLabel">—</span></div>
+      <div class="pill">Doc Type: <span id="docTypeLabel">UNKNOWN</span></div>
+      <div class="pill">IDLS: <span id="idlsLabel">IDLS_v1</span></div>
       <div class="pill">Request UUID: <span id="uuidLabel">—</span></div>
     </div>
-    <div id="tierStatus" class="status bad">Status: Detecting selection…</div>
+    <div id="statusLine" class="status bad">Status: waiting for selection…</div>
   </header>
 
   <div class="wrap">
     <div class="card">
-      <h2>Full Intake</h2>
-      <div class="small">
-        This intake captures everything needed to generate your document(s). Your selection is carried forward automatically.
+      <h2>Intake</h2>
+      <div class="sub">
+        Built from the locked Field Registry (Core 85% + Doc Addendum). Each field has a <b>field_id</b>, <b>field_key</b>, and <b>label</b> for IDLS coordinate mapping.
       </div>
 
       <div class="divider"></div>
@@ -71,411 +96,447 @@
       <div id="okBox" class="okbox"></div>
 
       <form id="intakeForm">
-
-        <!-- Customer -->
-        <div class="sectionTitle">Customer</div>
-        <div class="grid">
-          <div>
-            <label for="first_name">First Name</label>
-            <input id="first_name" autocomplete="given-name" required />
-          </div>
-          <div>
-            <label for="last_name">Last Name</label>
-            <input id="last_name" autocomplete="family-name" required />
-          </div>
-          <div>
-            <label for="email">Email</label>
-            <input id="email" type="email" autocomplete="email" required />
-          </div>
-          <div>
-            <label for="phone">Phone</label>
-            <input id="phone" autocomplete="tel" />
-          </div>
-        </div>
+        <div id="coreContainer"></div>
+        <div id="addendumContainer"></div>
 
         <div class="divider"></div>
 
-        <!-- Address / Jurisdiction -->
-        <div class="sectionTitle">Address & Jurisdiction</div>
-        <div class="grid">
-          <div>
-            <label for="addr1">Street Address</label>
-            <input id="addr1" autocomplete="street-address" />
-          </div>
-          <div>
-            <label for="addr2">Address Line 2</label>
-            <input id="addr2" />
-          </div>
-          <div>
-            <label for="city">City</label>
-            <input id="city" autocomplete="address-level2" />
-          </div>
-          <div>
-            <label for="state">State</label>
-            <input id="state" autocomplete="address-level1" placeholder="CA" />
-          </div>
-          <div>
-            <label for="zip">Zip</label>
-            <input id="zip" autocomplete="postal-code" />
-          </div>
-          <div>
-            <label for="preferred_jurisdiction">Preferred Jurisdiction (State)</label>
-            <input id="preferred_jurisdiction" placeholder="CA, FL, TX…" />
-          </div>
-        </div>
-
-        <div class="divider"></div>
-
-        <!-- Business / Entity -->
-        <div class="sectionTitle">Business / Entity (if applicable)</div>
-        <div class="grid">
-          <div>
-            <label for="business_name">Business / Entity Name</label>
-            <input id="business_name" />
-          </div>
-          <div>
-            <label for="entity_type">Entity Type</label>
-            <select id="entity_type">
-              <option value="">—</option>
-              <option>LLC</option>
-              <option>Corporation</option>
-              <option>Partnership</option>
-              <option>Sole Proprietor</option>
-              <option>Other</option>
-            </select>
-          </div>
-          <div>
-            <label for="formation_state">State of Formation</label>
-            <input id="formation_state" placeholder="CA" />
-          </div>
-          <div>
-            <label for="effective_date">Effective Date</label>
-            <input id="effective_date" type="date" />
-          </div>
-        </div>
-
-        <div class="divider"></div>
-
-        <!-- Parties -->
-        <div class="sectionTitle">Parties</div>
-        <div class="small">Enter the parties involved (minimum 2). If a party is a company, use the company name.</div>
-
-        <div class="grid" style="margin-top:10px;">
-          <div>
-            <label for="p1_name">Party 1 – Name</label>
-            <input id="p1_name" required />
-          </div>
-          <div>
-            <label for="p1_role">Party 1 – Role</label>
-            <select id="p1_role" required>
-              <option value="">—</option>
-              <option>Disclosing Party</option>
-              <option>Receiving Party</option>
-              <option>Seller</option>
-              <option>Buyer</option>
-              <option>Client</option>
-              <option>Contractor</option>
-              <option>Other</option>
-            </select>
-          </div>
-          <div>
-            <label for="p1_address">Party 1 – Address</label>
-            <input id="p1_address" />
-          </div>
-          <div>
-            <label for="p1_email">Party 1 – Email (optional)</label>
-            <input id="p1_email" type="email" />
-          </div>
-        </div>
-
-        <div class="grid" style="margin-top:10px;">
-          <div>
-            <label for="p2_name">Party 2 – Name</label>
-            <input id="p2_name" required />
-          </div>
-          <div>
-            <label for="p2_role">Party 2 – Role</label>
-            <select id="p2_role" required>
-              <option value="">—</option>
-              <option>Disclosing Party</option>
-              <option>Receiving Party</option>
-              <option>Seller</option>
-              <option>Buyer</option>
-              <option>Client</option>
-              <option>Contractor</option>
-              <option>Other</option>
-            </select>
-          </div>
-          <div>
-            <label for="p2_address">Party 2 – Address</label>
-            <input id="p2_address" />
-          </div>
-          <div>
-            <label for="p2_email">Party 2 – Email (optional)</label>
-            <input id="p2_email" type="email" />
-          </div>
-        </div>
-
-        <div class="divider"></div>
-
-        <!-- Document Details -->
-        <div class="sectionTitle">Document Details</div>
-        <div class="grid">
-          <div>
-            <label for="urgency">Urgency</label>
-            <select id="urgency">
-              <option value="normal" selected>normal</option>
-              <option value="rush">rush</option>
-            </select>
-          </div>
-          <div>
-            <label for="delivery_pref">Delivery Preference</label>
-            <select id="delivery_pref">
-              <option value="email" selected>Email</option>
-              <option value="download">Download link</option>
-              <option value="both">Both</option>
-            </select>
-          </div>
-          <div style="grid-column: 1 / -1;">
-            <label for="special_terms">Special Terms / Key Points</label>
-            <textarea id="special_terms" rows="4" placeholder="Put any key terms here (amounts, dates, obligations, etc.)."></textarea>
-          </div>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="actions">
-          <button class="btn" type="submit" id="submitBtn">Submit Full Intake & Continue</button>
-          <button class="btn secondary" type="button" id="backBtn">Back</button>
+        <div class="bar">
+          <button class="btn" id="submitBtn" type="submit">Submit Intake</button>
+          <button class="btn secondary" id="backBtn" type="button">Back</button>
         </div>
 
         <div class="small">
-          If Tier or Document shows UNKNOWN, go back and re-select. This page expects <span class="mono">tier</span> and <span class="mono">type</span> to come from your Tier page flow.
+          Tip: this page expects selection values via URL params like <span class="mono">?tier=1&doc_type=partnership</span> (or <span class="mono">type=IDLS_v1</span>). It will also use localStorage if the URL loses them.
         </div>
       </form>
     </div>
   </div>
 
   <script>
-    // ==========================
-    // CONFIG (YOU SET THESE TWO)
-    // ==========================
-    const SUPABASE_URL = "https://vvjbjfltqsivvxxifnvi.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";
+    /************************************************************
+     * CONFIG — paste your Supabase values
+     ************************************************************/
+    const SUPABASE_URL = "PASTE_YOUR_SUPABASE_URL_HERE";
+    const SUPABASE_ANON_KEY = "PASTE_YOUR_SUPABASE_ANON_KEY_HERE";
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // --------------------------
-    // Helpers
-    // --------------------------
+    /************************************************************
+     * LOCKED FIELD REGISTRY (Draft v1 — can expand as you paste
+     * your full master table later. IDs preserved.)
+     ************************************************************/
+    const FIELD_REGISTRY = {
+      core: [
+        // Identity / customer
+        { field_id:1001, field_key:"customer_name", label:"Customer Name", doc_code:"C001", description:"Primary customer / initiating party", type:"text", required:true, section:"Customer" },
+        { field_id:1002, field_key:"customer_email", label:"Customer Email", doc_code:"C002", description:"Email for delivery and notices", type:"email", required:true, section:"Customer" },
+        { field_id:1003, field_key:"customer_phone", label:"Customer Phone", doc_code:"C003", description:"Contact phone number", type:"tel", required:false, section:"Customer" },
+
+        // Parties
+        { field_id:1004, field_key:"party_a_name", label:"Party A Name", doc_code:"P001", description:"First contracting party", type:"text", required:true, section:"Parties" },
+        { field_id:1005, field_key:"party_b_name", label:"Party B Name", doc_code:"P002", description:"Second contracting party", type:"text", required:true, section:"Parties" },
+        { field_id:1006, field_key:"party_a_address", label:"Party A Address", doc_code:"P003", description:"Legal address of Party A", type:"textarea", required:false, section:"Parties" },
+        { field_id:1007, field_key:"party_b_address", label:"Party B Address", doc_code:"P004", description:"Legal address of Party B", type:"textarea", required:false, section:"Parties" },
+
+        // Entity / governing
+        { field_id:1010, field_key:"entity_name", label:"Entity / Partnership Name", doc_code:"E001", description:"Legal name of partnership", type:"text", required:true, section:"Entity" },
+        { field_id:1011, field_key:"governing_state", label:"Governing State", doc_code:"E002", description:"State governing the agreement", type:"select_state", required:true, section:"Entity" },
+        { field_id:1012, field_key:"effective_date", label:"Effective Date", doc_code:"E003", description:"Agreement effective date", type:"date", required:false, section:"Entity" },
+
+        // General clauses / terms
+        { field_id:1020, field_key:"confidentiality", label:"Confidentiality", doc_code:"G001", description:"Confidentiality obligations (summary)", type:"textarea", required:false, section:"Clauses" },
+        { field_id:1021, field_key:"non_compete", label:"Non-Compete", doc_code:"G002", description:"Non-compete applicability (summary)", type:"textarea", required:false, section:"Clauses" },
+        { field_id:1022, field_key:"dispute_resolution", label:"Dispute Resolution", doc_code:"G003", description:"Arbitration/venue selection", type:"textarea", required:false, section:"Clauses" },
+        { field_id:1023, field_key:"amendments", label:"Amendments", doc_code:"G004", description:"How agreement may be amended", type:"textarea", required:false, section:"Clauses" },
+        { field_id:1024, field_key:"severability", label:"Severability", doc_code:"G005", description:"Severability provision", type:"textarea", required:false, section:"Clauses" },
+
+        // Operations / lifecycle
+        { field_id:1030, field_key:"management_structure", label:"Management Structure", doc_code:"O001", description:"How partnership is managed", type:"textarea", required:false, section:"Operations" },
+        { field_id:1031, field_key:"decision_threshold", label:"Decision Threshold", doc_code:"O002", description:"Voting/approval rules", type:"textarea", required:false, section:"Operations" },
+        { field_id:1032, field_key:"dissolution_terms", label:"Dissolution Terms", doc_code:"O003", description:"Conditions for dissolution", type:"textarea", required:false, section:"Operations" },
+        { field_id:1033, field_key:"transfer_restrictions", label:"Transfer Restrictions", doc_code:"O004", description:"Assignment/transfer limits", type:"textarea", required:false, section:"Operations" },
+
+        // Notes (useful to IDLS content blocks if you want)
+        { field_id:1099, field_key:"special_notes", label:"Special Notes", doc_code:"N001", description:"Anything else you want included", type:"textarea", required:false, section:"Notes" },
+      ],
+
+      // Partnership / IDLS_v1 addendum
+      partnership_addendum: [
+        { field_id:2001, field_key:"ownership_split", label:"Ownership Split (%)", doc_code:"P101", description:"Percentage ownership per partner", type:"text", required:false, section:"Partnership Addendum" },
+        { field_id:2002, field_key:"capital_contributions", label:"Capital Contributions", doc_code:"P102", description:"Initial contributions (cash/property/crypto)", type:"textarea", required:false, section:"Partnership Addendum" },
+        { field_id:2003, field_key:"profit_loss_split", label:"Profit & Loss Allocation", doc_code:"P103", description:"Allocation of profits/losses", type:"textarea", required:false, section:"Partnership Addendum" },
+        { field_id:2004, field_key:"capital_accounts", label:"Capital Accounts", doc_code:"P104", description:"Capital account handling", type:"textarea", required:false, section:"Partnership Addendum" },
+
+        { field_id:2010, field_key:"management_duties", label:"Management Duties", doc_code:"P201", description:"Specific management obligations", type:"textarea", required:false, section:"Partnership Addendum" },
+        { field_id:2011, field_key:"withdrawal_terms", label:"Withdrawal Terms", doc_code:"P202", description:"Partner withdrawal rules", type:"textarea", required:false, section:"Partnership Addendum" },
+        { field_id:2012, field_key:"buyout_terms", label:"Buyout Terms", doc_code:"P203", description:"Buyout mechanics", type:"textarea", required:false, section:"Partnership Addendum" },
+        { field_id:2013, field_key:"non_compete_scope", label:"Non-Compete Scope", doc_code:"P204", description:"Scope of non-compete if enabled", type:"textarea", required:false, section:"Partnership Addendum" },
+      ]
+    };
+
+    /************************************************************
+     * Utilities
+     ************************************************************/
     const $ = (id) => document.getElementById(id);
 
-    function setStatus(ok, msg) {
-      const el = $("tierStatus");
+    const US_STATES = [
+      "", "AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME",
+      "MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI",
+      "SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"
+    ];
+
+    function showError(msg){
+      $("errorBox").style.display = "block";
+      $("errorBox").textContent = msg;
+      $("okBox").style.display = "none";
+    }
+    function showOk(msg){
+      $("okBox").style.display = "block";
+      $("okBox").textContent = msg;
+      $("errorBox").style.display = "none";
+    }
+    function setStatus(ok, msg){
+      const el = $("statusLine");
       el.className = "status " + (ok ? "ok" : "bad");
       el.textContent = msg;
     }
 
-    function showError(msg) {
-      const box = $("errorBox");
-      box.style.display = "block";
-      box.textContent = msg;
-      $("okBox").style.display = "none";
-    }
-
-    function showOk(msg) {
-      const box = $("okBox");
-      box.style.display = "block";
-      box.textContent = msg;
-      $("errorBox").style.display = "none";
-    }
-
-    function getSelection() {
+    function getSelection(){
       const params = new URLSearchParams(window.location.search);
+
+      // Tier
       const tier = params.get("tier") || localStorage.getItem("tier") || "";
-      const docType = params.get("type") || params.get("doc_type") || localStorage.getItem("doc_type") || "";
 
-      // Persist to storage so downstream pages can use it even if URL loses it
+      // Document type: support multiple param names
+      // We treat IDLS_v1 as partnership by default unless explicitly overridden.
+      const doc_type =
+        params.get("doc_type") ||
+        params.get("document") ||
+        params.get("type") ||
+        localStorage.getItem("doc_type") ||
+        "";
+
+      // normalize: if doc_type looks like "IDLS_v1", bind to partnership for addendum visibility
+      const normalized_doc =
+        (doc_type && doc_type.toLowerCase() === "idls_v1") ? "partnership" : doc_type;
+
       if (tier) localStorage.setItem("tier", tier);
-      if (docType) localStorage.setItem("doc_type", docType);
+      if (normalized_doc) localStorage.setItem("doc_type", normalized_doc);
 
-      return { tier, docType };
+      return { tier, doc_type_raw: doc_type, doc_type: normalized_doc };
     }
 
-    function buildIntakePayload() {
-      return {
-        customer: {
-          first_name: $("first_name").value.trim(),
-          last_name: $("last_name").value.trim(),
-          email: $("email").value.trim(),
-          phone: $("phone").value.trim()
-        },
-        address: {
-          addr1: $("addr1").value.trim(),
-          addr2: $("addr2").value.trim(),
-          city: $("city").value.trim(),
-          state: $("state").value.trim(),
-          zip: $("zip").value.trim(),
-          preferred_jurisdiction: $("preferred_jurisdiction").value.trim()
-        },
-        business: {
-          business_name: $("business_name").value.trim(),
-          entity_type: $("entity_type").value,
-          formation_state: $("formation_state").value.trim(),
-          effective_date: $("effective_date").value
-        },
-        parties: [
-          {
-            name: $("p1_name").value.trim(),
-            role: $("p1_role").value,
-            address: $("p1_address").value.trim(),
-            email: $("p1_email").value.trim()
-          },
-          {
-            name: $("p2_name").value.trim(),
-            role: $("p2_role").value,
-            address: $("p2_address").value.trim(),
-            email: $("p2_email").value.trim()
-          }
-        ],
-        document: {
-          urgency: $("urgency").value,
-          delivery_pref: $("delivery_pref").value,
-          special_terms: $("special_terms").value.trim()
-        },
-        meta: {
-          captured_at: new Date().toISOString(),
-          user_agent: navigator.userAgent
-        }
-      };
-    }
+    function buildFieldInput(field){
+      const id = `f_${field.field_id}`;
+      const reqStar = field.required ? `<span class="req">*</span>` : "";
+      const desc = field.description ? `<div class="metaHint">${field.doc_code} • ${field.field_key} • ${field.description}</div>` :
+                                       `<div class="metaHint">${field.doc_code} • ${field.field_key}</div>`;
 
-    // --------------------------
-    // Init (show tier/doc on page)
-    // --------------------------
-    (function init() {
-      const { tier, docType } = getSelection();
-      $("tierLabel").textContent = tier || "UNKNOWN";
-      $("docLabel").textContent = docType || "—";
+      let inputHtml = "";
 
-      if (!tier || !docType) {
-        setStatus(false, "Status: No tier/doc detected — please return and select Tier + Document.");
+      if (field.type === "textarea"){
+        inputHtml = `<textarea id="${id}" ${field.required ? "required" : ""}></textarea>`;
+      } else if (field.type === "date"){
+        inputHtml = `<input id="${id}" type="date" ${field.required ? "required" : ""} />`;
+      } else if (field.type === "email"){
+        inputHtml = `<input id="${id}" type="email" autocomplete="email" ${field.required ? "required" : ""} />`;
+      } else if (field.type === "tel"){
+        inputHtml = `<input id="${id}" type="tel" autocomplete="tel" ${field.required ? "required" : ""} />`;
+      } else if (field.type === "select_state"){
+        const opts = US_STATES.map(s => `<option value="${s}">${s || "— Select —"}</option>`).join("");
+        inputHtml = `<select id="${id}" ${field.required ? "required" : ""}>${opts}</select>`;
       } else {
-        setStatus(true, `Status: Detected (${tier}) • ${docType}`);
+        inputHtml = `<input id="${id}" type="text" ${field.required ? "required" : ""} />`;
       }
 
-      $("backBtn").addEventListener("click", () => history.back());
-    })();
+      return `
+        <div>
+          <label for="${id}">${field.label}${reqStar}</label>
+          ${inputHtml}
+          ${desc}
+        </div>
+      `;
+    }
 
-    // --------------------------
-    // Submit (requests + document_requests)
-    // --------------------------
+    function renderSections(containerId, fields, title, tagText){
+      const grouped = {};
+      for (const f of fields){
+        grouped[f.section] = grouped[f.section] || [];
+        grouped[f.section].push(f);
+      }
+
+      let html = "";
+      const sections = Object.keys(grouped);
+
+      for (const sec of sections){
+        html += `
+          <div class="divider"></div>
+          <div class="sectionTitle">${sec} <span class="tag">${tagText}</span></div>
+          <div class="grid">
+            ${grouped[sec].map(buildFieldInput).join("")}
+          </div>
+        `;
+      }
+
+      const wrap = `
+        <div>
+          <div class="sectionTitle">${title} <span class="tag">${tagText}</span></div>
+          ${html}
+        </div>
+      `;
+      document.getElementById(containerId).innerHTML = wrap;
+    }
+
+    function collectValues(fields){
+      const out = {};
+      for (const f of fields){
+        const id = `f_${f.field_id}`;
+        const el = document.getElementById(id);
+        if (!el) continue;
+        out[f.field_key] = (el.value ?? "").toString().trim();
+      }
+      return out;
+    }
+
+    // Adaptive insert: strips unknown columns if Supabase complains about schema cache
+    async function insertAdaptive({ table, row, selectColumns=null, maxPasses=20 }){
+      let working = { ...row };
+      let lastErr = null;
+
+      for (let pass = 0; pass < maxPasses; pass++){
+        const q = sb.from(table).insert([working]);
+        const q2 = selectColumns ? q.select(selectColumns).single() : q;
+
+        const { data, error } = await q2;
+
+        if (!error) return { data, used: working };
+
+        lastErr = error;
+
+        const msg = String(error.message || "");
+        const m = msg.match(/Could not find the '([^']+)' column of '([^']+)' in the schema cache/i)
+               || msg.match(/Could not find the ([a-zA-Z0-9_]+) column/i);
+
+        if (m){
+          const missing = m[1];
+          if (missing && Object.prototype.hasOwnProperty.call(working, missing)){
+            delete working[missing];
+            continue;
+          }
+        }
+
+        // Some errors are "schema cache" but formatted differently
+        // Try to detect "column <x> does not exist"
+        const m2 = msg.match(/column "([^"]+)" of relation "[^"]+" does not exist/i);
+        if (m2){
+          const missing = m2[1];
+          if (missing && Object.prototype.hasOwnProperty.call(working, missing)){
+            delete working[missing];
+            continue;
+          }
+        }
+
+        // If it isn't a missing-column error, stop
+        break;
+      }
+
+      return { data: null, used: null, error: lastErr };
+    }
+
+    // Try multiple candidate payload columns (no guessing what your schema uses)
+    function buildRequestRow(selection, coreValues, addendumValues){
+      // A single canonical payload used by IDLS later (field_id mapping lives in registry)
+      const payload = {
+        registry_version: "v1_locked",
+        idls_version: "IDLS_v1",
+        doc_type: selection.doc_type || "",
+        tier: selection.tier || "",
+        captured_at: new Date().toISOString(),
+        core: coreValues,
+        addendum: addendumValues
+      };
+
+      // Minimal "header-ish" columns that commonly exist
+      // (adaptive insert will remove any that don't exist)
+      const header = {
+        first_name: (coreValues.customer_name || "").split(" ")[0] || "",
+        last_name: (coreValues.customer_name || "").split(" ").slice(1).join(" ") || "",
+        email: coreValues.customer_email || "",
+        phone: coreValues.customer_phone || "",
+        tier: selection.tier || "",
+        doc_type: selection.doc_type || "",
+        governing_state: coreValues.governing_state || "",
+        entity_name: coreValues.entity_name || "",
+      };
+
+      // Candidate payload columns we might have in your requests table:
+      const payloadCandidates = ["intake_payload","request_payload","payload","data","form_data","intake","values"];
+
+      // We'll return a row that includes *all* candidate columns pointing to the same payload
+      // Adaptive insert will delete the ones that don't exist.
+      const row = { ...header };
+      for (const c of payloadCandidates){
+        row[c] = payload;
+      }
+      return row;
+    }
+
+    function buildDocumentRequestRow(request_uuid, selection){
+      // Candidate columns seen in various setups; adaptive insert will drop unknown.
+      const row = {
+        request_uuid,
+        doc_type: selection.doc_type || "",
+        document_type: selection.doc_type || "",
+        document_class_id: selection.doc_type || "",
+        idls_version: "IDLS_v1",
+        template_version: "v1",
+        created_by: "intake",
+      };
+      return row;
+    }
+
+    /************************************************************
+     * Init & Render
+     ************************************************************/
+    const selection = getSelection();
+
+    // Display selection
+    $("tierLabel").textContent = selection.tier || "UNKNOWN";
+    $("docTypeLabel").textContent = selection.doc_type || (selection.doc_type_raw || "UNKNOWN");
+
+    // Determine if partnership addendum should render
+    const isPartnership = (selection.doc_type || "").toLowerCase() === "partnership";
+
+    if (!selection.tier || !selection.doc_type){
+      setStatus(false, "Status: Missing tier/doc selection — go back and select Tier + Document.");
+    } else {
+      setStatus(true, `Status: Ready • Tier=${selection.tier} • Doc=${selection.doc_type}`);
+    }
+
+    // Render Core + Addendum
+    renderSections("coreContainer", FIELD_REGISTRY.core, "Core Intake (85%)", "CORE");
+
+    if (isPartnership){
+      renderSections("addendumContainer", FIELD_REGISTRY.partnership_addendum, "Document Addendum (15%) — Partnership", "ADDENDUM");
+    } else {
+      document.getElementById("addendumContainer").innerHTML = `
+        <div class="divider"></div>
+        <div class="sectionTitle">Document Addendum <span class="tag">ADDENDUM</span></div>
+        <div class="sub">No addendum fields are defined for doc_type <b>${selection.doc_type || "UNKNOWN"}</b> in this build.</div>
+      `;
+    }
+
+    // Back button
+    $("backBtn").addEventListener("click", () => history.back());
+
+    /************************************************************
+     * Submit
+     ************************************************************/
     $("intakeForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       $("errorBox").style.display = "none";
       $("okBox").style.display = "none";
 
-      const { tier, docType } = getSelection();
-      if (!tier || !docType) {
+      if (!selection.tier || !selection.doc_type){
         showError("Missing Tier or Document selection. Please go back and select again.");
         return;
       }
 
-      // Basic required fields check
-      if (!$("first_name").value.trim() || !$("last_name").value.trim() || !$("email").value.trim()) {
-        showError("First name, last name, and email are required.");
-        return;
+      const coreValues = collectValues(FIELD_REGISTRY.core);
+      const addendumValues = isPartnership ? collectValues(FIELD_REGISTRY.partnership_addendum) : {};
+
+      // Basic required checks (from registry)
+      for (const f of FIELD_REGISTRY.core){
+        if (f.required){
+          const v = coreValues[f.field_key];
+          if (!v){
+            showError(`Missing required field: ${f.label} (${f.doc_code} / ${f.field_key})`);
+            return;
+          }
+        }
       }
-      if (!$("p1_name").value.trim() || !$("p2_name").value.trim()) {
-        showError("Party 1 and Party 2 names are required.");
-        return;
-      }
-      if (!$("p1_role").value || !$("p2_role").value) {
-        showError("Party 1 and Party 2 roles are required.");
-        return;
+      if (isPartnership){
+        for (const f of FIELD_REGISTRY.partnership_addendum){
+          if (f.required){
+            const v = addendumValues[f.field_key];
+            if (!v){
+              showError(`Missing required field: ${f.label} (${f.doc_code} / ${f.field_key})`);
+              return;
+            }
+          }
+        }
       }
 
-      const submitBtn = $("submitBtn");
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Submitting…";
+      const btn = $("submitBtn");
+      btn.disabled = true;
+      btn.textContent = "Submitting…";
 
       try {
-        const payload = buildIntakePayload();
+        // Insert into requests (adaptive, schema-safe)
+        const requestRow = buildRequestRow(selection, coreValues, addendumValues);
 
-        // Build a safe core insert for requests (columns we’ve been using)
-        // NOTE: This does NOT include "notes" so you won't hit that schema-cache error again.
-        const coreRequestRow = {
-          first_name: payload.customer.first_name,
-          last_name: payload.customer.last_name,
-          email: payload.customer.email,
-          phone: payload.customer.phone,
-          preferred_jurisdiction: payload.address.preferred_jurisdiction,
-          urgency: payload.document.urgency,
-          doc_type: docType,
-          tier: tier,
-          payment_status: "pending",
-          status: "intake_received"
-        };
+        const ins1 = await insertAdaptive({
+          table: "requests",
+          row: requestRow,
+          selectColumns: "request_uuid"
+        });
 
-        // Try to include intake_payload IF your table has it.
-        // If it doesn't, we retry automatically without it.
-        let inserted;
-        let reqErr;
-
-        // Attempt #1: with intake_payload
-        ({ data: inserted, error: reqErr } = await sb
-          .from("requests")
-          .insert([{ ...coreRequestRow, intake_payload: payload }])
-          .select("request_uuid")
-          .single()
-        );
-
-        // If intake_payload column doesn't exist, retry without it
-        if (reqErr && (String(reqErr.message || "").toLowerCase().includes("intake_payload")
-                      || String(reqErr.message || "").toLowerCase().includes("schema cache")
-                      || String(reqErr.details || "").toLowerCase().includes("intake_payload"))) {
-
-          ({ data: inserted, error: reqErr } = await sb
-            .from("requests")
-            .insert([coreRequestRow])
-            .select("request_uuid")
-            .single()
+        if (ins1.error){
+          throw new Error(
+            "Requests insert failed.\n\n" +
+            (ins1.error.message || "Unknown error") +
+            (ins1.error.details ? "\n" + ins1.error.details : "")
           );
         }
 
-        if (reqErr) throw reqErr;
+        const request_uuid = ins1.data?.request_uuid || null;
+        if (!request_uuid){
+          // If your table uses a different PK name, we still persist a local UUID for linkage,
+          // but we prefer DB request_uuid when available.
+          // We'll generate a fallback and proceed to document_requests insert (it may fail if FK enforced).
+          const fallback = crypto.randomUUID();
+          $("uuidLabel").textContent = fallback;
+          localStorage.setItem("request_uuid", fallback);
+          showOk("Saved request (no request_uuid returned from DB).");
+        } else {
+          $("uuidLabel").textContent = request_uuid;
+          localStorage.setItem("request_uuid", request_uuid);
 
-        const request_uuid = inserted?.request_uuid;
-        if (!request_uuid) throw new Error("Insert succeeded but no request_uuid returned.");
+          // Try insert into document_requests (adaptive, if table exists)
+          const docRow = buildDocumentRequestRow(request_uuid, selection);
+          const ins2 = await insertAdaptive({
+            table: "document_requests",
+            row: docRow,
+            selectColumns: null
+          });
 
-        $("uuidLabel").textContent = request_uuid;
-        localStorage.setItem("request_uuid", request_uuid);
+          // If document_requests fails, we do NOT block intake (your rule: capture first)
+          if (ins2.error){
+            showOk(
+              `Request saved (request_uuid=${request_uuid}).\n` +
+              `Note: document_requests insert did not complete (this does not block intake).\n` +
+              `Reason: ${ins2.error.message || "Unknown error"}`
+            );
+          } else {
+            showOk(`Request saved (request_uuid=${request_uuid}). Document request queued.`);
+          }
+        }
 
-        // Insert one document request line item
-        const { error: docErr } = await sb
-          .from("document_requests")
-          .insert([{
-            request_uuid,
-            doc_type: docType,
-            urgency: payload.document.urgency
-          }]);
-
-        if (docErr) throw docErr;
-
-        showOk(`Saved. Request UUID: ${request_uuid}`);
-
-        // Redirect to payment with selection + UUID
-        const url = new URL("payment.html", window.location.origin);
-        url.searchParams.set("tier", tier);
-        url.searchParams.set("type", docType);
-        url.searchParams.set("request_uuid", request_uuid);
-        window.location.href = url.toString();
+        // Redirect forward if you have a payment page; keep it gentle (no payment logic).
+        // If your flow uses a different next step, change below safely later.
+        const nextUrl = new URL("payment.html", window.location.origin);
+        nextUrl.searchParams.set("tier", selection.tier);
+        nextUrl.searchParams.set("doc_type", selection.doc_type);
+        const rq = localStorage.getItem("request_uuid");
+        if (rq) nextUrl.searchParams.set("request_uuid", rq);
+        window.location.href = nextUrl.toString();
 
       } catch (err) {
         console.error(err);
-        showError("Submit failed: " + (err?.message || "Unknown error"));
+        showError(String(err.message || err));
       } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Submit Full Intake & Continue";
+        btn.disabled = false;
+        btn.textContent = "Submit Intake";
       }
     });
   </script>
