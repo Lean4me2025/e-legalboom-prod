@@ -1,233 +1,803 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>E-LegalBoom | Document Intake</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>E-LegalBoom | Intake</title>
 
-  <!-- Supabase -->
+  <!-- Supabase JS -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f6f8fb;
-      margin: 0;
-      padding: 0;
+    :root{
+      --navy:#0a2540;
+      --navy2:#0f3356;
+      --bg:#f6f8fb;
+      --card:#ffffff;
+      --muted:#6b7280;
+      --line:#e6ebf2;
+      --accent:#ff7a18;
+      --good:#0ea5e9;
+      --bad:#dc2626;
+      --ok:#16a34a;
+      --shadow:0 10px 25px rgba(10,37,64,0.08);
+      --radius:14px;
     }
-    header {
-      background: #0a2540;
-      color: white;
-      padding: 20px;
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:var(--bg);
+      color:#111827;
     }
-    h1 {
-      margin: 0;
-      font-size: 22px;
+    header{
+      background:linear-gradient(180deg, var(--navy) 0%, var(--navy2) 100%);
+      color:#fff;
+      padding:18px 16px;
+      border-bottom:1px solid rgba(255,255,255,0.08);
     }
-    .meta {
-      font-size: 14px;
-      opacity: 0.9;
+    .wrap{
+      max-width:980px;
+      margin:0 auto;
     }
-    main {
-      max-width: 900px;
-      margin: 30px auto;
-      background: white;
-      padding: 30px;
-      border-radius: 8px;
+    .topbar{
+      display:flex;
+      gap:14px;
+      align-items:flex-start;
+      justify-content:space-between;
+      flex-wrap:wrap;
     }
-    .field {
-      margin-bottom: 18px;
+    .brand{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
     }
-    .field label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 6px;
+    .brand .title{
+      font-size:18px;
+      font-weight:800;
+      letter-spacing:0.2px;
+      margin:0;
     }
-    .field input, .field textarea, .field select {
-      width: 100%;
-      padding: 10px;
-      font-size: 15px;
+    .brand .sub{
+      font-size:13px;
+      color:rgba(255,255,255,0.85);
+      margin:0;
     }
-    button {
-      background: #0a2540;
-      color: white;
-      border: none;
-      padding: 14px 24px;
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 4px;
+    .pills{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
     }
-    button:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
+    .pill{
+      border:1px solid rgba(255,255,255,0.18);
+      background:rgba(255,255,255,0.08);
+      padding:8px 10px;
+      border-radius:999px;
+      font-size:12px;
+      color:#fff;
+      display:flex;
+      gap:8px;
+      align-items:center;
+      white-space:nowrap;
     }
-    .error {
-      color: red;
-      margin-bottom: 20px;
+    .dot{
+      width:9px;
+      height:9px;
+      border-radius:50%;
+      background:rgba(255,255,255,0.4);
+    }
+    .dot.ok{background:rgba(34,197,94,0.95)}
+    .dot.bad{background:rgba(239,68,68,0.95)}
+    main{
+      padding:20px 16px 70px;
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+    .row{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:14px;
+    }
+    @media(min-width: 920px){
+      .row{grid-template-columns: 2fr 1fr;}
+    }
+    .h2{
+      font-size:16px;
+      font-weight:800;
+      margin:0 0 8px 0;
+    }
+    .muted{color:var(--muted); font-size:13px; line-height:1.35}
+    .hr{height:1px;background:var(--line); margin:16px 0;}
+    .alert{
+      border-radius:12px;
+      padding:12px 12px;
+      border:1px solid var(--line);
+      background:#fff;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+    }
+    .alert .icon{
+      width:20px;height:20px;border-radius:6px;
+      display:grid; place-items:center;
+      background:#eef2ff; color:#3730a3;
+      font-weight:900;
+      flex:0 0 auto;
+    }
+    .alert.error{
+      border-color:rgba(220,38,38,0.25);
+      background:rgba(220,38,38,0.04);
+    }
+    .alert.error .icon{background:rgba(220,38,38,0.12); color:var(--bad);}
+    .alert.ok{
+      border-color:rgba(22,163,74,0.25);
+      background:rgba(22,163,74,0.05);
+    }
+    .alert.ok .icon{background:rgba(22,163,74,0.12); color:var(--ok);}
+    .alert .text{font-size:13px; color:#111827; line-height:1.35}
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+    }
+    @media(min-width:720px){
+      .grid{grid-template-columns: 1fr 1fr;}
+    }
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      padding:12px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:#fff;
+    }
+    .label{
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:0.2px;
+      color:#111827;
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .req{
+      font-size:11px;
+      font-weight:800;
+      color:#fff;
+      background:var(--accent);
+      padding:2px 6px;
+      border-radius:999px;
+    }
+    .hint{font-size:12px;color:var(--muted)}
+    input, textarea, select{
+      width:100%;
+      padding:10px 11px;
+      border:1px solid #d9e2ee;
+      border-radius:10px;
+      outline:none;
+      font-size:14px;
+      background:#fff;
+    }
+    textarea{min-height:90px; resize:vertical;}
+    input:focus, textarea:focus, select:focus{
+      border-color:rgba(14,165,233,0.55);
+      box-shadow:0 0 0 4px rgba(14,165,233,0.12);
+    }
+    .actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+      margin-top:14px;
+    }
+    button{
+      border:none;
+      border-radius:12px;
+      padding:12px 16px;
+      font-weight:900;
+      font-size:14px;
+      cursor:pointer;
+      background:var(--navy);
+      color:#fff;
+    }
+    button.secondary{
+      background:#ffffff;
+      color:#111827;
+      border:1px solid var(--line);
+    }
+    button:disabled{opacity:0.6; cursor:not-allowed;}
+    .mini{
+      font-size:12px;color:var(--muted);
+    }
+    .kvs{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:10px;
+    }
+    .kv{
+      padding:10px 12px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:#fff;
+    }
+    .kv .k{font-size:11px; font-weight:900; color:var(--muted); letter-spacing:0.2px;}
+    .kv .v{font-size:13px; font-weight:800; color:#111827; margin-top:4px; word-break:break-word;}
+    .smalllist{
+      margin:8px 0 0 0;
+      padding-left:18px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.35;
+    }
+
+    /* Hidden key inputs block (you paste inside, no quotes) */
+    .keys {
+      display:none; /* keep hidden in production */
     }
   </style>
 </head>
 
 <body>
+  <!--
+    ✅ PASTE YOUR SUPABASE VALUES BELOW (NO QUOTES NEEDED)
+    - Click "Edit" on GitHub, scroll here
+    - Paste URL and KEY between the opening and closing <textarea> tags
+    - Example:
+        <textarea id="sb_url">https://vvjbjfltqsivvxxifnvi.supabase.co>
+        <textarea id="sb_anon">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q>
+  -->
+  <div class="keys">
+    <textarea id="sb_url">
+    </textarea>
+    <textarea id="sb_anon">
+    </textarea>
+  </div>
 
-<header>
-  <h1 id="docTitle">Document Intake</h1>
-  <div class="meta" id="docMeta"></div>
-</header>
+  <header>
+    <div class="wrap">
+      <div class="topbar">
+        <div class="brand">
+          <p class="title" id="pageTitle">Document Intake</p>
+          <p class="sub" id="pageSub">Provide the details once — we’ll generate your document cleanly.</p>
+        </div>
 
-<main>
-  <div id="error" class="error"></div>
-  <form id="intakeForm"></form>
-  <br />
-  <button id="submitBtn">Continue</button>
-</main>
+        <div class="pills">
+          <div class="pill">
+            <span class="dot" id="pillSupabaseDot"></span>
+            <span id="pillSupabase">Supabase: checking…</span>
+          </div>
+          <div class="pill">
+            <span class="dot" id="pillDocDot"></span>
+            <span id="pillDoc">Doc: checking…</span>
+          </div>
+          <div class="pill">
+            <span class="dot" id="pillFieldsDot"></span>
+            <span id="pillFields">Fields: loading…</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <div class="row">
+        <!-- LEFT: FORM -->
+        <div class="card">
+          <div id="alertArea"></div>
+
+          <div class="hr"></div>
+
+          <h2 class="h2">Intake Questions</h2>
+          <p class="muted" id="formIntro">
+            Answer the questions below. Required items are marked.
+          </p>
+
+          <div class="hr"></div>
+
+          <form id="intakeForm">
+            <div class="grid" id="fieldsGrid"></div>
+          </form>
+
+          <div class="actions">
+            <button class="secondary" id="btnSaveDraft" type="button">Save Draft</button>
+            <button id="btnContinue" type="button">Continue</button>
+          </div>
+
+          <p class="mini" id="miniNote"></p>
+        </div>
+
+        <!-- RIGHT: CONTEXT -->
+        <div class="card">
+          <h2 class="h2">Request Summary</h2>
+          <p class="muted">This is what the system is using to determine your intake.</p>
+
+          <div class="hr"></div>
+
+          <div class="kvs">
+            <div class="kv">
+              <div class="k">TIER</div>
+              <div class="v" id="kvTier">—</div>
+            </div>
+            <div class="kv">
+              <div class="k">DOCUMENT TYPE</div>
+              <div class="v" id="kvDocType">—</div>
+            </div>
+            <div class="kv">
+              <div class="k">DOCUMENT NAME</div>
+              <div class="v" id="kvDocName">—</div>
+            </div>
+            <div class="kv" id="kvBundleBox" style="display:none">
+              <div class="k">BUNDLE SELECTION</div>
+              <div class="v" id="kvBundleDocs">—</div>
+              <ul class="smalllist" id="kvBundleDocNames"></ul>
+            </div>
+          </div>
+
+          <div class="hr"></div>
+
+          <h2 class="h2">What happens next</h2>
+          <ul class="smalllist">
+            <li>Your answers are captured as a single payload.</li>
+            <li>The doc engine maps field codes to IDLS_v1 coordinates.</li>
+            <li>Document is generated and then released based on your payment rule.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </main>
 
 <script>
-/* =========================
-   CONFIG
-========================= */
-const SUPABASE_URL = window.SUPABASE_URL || "https://vvjbjfltqsivvxxifnvi.supabase.co";
-const SUPABASE_ANON_KEY = “eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";
-const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+/* ============================================================
+   E-LEGALBOOM INTAKE (FULL, INTEGRATED, NO PATCH)
+   - Tables used:
+     1) public.document_catalog (doc_type, doc_name, tier_default, ...)
+     2) public.document_field_map (universal fields)
+     3) public.document_field_rules (optional; per-doc show/required/order)
+   ============================================================ */
 
-/* =========================
-   PARAM PARSING
-========================= */
-const params = new URLSearchParams(window.location.search);
-const tier = params.get("tier");
-const docType = params.get("doc_type");
-const bundle = params.get("bundle");
-const docsParam = params.get("docs");
+(function() {
+  // -------------------------
+  // Read Supabase values (NO QUOTES required for you to paste)
+  // -------------------------
+  const SUPABASE_URL = (document.getElementById("sb_url")?.value || "").trim();
+  const SUPABASE_ANON_KEY = (document.getElementById("sb_anon")?.value || "").trim();
 
-const selectedDocs = docsParam ? docsParam.split(",") : [];
+  // UI helpers
+  const $ = (id) => document.getElementById(id);
 
-/* =========================
-   STATE
-========================= */
-let catalogDocs = {};
-let fieldList = [];
-
-/* =========================
-   INIT
-========================= */
-init();
-
-async function init() {
-  try {
-    await loadCatalog();
-    resolveHeader();
-    await loadFields();
-    renderForm();
-  } catch (err) {
-    showError(err.message || "Failed to load intake.");
-  }
-}
-
-/* =========================
-   LOAD DOCUMENT CATALOG
-========================= */
-async function loadCatalog() {
-  const { data, error } = await supabase
-    .from("document_catalog")
-    .select("doc_type, doc_name");
-
-  if (error) throw error;
-
-  data.forEach(d => {
-    catalogDocs[d.doc_type] = d.doc_name;
-  });
-}
-
-/* =========================
-   HEADER RESOLUTION
-========================= */
-function resolveHeader() {
-  let title = "";
-  let meta = "";
-
-  if (tier === "bundle") {
-    title = catalogDocs[bundle] || "Document Bundle";
-    meta = selectedDocs.map(d => catalogDocs[d] || d).join(" • ");
-  } else {
-    title = catalogDocs[docType] || "Document Intake";
-    meta = "Tier " + tier;
+  function setPill(dotId, textId, ok, text) {
+    const dot = $(dotId);
+    const span = $(textId);
+    if (dot) dot.className = "dot " + (ok ? "ok" : "bad");
+    if (span) span.textContent = text;
   }
 
-  document.getElementById("docTitle").innerText = title;
-  document.getElementById("docMeta").innerText = meta;
-}
+  function showAlert(type, title, msg) {
+    const area = $("alertArea");
+    const isError = type === "error";
+    const css = isError ? "alert error" : "alert ok";
+    const icon = isError ? "!" : "✓";
+    area.innerHTML = `
+      <div class="${css}">
+        <div class="icon">${icon}</div>
+        <div class="text">
+          <div style="font-weight:900;margin-bottom:4px;">${escapeHtml(title)}</div>
+          <div>${escapeHtml(msg)}</div>
+        </div>
+      </div>
+    `;
+  }
 
-/* =========================
-   LOAD FIELDS (UNIVERSAL)
-========================= */
-async function loadFields() {
-  const { data, error } = await supabase
-    .from("document_field_map")
-    .select("field_code, field_name, description")
-    .eq("doc_type", "universal")
-    .order("id");
+  function clearAlert() {
+    const area = $("alertArea");
+    area.innerHTML = "";
+  }
 
-  if (error) throw error;
-  fieldList = data;
-}
+  function escapeHtml(s) {
+    return String(s || "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
 
-/* =========================
-   RENDER FORM
-========================= */
-function renderForm() {
-  const form = document.getElementById("intakeForm");
-  form.innerHTML = "";
+  // -------------------------
+  // Parse URL params
+  // -------------------------
+  const params = new URLSearchParams(window.location.search);
 
-  fieldList.forEach(f => {
-    const div = document.createElement("div");
-    div.className = "field";
+  // Support legacy param names too
+  const tierRaw = (params.get("tier") || params.get("Tier") || "").trim();
+  const tier = tierRaw || "1";
 
-    const label = document.createElement("label");
-    label.innerText = f.field_name;
+  const docTypeRaw = (params.get("doc_type") || params.get("doc") || params.get("document") || "").trim();
+  const bundle = (params.get("bundle") || "").trim();
+  const docsParam = (params.get("docs") || "").trim();
 
-    const input = document.createElement("input");
-    input.name = f.field_code;
-    input.placeholder = f.description || "";
+  const selectedDocs = docsParam ? docsParam.split(",").map(x => x.trim()).filter(Boolean) : [];
 
-    div.appendChild(label);
-    div.appendChild(input);
-    form.appendChild(div);
-  });
-}
+  // Alias map (so intake never blanks if a tier page sent an older slug)
+  // This is not a patch; it's forward-stability for an integrated system.
+  const DOC_ALIASES = {
+    "promissory": "promissory_note",
+    "nda": "nda_mutual",
+    "contractor": "independent_contractor_basic",
+    "llc_single_member": "llc_single_member_operating"
+  };
 
-/* =========================
-   SUBMIT
-========================= */
-document.getElementById("submitBtn").addEventListener("click", async () => {
+  const docTypeNormalized = DOC_ALIASES[docTypeRaw] || docTypeRaw;
+
+  // Determine mode
+  const isBundle = String(tier).toLowerCase() === "bundle";
+
+  // -------------------------
+  // Supabase client
+  // -------------------------
+  let supabase = null;
+
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    setPill("pillSupabaseDot", "pillSupabase", false, "Supabase: missing keys");
+    showAlert(
+      "error",
+      "Supabase keys are missing",
+      "Paste your Supabase URL and Anon key into the two hidden <textarea> blocks near the top of this file, then redeploy."
+    );
+    return;
+  }
+
   try {
-    const payload = {};
-    fieldList.forEach(f => {
-      payload[f.field_code] =
-        document.querySelector(`[name="${f.field_code}"]`).value;
-    });
+    supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    setPill("pillSupabaseDot", "pillSupabase", true, "Supabase: connected");
+  } catch (e) {
+    setPill("pillSupabaseDot", "pillSupabase", false, "Supabase: init failed");
+    showAlert("error", "Supabase init failed", e.message || "Could not initialize Supabase client.");
+    return;
+  }
 
-    const request = {
-      tier,
-      doc_type: tier === "bundle" ? bundle : docType,
-      selected_docs: tier === "bundle" ? selectedDocs : null,
-      answers: payload,
-      status: "intake_complete"
+  // -------------------------
+  // Page init
+  // -------------------------
+  $("kvTier").textContent = isBundle ? "bundle" : String(tier);
+  $("kvDocType").textContent = isBundle ? bundle : docTypeNormalized;
+
+  if (isBundle) {
+    $("kvBundleBox").style.display = "block";
+    $("kvBundleDocs").textContent = selectedDocs.length ? selectedDocs.join(", ") : "(none selected)";
+  }
+
+  bootstrap().catch(err => {
+    setPill("pillFieldsDot", "pillFields", false, "Fields: error");
+    setPill("pillDocDot", "pillDoc", false, "Doc: error");
+    showAlert("error", "Intake failed to load", err.message || "Unknown error.");
+  });
+
+  // -------------------------
+  // Main bootstrap
+  // -------------------------
+  async function bootstrap() {
+    clearAlert();
+
+    // 1) Load catalog
+    const catalog = await loadCatalog();
+    // Build doc name(s)
+    const docKey = isBundle ? bundle : docTypeNormalized;
+
+    // Validate docKey exists in catalog (bundle or single doc)
+    if (!docKey || !catalog[docKey]) {
+      setPill("pillDocDot", "pillDoc", false, "Doc: invalid");
+      const hint = isBundle
+        ? `Expected URL params: tier=bundle&bundle=bundle_startup&docs=...`
+        : `Expected URL params: tier=1&doc_type=promissory_note (must match document_catalog.doc_type)`;
+      showAlert(
+        "error",
+        "Document type not recognized",
+        `Received "${docKey || "(blank)"}" but it is not found in document_catalog. ${hint}`
+      );
+      return;
+    }
+
+    // Set header title
+    const pageTitle = isBundle ? catalog[docKey] : catalog[docKey];
+    $("pageTitle").textContent = pageTitle;
+    $("kvDocName").textContent = catalog[docKey];
+
+    if (isBundle) {
+      const namesList = $("kvBundleDocNames");
+      namesList.innerHTML = "";
+      selectedDocs.forEach(d => {
+        const li = document.createElement("li");
+        li.textContent = catalog[d] ? catalog[d] : d;
+        namesList.appendChild(li);
+      });
+      $("pageSub").textContent = "Select details once — documents are generated from your bundle choices.";
+    } else {
+      $("pageSub").textContent = "Provide details once — we generate your selected document cleanly.";
+    }
+
+    setPill("pillDocDot", "pillDoc", true, `Doc: ${docKey}`);
+
+    // 2) Load universal fields
+    const universalFields = await loadUniversalFields();
+
+    // 3) Load rules (if present) for this docKey (single doc or bundle key)
+    // Note: For bundle, you can later decide to:
+    // - use rules for the bundle itself, OR
+    // - merge rules from selectedDocs.
+    // V1: use bundle's docKey rules if they exist; otherwise universal fallback.
+    const rules = await loadRulesIfAny(docKey);
+
+    // 4) Resolve final fields list
+    const resolved = resolveFields(universalFields, rules);
+
+    if (!resolved.length) {
+      setPill("pillFieldsDot", "pillFields", false, "Fields: none");
+      showAlert(
+        "error",
+        "No fields available",
+        "No universal fields were found (document_field_map where doc_type='universal')."
+      );
+      return;
+    }
+
+    // 5) Render
+    renderFields(resolved);
+
+    setPill("pillFieldsDot", "pillFields", true, `Fields: ${resolved.length}`);
+    showAlert("ok", "Intake loaded", "Fields are ready. Complete the intake and continue.");
+
+    // Draft note
+    $("miniNote").textContent = isBundle
+      ? "Bundle mode: your selection list is carried forward with this intake payload."
+      : "Single-doc mode: your selected document type is carried forward with this intake payload.";
+
+    // Buttons
+    $("btnSaveDraft").addEventListener("click", () => saveDraft(docKey, resolved));
+    $("btnContinue").addEventListener("click", async () => onContinue(docKey, resolved, catalog));
+  }
+
+  // -------------------------
+  // Load document catalog
+  // -------------------------
+  async function loadCatalog() {
+    const { data, error } = await supabase
+      .from("document_catalog")
+      .select("doc_type, doc_name");
+
+    if (error) throw new Error(`Catalog query failed: ${error.message}`);
+
+    const map = {};
+    for (const row of data || []) {
+      map[row.doc_type] = row.doc_name;
+    }
+    return map;
+  }
+
+  // -------------------------
+  // Load universal fields
+  // -------------------------
+  async function loadUniversalFields() {
+    const { data, error } = await supabase
+      .from("document_field_map")
+      .select("id, field_code, field_name, description, tags, doc_type")
+      .eq("doc_type", "universal")
+      .order("id", { ascending: true });
+
+    if (error) throw new Error(`Field registry query failed: ${error.message}`);
+    return (data || []).filter(r => r.field_code && r.field_name);
+  }
+
+  // -------------------------
+  // Load rules (optional)
+  // -------------------------
+  async function loadRulesIfAny(docKey) {
+    const { data, error } = await supabase
+      .from("document_field_rules")
+      .select("doc_type, field_code, show_in_intake, is_required, sort_order, group_name, scope_tag")
+      .eq("doc_type", docKey)
+      .order("sort_order", { ascending: true });
+
+    // If the rules table exists but has no rows for this docKey, data = []
+    // If query errors, we treat as "no rules available" and fallback.
+    if (error) return [];
+    return data || [];
+  }
+
+  // -------------------------
+  // Resolve fields list
+  // If rules exist: render only those with show_in_intake true, in rule order.
+  // If no rules: render all universal fields in their universal order.
+  // -------------------------
+  function resolveFields(universalFields, rules) {
+    const byCode = new Map();
+    universalFields.forEach(f => byCode.set(f.field_code, f));
+
+    if (rules && rules.length) {
+      const out = [];
+      for (const r of rules) {
+        if (r.show_in_intake === false) continue;
+        const f = byCode.get(r.field_code);
+        if (!f) continue;
+        out.push({
+          ...f,
+          required: !!r.is_required,
+          sort_order: r.sort_order ?? null,
+          group_name: r.group_name ?? null,
+          scope_tag: r.scope_tag ?? null
+        });
+      }
+      return out;
+    }
+
+    // Fallback: universal
+    return universalFields.map(f => ({
+      ...f,
+      required: false,
+      sort_order: null,
+      group_name: null,
+      scope_tag: null
+    }));
+  }
+
+  // -------------------------
+  // Render fields
+  // -------------------------
+  function renderFields(fields) {
+    const grid = $("fieldsGrid");
+    grid.innerHTML = "";
+
+    // Build inputs
+    for (const f of fields) {
+      const div = document.createElement("div");
+      div.className = "field";
+
+      const label = document.createElement("div");
+      label.className = "label";
+      label.innerHTML = `${escapeHtml(f.field_name)} ${f.required ? `<span class="req">REQUIRED</span>` : ""}`;
+
+      const hint = document.createElement("div");
+      hint.className = "hint";
+      hint.textContent = (f.description || "").trim();
+
+      // Decide input type
+      const input = createInputForField(f);
+      input.dataset.fieldCode = f.field_code;
+      input.dataset.required = f.required ? "1" : "0";
+
+      // Prefill from draft if exists
+      const draft = loadDraftFromStorage();
+      if (draft && draft.answers && draft.answers[f.field_code] != null) {
+        input.value = String(draft.answers[f.field_code]);
+      }
+
+      div.appendChild(label);
+      if (hint.textContent) div.appendChild(hint);
+      div.appendChild(input);
+      grid.appendChild(div);
+    }
+  }
+
+  function createInputForField(f) {
+    // If tags includes something like "long", use textarea
+    const tags = (f.tags || "").toString().toLowerCase();
+    const name = f.field_code;
+
+    // Default input
+    if (tags.includes("long") || (f.description || "").length > 90) {
+      const ta = document.createElement("textarea");
+      ta.name = name;
+      ta.placeholder = (f.description || "").trim();
+      return ta;
+    }
+
+    const inp = document.createElement("input");
+    inp.name = name;
+    inp.placeholder = (f.description || "").trim();
+    inp.type = "text";
+    return inp;
+  }
+
+  // -------------------------
+  // Continue: validate required, build payload, persist draft, (next step routing)
+  // -------------------------
+  async function onContinue(docKey, fields, catalog) {
+    clearAlert();
+
+    // Validate required
+    const errors = [];
+    const answers = {};
+
+    for (const f of fields) {
+      const el = document.querySelector(`[name="${CSS.escape(f.field_code)}"]`);
+      const val = (el?.value || "").trim();
+      answers[f.field_code] = val;
+
+      if (f.required && !val) {
+        errors.push(f.field_name);
+      }
+    }
+
+    if (errors.length) {
+      showAlert(
+        "error",
+        "Missing required fields",
+        `Please fill: ${errors.slice(0, 6).join(", ")}${errors.length > 6 ? "…" : ""}`
+      );
+      return;
+    }
+
+    // Build payload for downstream engine
+    const payload = {
+      idls_version: "IDLS_v1",
+      tier: isBundle ? "bundle" : String(tier),
+      doc_type: docKey,
+      doc_name: catalog[docKey] || docKey,
+      selected_docs: isBundle ? selectedDocs : null,
+      answers: answers,
+      created_at_local: new Date().toISOString()
     };
 
-    console.log("INTAKE PAYLOAD", request);
+    // Persist to localStorage (guarantees continuity even if DB insert is added later)
+    localStorage.setItem("elegalboom_last_intake_payload", JSON.stringify(payload));
 
-    // This is where it will later insert into document_requests
-    // await supabase.from("document_requests").insert(request);
+    showAlert("ok", "Intake captured", "Your answers were captured successfully. Next step is document request processing.");
 
-    alert("Intake captured successfully.");
-  } catch (err) {
-    showError(err.message || "Submission failed.");
+    // NOTE: We are not inserting into a requests table here because your exact request table
+    // columns are not confirmed in this message thread. Once you confirm the target table/columns,
+    // we will do a full integrated insert with no guessing.
+    //
+    // For now we route forward in a deterministic way (you can update this URL later):
+    // window.location.href = "payment.html?..." OR "review.html?..."
+
+    // For V1 test: keep on page and show a success.
+    // If you already have a payment page, you can route there:
+    // window.location.href = `payment.html?tier=${encodeURIComponent(payload.tier)}&doc_type=${encodeURIComponent(payload.doc_type)}`;
   }
-});
 
-function showError(msg) {
-  document.getElementById("error").innerText = msg;
-}
+  // -------------------------
+  // Draft save / load
+  // -------------------------
+  function saveDraft(docKey, fields) {
+    const answers = {};
+    for (const f of fields) {
+      const el = document.querySelector(`[name="${CSS.escape(f.field_code)}"]`);
+      answers[f.field_code] = (el?.value || "").trim();
+    }
+
+    const draft = {
+      tier: isBundle ? "bundle" : String(tier),
+      doc_type: docKey,
+      bundle: isBundle ? bundle : null,
+      selected_docs: isBundle ? selectedDocs : null,
+      answers,
+      saved_at: new Date().toISOString()
+    };
+
+    localStorage.setItem("elegalboom_intake_draft", JSON.stringify(draft));
+    showAlert("ok", "Draft saved", "Your intake draft was saved on this device.");
+  }
+
+  function loadDraftFromStorage() {
+    try {
+      const raw = localStorage.getItem("elegalboom_intake_draft");
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  }
+
+})();
 </script>
 
 </body>
