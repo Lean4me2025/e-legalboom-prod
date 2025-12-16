@@ -5,314 +5,635 @@
   <title>E-LegalBoom | Document Intake</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Supabase JS (v2, global build) -->
+  <!-- Supabase v2 -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-    :root {
+    :root{
       --navy:#0a2540;
+      --navy2:#0f355e;
       --bg:#f6f8fb;
       --card:#ffffff;
-      --border:#e5e7eb;
       --text:#0b1220;
-      --muted:#6b7280;
-      --danger:#b42318;
-      --ok:#067647;
-      --warn:#92400e;
+      --muted:#64748b;
+      --line:#e6edf5;
+      --ok:#16a34a;
+      --bad:#dc2626;
+      --warn:#d97706;
+      --shadow:0 10px 30px rgba(10,37,64,.08);
+      --radius:14px;
+      --btn:#0a2540;
+      --btn2:#123a64;
     }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
+    *{ box-sizing:border-box; }
+    body{ margin:0; font-family: Arial, sans-serif; background:var(--bg); color:var(--text); }
+    header{
+      background: linear-gradient(180deg, var(--navy) 0%, var(--navy2) 100%);
+      color:#fff;
+      padding: 18px 18px;
+      box-shadow: 0 6px 22px rgba(0,0,0,.12);
+      position: sticky;
+      top:0;
+      z-index:10;
     }
-
-    header {
-      background: var(--navy);
-      color: #fff;
-      padding: 18px 22px;
+    .wrap{ max-width: 980px; margin: 0 auto; }
+    .topbar{ display:flex; gap:14px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; }
+    .brand h1{ margin:0; font-size:20px; font-weight:800; letter-spacing:.2px; }
+    .brand p{ margin:6px 0 0; font-size:13px; opacity:.9; }
+    .pills{ display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+    .pill{
+      display:flex; align-items:center; gap:8px;
+      padding: 8px 10px; border-radius:999px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.18);
+      font-size:12px; white-space:nowrap;
     }
+    .dot{ width:10px; height:10px; border-radius:99px; background:rgba(255,255,255,.35); }
+    .dot.ok{ background: var(--ok); }
+    .dot.bad{ background: var(--bad); }
+    .dot.warn{ background: var(--warn); }
 
-    header h1 {
-      margin: 0;
-      font-size: 20px;
-      font-weight: 700;
-    }
-
-    header p {
-      margin: 6px 0 0;
-      font-size: 13px;
-      opacity: 0.9;
-    }
-
-    main {
-      max-width: 980px;
-      margin: 22px auto;
+    main{ max-width: 980px; margin: 22px auto; padding: 0 16px 36px; }
+    .card{
       background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
       padding: 18px;
     }
 
-    .status {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
+    .metaRow{
+      display:flex; gap:12px; flex-wrap:wrap;
+      align-items:flex-start; justify-content:space-between;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 14px; margin-bottom: 14px;
+    }
+    .metaLeft h2{ margin:0; font-size:16px; }
+    .metaLeft p{ margin:6px 0 0; color:var(--muted); font-size:13px; }
+    .metaRight{ display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+    .chip{
+      padding: 8px 10px; border-radius:999px;
+      border:1px solid var(--line); background:#fbfdff;
+      font-size:12px; color:#203047;
     }
 
-    .pill {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 12px;
-      background: #eef2ff;
-      border: 1px solid var(--border);
-    }
-
-    .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #9ca3af;
-    }
-    .dot.ok { background: #22c55e; }
-    .dot.bad { background: #ef4444; }
-    .dot.warn { background: #f59e0b; }
-
-    .notice {
+    .notice{
       border-radius: 10px;
-      padding: 12px 14px;
-      margin-bottom: 16px;
-      border: 1px solid var(--border);
-      background: #fafafa;
-      display: none;
+      padding: 12px 12px;
+      margin: 12px 0 16px;
+      border: 1px solid var(--line);
+      background: #fbfdff;
+      display:none;
     }
-    .notice.show { display: block; }
-    .notice.danger {
-      border-color: #fca5a5;
-      background: #fff5f5;
-      color: var(--danger);
-    }
-    .notice.ok {
-      border-color: #86efac;
-      background: #f0fdf4;
-      color: var(--ok);
-    }
+    .notice.show{ display:block; }
+    .notice.bad{ border-color: rgba(220,38,38,.35); background: rgba(220,38,38,.06); }
+    .notice.warn{ border-color: rgba(217,119,6,.35); background: rgba(217,119,6,.06); }
+    .notice.ok{ border-color: rgba(22,163,74,.35); background: rgba(22,163,74,.06); }
+    .notice h3{ margin:0 0 6px; font-size:14px; }
+    .notice p{ margin:0; font-size:13px; color: var(--muted); }
 
-    h2 {
-      margin: 16px 0 6px;
-      font-size: 16px;
-    }
-
-    .hint {
-      margin: 0 0 14px;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .grid {
-      display: grid;
+    .grid{
+      display:grid;
       grid-template-columns: 1fr 1fr;
       gap: 14px;
     }
-
-    @media (max-width: 820px) {
-      .grid { grid-template-columns: 1fr; }
+    @media (max-width: 820px){
+      .grid{ grid-template-columns: 1fr; }
     }
-
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
+    .field{ display:flex; flex-direction:column; gap:6px; }
+    .field label{ font-weight:800; font-size:13px; }
+    .field .hint{ font-size:12px; color:var(--muted); margin-top:-2px; }
+    .field input, .field textarea, .field select{
+      width:100%;
+      padding:10px 10px;
+      border-radius:10px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-size:14px;
+      outline:none;
     }
+    .field textarea{ min-height: 90px; resize: vertical; }
+    .req{ color: var(--bad); font-weight:900; margin-left:6px; }
 
-    label {
-      font-weight: 700;
-      font-size: 13px;
+    .actions{
+      display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap;
+      margin-top: 16px;
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
     }
+    .btn{
+      border: 1px solid var(--line);
+      background: #fff;
+      color: #203047;
+      padding: 10px 14px;
+      border-radius: 12px;
+      cursor:pointer;
+      font-weight: 800;
+    }
+    .btn.primary{
+      background: var(--btn);
+      color:#fff;
+      border-color: rgba(255,255,255,.12);
+    }
+    .btn.primary:hover{ background: var(--btn2); }
 
-    input, textarea {
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px;
-      font-size: 14px;
-    }
-
-    textarea {
-      min-height: 90px;
-      resize: vertical;
-    }
-
-    .actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    button {
-      padding: 10px 16px;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 14px;
-    }
-
-    button.primary {
-      background: var(--navy);
-      color: #fff;
-    }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size:12px; color: var(--muted); }
+    .small{ font-size:12px; color: var(--muted); }
   </style>
 </head>
 
 <body>
 
 <header>
-  <h1>E-LegalBoom · Document Intake</h1>
-  <p>Provide your information once. We handle the rest.</p>
+  <div class="wrap topbar">
+    <div class="brand">
+      <h1 id="pageTitle">E-LegalBoom · Document Intake</h1>
+      <p id="pageSub">Universal + document-specific fields loaded from Supabase.</p>
+    </div>
+    <div class="pills">
+      <div class="pill"><span class="dot" id="sbDot"></span><span id="sbText">Supabase: pending</span></div>
+      <div class="pill"><span class="dot" id="docDot"></span><span id="docText">Doc: pending</span></div>
+      <div class="pill"><span class="dot" id="tierDot"></span><span id="tierText">Tier: pending</span></div>
+      <div class="pill"><span class="dot" id="fldDot"></span><span id="fldText">Fields: pending</span></div>
+    </div>
+  </div>
 </header>
 
 <main>
+  <div class="card">
 
-  <!-- ================= STATUS ================= -->
-  <div class="status">
-    <div class="pill">
-      <span class="dot" id="sbDot"></span>
-      <span id="sbText">Supabase: pending</span>
+    <div class="metaRow">
+      <div class="metaLeft">
+        <h2 id="headline">Intake Questions</h2>
+        <p id="desc">Answer the questions below. This form is generated from your field registry.</p>
+      </div>
+      <div class="metaRight">
+        <div class="chip" id="chipTier">Tier: —</div>
+        <div class="chip" id="chipDocType">doc_type: —</div>
+        <div class="chip" id="chipDocName">Document: —</div>
+      </div>
     </div>
-    <div class="pill">
-      <span class="dot" id="docDot"></span>
-      <span id="docText">Document: pending</span>
+
+    <div class="notice bad" id="badBox">
+      <h3 id="badTitle">Error</h3>
+      <p id="badMsg"></p>
     </div>
-    <div class="pill">
-      <span class="dot" id="tierDot"></span>
-      <span id="tierText">Tier: pending</span>
+
+    <div class="notice warn" id="warnBox">
+      <h3 id="warnTitle">Warning</h3>
+      <p id="warnMsg"></p>
     </div>
+
+    <div class="notice ok" id="okBox">
+      <h3 id="okTitle">Ready</h3>
+      <p id="okMsg"></p>
+    </div>
+
+    <div id="formHost">
+      <div class="small">Loading fields…</div>
+    </div>
+
+    <div class="actions">
+      <button class="btn" type="button" id="btnSaveDraft">Save Draft</button>
+      <button class="btn primary" type="button" id="btnContinue">Continue</button>
+    </div>
+
+    <div class="mono" id="debugLine"></div>
   </div>
-
-  <div class="notice danger" id="errorBox"></div>
-  <div class="notice ok" id="okBox"></div>
-
-  <!-- ================= FORM ================= -->
-  <h2 id="formTitle">Intake</h2>
-  <p class="hint" id="formHint"></p>
-
-  <div class="grid" id="formFields">
-    <!-- Fields will render here -->
-  </div>
-
-  <div class="actions">
-    <button class="primary" id="continueBtn">Continue</button>
-  </div>
-
 </main>
 
 <script>
 /* ============================================================
-   SUPABASE CONFIG — EDIT ONLY THE ANON KEY VALUE
+   SUPABASE CONFIG (QUOTES) — YOU EDIT ONLY THE ANON KEY
    ============================================================ */
 
 const SUPABASE_URL = "https://vwjbjfltqsivwxdifnvi.supabase.co";
-
-/*
-  👉 PASTE YOUR FULL ANON KEY BETWEEN THESE QUOTES
-  👉 LEAVE THE QUOTES IN PLACE
-*/
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q"; // paste full key between quotes
 
 /* ============================================================ */
 
-function qs(id){ return document.getElementById(id); }
+const UNIVERSAL_DOC_TYPE = "universal"; // 85% shared fields key
+const FIELD_TABLE = "document_field_map"; // your registry table name
 
-function showError(msg){
-  const box = qs("errorBox");
-  box.textContent = msg;
-  box.classList.add("show");
+// Where to try saving drafts (best-effort). We'll try these in order.
+const SAVE_TABLE_PRIMARY = "document_requests";
+const SAVE_TABLE_FALLBACK = "requests";
+
+// Where to go next (edit if your flow uses a different page)
+const NEXT_PAGE = "payment.html";
+
+function $(id){ return document.getElementById(id); }
+function setDot(id, state){
+  const el = $(id);
+  el.classList.remove("ok","bad","warn");
+  if(state) el.classList.add(state);
+}
+function showBox(kind, title, msg){
+  $("badBox").classList.remove("show");
+  $("warnBox").classList.remove("show");
+  $("okBox").classList.remove("show");
+
+  if(kind === "bad"){
+    $("badTitle").textContent = title;
+    $("badMsg").textContent = msg;
+    $("badBox").classList.add("show");
+  } else if(kind === "warn"){
+    $("warnTitle").textContent = title;
+    $("warnMsg").textContent = msg;
+    $("warnBox").classList.add("show");
+  } else if(kind === "ok"){
+    $("okTitle").textContent = title;
+    $("okMsg").textContent = msg;
+    $("okBox").classList.add("show");
+  }
+}
+function pretty(s){
+  if(!s) return "—";
+  return String(s).replaceAll("_"," ").replace(/\b\w/g, c => c.toUpperCase());
+}
+function getParams(){
+  const p = new URLSearchParams(location.search);
+  return {
+    tier: (p.get("tier") || "").trim(),
+    docType: (p.get("doc_type") || "").trim()
+  };
+}
+function normalizeTier(t){
+  const x = (t || "").toLowerCase();
+  if(x === "1" || x === "t1" || x === "tier1") return "T1";
+  if(x === "2" || x === "t2" || x === "tier2") return "T2";
+  if(x === "3" || x === "t3" || x === "tier3") return "T3";
+  if(x === "bundle") return "BUNDLE";
+  return t || "—";
+}
+function safeTrim(v){ return (v == null ? "" : String(v)).trim(); }
+
+// Build a stable local storage key so drafts don’t collide
+function draftKey(docType, tier){
+  return `elegalboom:intake:${docType}:${tier || "NA"}`;
 }
 
-function showOk(msg){
-  const box = qs("okBox");
-  box.textContent = msg;
-  box.classList.add("show");
+function getFieldDocType(row){
+  // Support either column name: doc_type or dot_type
+  const a = row.doc_type;
+  const b = row.dot_type;
+  return safeTrim(a || b);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+function getFieldOrder(row){
+  // support multiple possible names; fall back to id
+  const o =
+    row.sort_order ??
+    row.display_order ??
+    row.order ??
+    row.ordinal ??
+    row.sequence ??
+    row.id ??
+    999999;
+  const n = Number(o);
+  return Number.isFinite(n) ? n : 999999;
+}
 
-  /* ---------- Validate config ---------- */
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY || SUPABASE_ANON_KEY.includes("PASTE_")) {
-    qs("sbDot").classList.add("bad");
-    qs("sbText").textContent = "Supabase: missing config";
-    showError("Supabase URL or Anon key is missing or not filled in.");
+function getFieldCode(row){
+  return safeTrim(row.field_code || row.code || row.field || row.key || row.fieldname);
+}
+
+function getFieldLabel(row){
+  return safeTrim(row.field_name || row.label || row.name || getFieldCode(row));
+}
+
+function getFieldDesc(row){
+  return safeTrim(row.description || row.help || row.hint || "");
+}
+
+function getFieldRequired(row){
+  const v = row.is_required ?? row.required ?? row.req ?? false;
+  if(typeof v === "boolean") return v;
+  const s = safeTrim(v).toLowerCase();
+  return (s === "true" || s === "yes" || s === "1" || s === "required");
+}
+
+function getFieldInputType(row){
+  // If you don’t have this column, we default to text.
+  const t = safeTrim(row.input_type || row.type || row.ui_type || "text").toLowerCase();
+  const allowed = new Set(["text","email","tel","number","date","textarea","select"]);
+  return allowed.has(t) ? t : "text";
+}
+
+function parseOptions(row){
+  // optional: options could be JSON string, array, or comma string
+  const raw = row.options ?? row.options_json ?? row.choices ?? row.enum ?? null;
+  if(raw == null) return [];
+  if(Array.isArray(raw)) return raw.map(x => String(x));
+  const s = String(raw).trim();
+  if(!s) return [];
+  try{
+    const j = JSON.parse(s);
+    if(Array.isArray(j)) return j.map(x => String(x));
+  }catch(_){}
+  // fallback comma-separated
+  return s.split(",").map(x => x.trim()).filter(Boolean);
+}
+
+function renderFields(rows){
+  const host = $("formHost");
+  host.innerHTML = "";
+
+  if(!rows || rows.length === 0){
+    host.innerHTML = `<div class="small">No fields were found for this document type.</div>`;
     return;
   }
 
-  if (!window.supabase) {
-    qs("sbDot").classList.add("bad");
-    qs("sbText").textContent = "Supabase: library not loaded";
-    showError("Supabase JS library failed to load.");
+  const grid = document.createElement("div");
+  grid.className = "grid";
+
+  rows.forEach(r => {
+    const code = getFieldCode(r);
+    const label = getFieldLabel(r);
+    const desc = getFieldDesc(r);
+    const required = getFieldRequired(r);
+    const inputType = getFieldInputType(r);
+    const options = parseOptions(r);
+
+    if(!code){
+      // skip invalid rows
+      return;
+    }
+
+    const wrap = document.createElement("div");
+    wrap.className = "field";
+
+    const reqMark = required ? `<span class="req">*</span>` : ``;
+
+    let controlHtml = "";
+    if(inputType === "textarea"){
+      controlHtml = `<textarea id="${code}" name="${code}" ${required ? "data-required='1'" : ""} placeholder="Enter ${escapeHtml(label)}"></textarea>`;
+    } else if(inputType === "select"){
+      const opts = ["<option value=''>Select…</option>"].concat(options.map(o => `<option value="${escapeHtml(o)}">${escapeHtml(o)}</option>`)).join("");
+      controlHtml = `<select id="${code}" name="${code}" ${required ? "data-required='1'" : ""}>${opts}</select>`;
+    } else {
+      controlHtml = `<input id="${code}" name="${code}" type="${inputType}" ${required ? "data-required='1'" : ""} placeholder="Enter ${escapeHtml(label)}" />`;
+    }
+
+    wrap.innerHTML = `
+      <label for="${escapeHtml(code)}">${escapeHtml(label)}${reqMark}</label>
+      ${desc ? `<div class="hint">${escapeHtml(desc)}</div>` : ``}
+      ${controlHtml}
+    `;
+
+    grid.appendChild(wrap);
+  });
+
+  host.appendChild(grid);
+}
+
+function escapeHtml(s){
+  return String(s ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function collectAnswers(){
+  const host = $("formHost");
+  const inputs = host.querySelectorAll("input, textarea, select");
+  const out = {};
+  inputs.forEach(el => {
+    const key = el.name || el.id;
+    if(!key) return;
+    out[key] = el.value;
+  });
+  return out;
+}
+
+function validateRequired(){
+  const host = $("formHost");
+  const requiredEls = host.querySelectorAll("[data-required='1']");
+  const missing = [];
+  requiredEls.forEach(el => {
+    if(!String(el.value || "").trim()){
+      missing.push(el.name || el.id || "field");
+      el.style.borderColor = "rgba(220,38,38,.6)";
+    } else {
+      el.style.borderColor = "";
+    }
+  });
+  return missing;
+}
+
+async function tryInsert(supabase, tableName, payload){
+  const { data, error } = await supabase.from(tableName).insert(payload).select("*").limit(1);
+  if(error) throw error;
+  return (data && data[0]) ? data[0] : null;
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const { tier, docType } = getParams();
+  const tierNorm = normalizeTier(tier);
+
+  $("chipTier").textContent = `Tier: ${tierNorm || "—"}`;
+  $("chipDocType").textContent = `doc_type: ${docType || "—"}`;
+  $("chipDocName").textContent = `Document: ${pretty(docType)}`;
+
+  // Basic param status
+  if(!docType){
+    setDot("docDot","bad");
+    $("docText").textContent = "Doc: missing";
+    showBox("bad","Missing doc_type","Your URL must include ?doc_type=... (example: ?tier=T1&doc_type=promissory_note).");
     return;
-  }
-
-  const supabase = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-  );
-
-  qs("sbDot").classList.add("ok");
-  qs("sbText").textContent = "Supabase: initialized";
-
-  /* ---------- Read URL params ---------- */
-  const params = new URLSearchParams(window.location.search);
-  const tier = params.get("tier");
-  const docType = params.get("doc_type");
-
-  if (!docType) {
-    qs("docDot").classList.add("bad");
-    qs("docText").textContent = "Document: missing";
-    showError("No document type was provided in the URL.");
-    return;
-  }
-
-  qs("docDot").classList.add("ok");
-  qs("docText").textContent = "Document: " + docType;
-
-  if (tier) {
-    qs("tierDot").classList.add("ok");
-    qs("tierText").textContent = "Tier: " + tier;
   } else {
-    qs("tierDot").classList.add("warn");
-    qs("tierText").textContent = "Tier: not specified";
+    setDot("docDot","ok");
+    $("docText").textContent = `Doc: ${docType}`;
   }
 
-  /* ---------- Render placeholder fields (next step: DB driven) ---------- */
-  qs("formTitle").textContent = "Document Intake";
-  qs("formHint").textContent =
-    "This intake is loaded for document type: " + docType;
+  if(tierNorm && tierNorm !== "—"){
+    setDot("tierDot","ok");
+    $("tierText").textContent = `Tier: ${tierNorm}`;
+  } else {
+    setDot("tierDot","warn");
+    $("tierText").textContent = "Tier: not specified";
+  }
 
-  const fields = qs("formFields");
-  fields.innerHTML = `
-    <div class="field">
-      <label>Full Legal Name</label>
-      <input type="text" />
-    </div>
-    <div class="field">
-      <label>Email Address</label>
-      <input type="email" />
-    </div>
-    <div class="field">
-      <label>Additional Notes</label>
-      <textarea></textarea>
-    </div>
-  `;
+  // Supabase config checks
+  if(!SUPABASE_URL || !SUPABASE_ANON_KEY || SUPABASE_ANON_KEY.includes("PASTE_")){
+    setDot("sbDot","bad");
+    $("sbText").textContent = "Supabase: missing key";
+    showBox("bad","Supabase config missing","Paste your full anon key between the quotes in intake.html.");
+    return;
+  }
 
-  showOk("Intake loaded successfully. Supabase connection is healthy.");
+  if(!window.supabase){
+    setDot("sbDot","bad");
+    $("sbText").textContent = "Supabase: library not loaded";
+    showBox("bad","Supabase library failed to load","CDN did not load @supabase/supabase-js. Try a hard refresh.");
+    return;
+  }
+
+  let supabase;
+  try{
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    setDot("sbDot","ok");
+    $("sbText").textContent = "Supabase: initialized";
+  } catch (e){
+    setDot("sbDot","bad");
+    $("sbText").textContent = "Supabase: init failed";
+    showBox("bad","Supabase init failed", String(e?.message || e));
+    return;
+  }
+
+  // Load all field rows (client-side filter supports either doc_type or dot_type)
+  setDot("fldDot","warn");
+  $("fldText").textContent = "Fields: loading…";
+
+  let allRows = [];
+  try{
+    const { data, error } = await supabase.from(FIELD_TABLE).select("*").limit(1000);
+    if(error) throw error;
+    allRows = Array.isArray(data) ? data : [];
+  } catch (e){
+    setDot("fldDot","bad");
+    $("fldText").textContent = "Fields: load failed";
+    showBox("bad","Could not load field registry",
+      `Table "${FIELD_TABLE}" could not be read. Check table name, RLS policies, and anon permissions. Error: ${String(e?.message || e)}`
+    );
+    $("debugLine").textContent = `Debug: FIELD_TABLE=${FIELD_TABLE}`;
+    return;
+  }
+
+  // Filter universal + doc-specific
+  const universal = allRows.filter(r => getFieldDocType(r).toLowerCase() === UNIVERSAL_DOC_TYPE.toLowerCase());
+  const specific  = allRows.filter(r => getFieldDocType(r).toLowerCase() === docType.toLowerCase());
+
+  // Combine, dedupe by field_code (specific overrides universal if same code)
+  const mergedMap = new Map();
+  [...universal, ...specific]
+    .sort((a,b) => getFieldOrder(a) - getFieldOrder(b))
+    .forEach(r => {
+      const code = getFieldCode(r);
+      if(!code) return;
+      mergedMap.set(code, r);
+    });
+
+  const merged = Array.from(mergedMap.values())
+    .sort((a,b) => getFieldOrder(a) - getFieldOrder(b));
+
+  setDot("fldDot", merged.length ? "ok" : "warn");
+  $("fldText").textContent = `Fields: ${merged.length}`;
+
+  if(!merged.length){
+    showBox("warn","No fields for this doc_type",
+      `No registry rows found for "${UNIVERSAL_DOC_TYPE}" or "${docType}". Add rows to ${FIELD_TABLE} and reload.`
+    );
+    renderFields([]);
+    return;
+  }
+
+  // Render the form
+  renderFields(merged);
+
+  // Restore any saved draft
+  const dk = draftKey(docType, tierNorm);
+  const existing = localStorage.getItem(dk);
+  if(existing){
+    try{
+      const parsed = JSON.parse(existing);
+      const answers = parsed?.answers || {};
+      Object.entries(answers).forEach(([k,v]) => {
+        const el = document.getElementById(k);
+        if(el) el.value = v;
+      });
+      showBox("ok","Draft restored","We found a saved draft for this document and restored it.");
+    } catch(_){}
+  } else {
+    showBox("ok","Ready","Fields loaded from Supabase. Fill them out and click Continue.");
+  }
+
+  $("debugLine").textContent =
+    `doc_type=${docType} | tier=${tierNorm} | universal_fields=${universal.length} | specific_fields=${specific.length} | merged=${merged.length}`;
+
+  async function saveDraftToSupabase(status){
+    const answers = collectAnswers();
+    const payload = {
+      doc_type: docType,
+      tier: tierNorm,
+      status: status || "draft",
+      answers_json: answers,       // best practice column name
+      intake_json: answers,        // alt column name (some builds use this)
+      updated_at: new Date().toISOString(),
+      created_at: new Date().toISOString()
+    };
+
+    // Always save locally (no data loss)
+    localStorage.setItem(dk, JSON.stringify({ saved_at: Date.now(), doc_type: docType, tier: tierNorm, answers }));
+
+    // Best-effort DB insert; if it fails due to schema/RLS, we keep local draft + show warning.
+    try{
+      const row = await tryInsert(supabase, SAVE_TABLE_PRIMARY, payload);
+      return { ok:true, table: SAVE_TABLE_PRIMARY, row };
+    } catch (e1){
+      try{
+        const row = await tryInsert(supabase, SAVE_TABLE_FALLBACK, payload);
+        return { ok:true, table: SAVE_TABLE_FALLBACK, row };
+      } catch (e2){
+        return { ok:false, error: (e2?.message || e1?.message || String(e2 || e1)) };
+      }
+    }
+  }
+
+  $("btnSaveDraft").addEventListener("click", async () => {
+    $("badBox").classList.remove("show");
+    $("warnBox").classList.remove("show");
+    $("okBox").classList.remove("show");
+
+    const missing = validateRequired();
+    if(missing.length){
+      showBox("warn","Missing required fields", `Please fill the required fields (missing: ${missing.slice(0,6).join(", ")}${missing.length>6?"…":""}).`);
+      return;
+    }
+
+    const result = await saveDraftToSupabase("draft");
+    if(result.ok){
+      showBox("ok","Draft saved", `Saved locally + inserted into "${result.table}".`);
+    } else {
+      showBox("warn","Draft saved locally (DB insert blocked)",
+        `We saved your draft locally, but Supabase insert failed (likely schema/RLS). Error: ${result.error}`
+      );
+    }
+  });
+
+  $("btnContinue").addEventListener("click", async () => {
+    $("badBox").classList.remove("show");
+    $("warnBox").classList.remove("show");
+    $("okBox").classList.remove("show");
+
+    const missing = validateRequired();
+    if(missing.length){
+      showBox("warn","Missing required fields", `Please fill the required fields (missing: ${missing.slice(0,6).join(", ")}${missing.length>6?"…":""}).`);
+      return;
+    }
+
+    const result = await saveDraftToSupabase("submitted");
+
+    // Build next URL
+    const next = new URL(NEXT_PAGE, window.location.href);
+    next.searchParams.set("tier", tierNorm);
+    next.searchParams.set("doc_type", docType);
+
+    // If we successfully inserted and got an id, pass it forward
+    const id = result?.row?.id || result?.row?.request_id || result?.row?.uuid || null;
+    if(id) next.searchParams.set("request_id", String(id));
+
+    if(result.ok){
+      showBox("ok","Saved. Continuing…", `Inserted into "${result.table}". Redirecting…`);
+      setTimeout(() => { window.location.href = next.toString(); }, 350);
+    } else {
+      // Still proceed (you asked: keep flow moving), but warn that DB insert is blocked.
+      showBox("warn","Continuing (saved locally)", `Saved locally, but DB insert failed (schema/RLS). Redirecting anyway…`);
+      setTimeout(() => { window.location.href = next.toString(); }, 650);
+    }
+  });
 
 });
 </script>
