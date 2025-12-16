@@ -164,8 +164,9 @@
 <main>
   <div class="wrap">
     <div class="card">
-      <div id="statusBox" class="status">Initializing…</div>
-
+      <div id="statusBox" class="status ok">
+        Please provide the information below so we can prepare your legal document.
+      </div>
       <div class="metaRow">
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
           <div class="chip"><b>Tier</b>: <span id="chipTier">—</span></div>
@@ -417,14 +418,6 @@
     setDot("dotSb","ok");
     $("sbText").textContent = "Supabase: connected";
 
-    setStatus("Loading fields…", "");
-    try{
-      const rows = await loadFields();
-      render(rows);
-    }catch(err){
-      setDot("dotFields","bad");
-      setStatus(`Fields load failed: ${err.message || String(err)}`, "bad");
-      debug([`[INTAKE_V2] ERROR`, String(err)]);
     }
   })();
 </script>
