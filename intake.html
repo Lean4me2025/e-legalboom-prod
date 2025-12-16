@@ -1,232 +1,234 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>E-LegalBoom • Intake</title>
+  <meta charset="UTF-8" />
+  <title>E-LegalBoom | Document Intake</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
-    /* Your existing CSS styles here */
     body {
+      font-family: Arial, sans-serif;
+      background: #f6f8fb;
       margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: #f5f7fb;
-      color: #111827;
+      padding: 0;
     }
     header {
-      background: #1e1e2f;
-      color: #fff;
-      padding: 16px 24px;
+      background: #0a2540;
+      color: white;
+      padding: 20px;
     }
-    .brand {
-      font-weight: 800;
-      letter-spacing: 0.03em;
+    h1 {
+      margin: 0;
+      font-size: 22px;
+    }
+    .meta {
+      font-size: 14px;
+      opacity: 0.9;
     }
     main {
       max-width: 900px;
-      margin: 32px auto;
-      padding: 0 20px 40px;
-    }
-    .card {
-      background: #fff;
-      border: 1px solid #e5e7eb;
-      border-radius: 14px;
-      padding: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    }
-    h1 {
-      margin-top: 0;
-    }
-    .status {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-    .status .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-    }
-    .status .dot.ok { background: #10b981; }
-    .status .dot.warn { background: #f59e0b; }
-    .status .dot.bad { background: #ef4444; }
-    .hidden {
-      display: none;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-    @media (max-width: 860px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-    }
-    .btn {
-      padding: 10px 16px;
+      margin: 30px auto;
+      background: white;
+      padding: 30px;
       border-radius: 8px;
+    }
+    .field {
+      margin-bottom: 18px;
+    }
+    .field label {
+      display: block;
       font-weight: bold;
+      margin-bottom: 6px;
+    }
+    .field input, .field textarea, .field select {
+      width: 100%;
+      padding: 10px;
+      font-size: 15px;
+    }
+    button {
+      background: #0a2540;
+      color: white;
+      border: none;
+      padding: 14px 24px;
+      font-size: 16px;
       cursor: pointer;
+      border-radius: 4px;
     }
-    .btn.primary {
-      background: #ff7b2c;
-      color: #fff;
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
-    .btn.ghost {
-      background: #fff;
-      border: 1px solid #e5e7eb;
-      color: #111827;
-    }
-    .small {
-      font-size: 13px;
-      color: #6b7280;
+    .error {
+      color: red;
+      margin-bottom: 20px;
     }
   </style>
-  <!-- Supabase client -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
+
 <body>
-  <header>
-    <div class="brand">E-LegalBoom</div>
-  </header>
-  <main>
-    <div class="card">
-      <h1>Intake</h1>
-      <div class="status">
-        <div class="dot warn" id="statusDot"></div>
-        <div>
-          <strong id="statusTitle">Loading…</strong>
-          <div class="small" id="statusDetail">Resolving selection and loading registry.</div>
-        </div>
-      </div>
-      <div class="panel error hidden" id="errorPanel">
-        <strong>Error:</strong>
-        <p id="errorHuman" class="small">—</p>
-        <pre id="errorTech" class="small">—</pre>
-      </div>
-      <form id="intakeForm" class="hidden">
-        <div id="fields" class="grid"></div>
-        <div class="btnrow">
-          <button type="submit" class="btn primary">Submit Intake</button>
-          <a href="catalog.html" class="btn ghost">Back to Catalog</a>
-        </div>
-        <div class="small" style="margin-top:10px;">
-          Debug: <span id="debugLine" class="mono">—</span>
-        </div>
-      </form>
-    </div>
-  </main>
-  <script>
-    (function () {
-      // Config and constants
-      const SUPABASE_URL = window.SUPABASE_URL || "https://vvjbjfltqsivvxxifnvi.supabase.co";
-      const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";
 
-      const TABLE_CORE = "field_registry";
-      const TABLE_DOC = "doc_field_registry";
+<header>
+  <h1 id="docTitle">Document Intake</h1>
+  <div class="meta" id="docMeta"></div>
+</header>
 
-      // Helpers
-      function normalizeTier(raw) {
-        const t = (raw || "").toLowerCase().trim();
-        if (["1","2","3","bundle"].includes(t)) return t;
-        if (["t1","tier1","tier one"].includes(t)) return "1";
-        if (["t2","tier2","tier two"].includes(t)) return "2";
-        if (["t3","tier3","tier three"].includes(t)) return "3";
-        if (["tb","bundle"].includes(t)) return "bundle";
-        return "";
-      }
+<main>
+  <div id="error" class="error"></div>
+  <form id="intakeForm"></form>
+  <br />
+  <button id="submitBtn">Continue</button>
+</main>
 
-      function readDocType() {
-        return (new URLSearchParams(window.location.search).get("doc_type") || "").trim();
-      }
+<script>
+/* =========================
+   CONFIG
+========================= */
+const SUPABASE_URL = window.SUPABASE_URL || "https://vvjbjfltqsivvxxifnvi.supabase.co";
+const SUPABASE_ANON_KEY = “eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";
+const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-      function setStatus(mode, title, detail) {
-        const dot = document.getElementById("statusDot");
-        const statusTitle = document.getElementById("statusTitle");
-        const statusDetail = document.getElementById("statusDetail");
-        dot.className = "dot " + mode;
-        statusTitle.textContent = title;
-        statusDetail.textContent = detail || "";
-      }
+/* =========================
+   PARAM PARSING
+========================= */
+const params = new URLSearchParams(window.location.search);
+const tier = params.get("tier");
+const docType = params.get("doc_type");
+const bundle = params.get("bundle");
+const docsParam = params.get("docs");
 
-      function fail(human, tech) {
-        setStatus("bad", "Error", human);
-        document.getElementById("errorPanel").classList.remove("hidden");
-        document.getElementById("errorHuman").textContent = human;
-        document.getElementById("errorTech").textContent = tech || "";
-        document.getElementById("intakeForm").classList.add("hidden");
-      }
+const selectedDocs = docsParam ? docsParam.split(",") : [];
 
-      // Main logic
-      const qs = new URLSearchParams(window.location.search);
-      const rawTier = qs.get("tier") || "";
-      const tier = normalizeTier(rawTier);
-      const doc_type = readDocType();
-      const idls = qs.get("type") || "IDLS_v1";
+/* =========================
+   STATE
+========================= */
+let catalogDocs = {};
+let fieldList = [];
 
-      // Update debug line and labels
-      document.getElementById("debugLine").textContent = JSON.stringify({ tier, doc_type, idls });
+/* =========================
+   INIT
+========================= */
+init();
 
-      if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-        fail("Supabase configuration missing.", "Check SUPABASE_URL / SUPABASE_ANON_KEY.");
-        return;
-      }
-      if (!tier || !doc_type) {
-        fail("Invalid tier or document type.", `Received tier="${rawTier}", doc_type="${doc_type}"`);
-        return;
-      }
+async function init() {
+  try {
+    await loadCatalog();
+    resolveHeader();
+    await loadFields();
+    renderForm();
+  } catch (err) {
+    showError(err.message || "Failed to load intake.");
+  }
+}
 
-      setStatus("warn", "Loading", "Fetching registry…");
-      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+/* =========================
+   LOAD DOCUMENT CATALOG
+========================= */
+async function loadCatalog() {
+  const { data, error } = await supabase
+    .from("document_catalog")
+    .select("doc_type, doc_name");
 
-      async function loadIntakeFields() {
-        try {
-          const core = await supabase.from(TABLE_CORE)
-            .select("*")
-            .eq("idls_type", idls)
-            .order("sort_order", { ascending: true });
+  if (error) throw error;
 
-          const doc = await supabase.from(TABLE_DOC)
-            .select("*")
-            .eq("idls_type", idls)
-            .eq("tier", tier)
-            .eq("doc_type", doc_type)
-            .order("sort_order", { ascending: true });
+  data.forEach(d => {
+    catalogDocs[d.doc_type] = d.doc_name;
+  });
+}
 
-          if (core.error || doc.error) {
-            throw core.error || doc.error;
-          }
+/* =========================
+   HEADER RESOLUTION
+========================= */
+function resolveHeader() {
+  let title = "";
+  let meta = "";
 
-          const fields = [...(core.data || []), ...(doc.data || [])];
-          if (fields.length === 0) {
-            fail("No fields returned.", "Registry query returned zero rows.");
-            return;
-          }
+  if (tier === "bundle") {
+    title = catalogDocs[bundle] || "Document Bundle";
+    meta = selectedDocs.map(d => catalogDocs[d] || d).join(" • ");
+  } else {
+    title = catalogDocs[docType] || "Document Intake";
+    meta = "Tier " + tier;
+  }
 
-          const fieldsContainer = document.getElementById("fields");
-          fieldsContainer.innerHTML = "";
-          fields.forEach(f => {
-            const div = document.createElement("div");
-            const label = document.createElement("label");
-            label.textContent = f.label || f.field_key;
-            const input = document.createElement(f.input_type === "textarea" ? "textarea" : "input");
-            input.name = f.field_key;
-            input.required = !!f.required;
-            div.appendChild(label);
-            div.appendChild(input);
-            fieldsContainer.appendChild(div);
-          });
+  document.getElementById("docTitle").innerText = title;
+  document.getElementById("docMeta").innerText = meta;
+}
 
-          document.getElementById("intakeForm").classList.remove("hidden");
-          setStatus("ok", "Ready", "Intake loaded.");
-        } catch (e) {
-          fail("Failed to load registry.", e.message || String(e));
-        }
-      }
+/* =========================
+   LOAD FIELDS (UNIVERSAL)
+========================= */
+async function loadFields() {
+  const { data, error } = await supabase
+    .from("document_field_map")
+    .select("field_code, field_name, description")
+    .eq("doc_type", "universal")
+    .order("id");
 
-      loadIntakeFields();
-    })();
-  </script>
+  if (error) throw error;
+  fieldList = data;
+}
+
+/* =========================
+   RENDER FORM
+========================= */
+function renderForm() {
+  const form = document.getElementById("intakeForm");
+  form.innerHTML = "";
+
+  fieldList.forEach(f => {
+    const div = document.createElement("div");
+    div.className = "field";
+
+    const label = document.createElement("label");
+    label.innerText = f.field_name;
+
+    const input = document.createElement("input");
+    input.name = f.field_code;
+    input.placeholder = f.description || "";
+
+    div.appendChild(label);
+    div.appendChild(input);
+    form.appendChild(div);
+  });
+}
+
+/* =========================
+   SUBMIT
+========================= */
+document.getElementById("submitBtn").addEventListener("click", async () => {
+  try {
+    const payload = {};
+    fieldList.forEach(f => {
+      payload[f.field_code] =
+        document.querySelector(`[name="${f.field_code}"]`).value;
+    });
+
+    const request = {
+      tier,
+      doc_type: tier === "bundle" ? bundle : docType,
+      selected_docs: tier === "bundle" ? selectedDocs : null,
+      answers: payload,
+      status: "intake_complete"
+    };
+
+    console.log("INTAKE PAYLOAD", request);
+
+    // This is where it will later insert into document_requests
+    // await supabase.from("document_requests").insert(request);
+
+    alert("Intake captured successfully.");
+  } catch (err) {
+    showError(err.message || "Submission failed.");
+  }
+});
+
+function showError(msg) {
+  document.getElementById("error").innerText = msg;
+}
+</script>
+
 </body>
 </html>
