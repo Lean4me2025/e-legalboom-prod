@@ -2,267 +2,510 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>E-LegalBoom — Secure Payment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>E-LegalBoom | Confirm Tier & Complete Payment</title>
 
   <style>
     :root{
-      --bg:#f5f7fb;
+      --navy:#0a2540;
+      --navy2:#0f355e;
+      --bg:#f6f8fb;
       --card:#ffffff;
-      --ink:#1d2330;
-      --muted:#667085;
-      --brand:#1e1e2f;
-      --accent:#2f80ff;
-      --accent2:#ff7b2c;
-      --line:#e6eaf2;
-      --shadow:0 10px 26px rgba(16,24,40,.12);
-      --radius:16px;
-      --danger:#b42318;
+      --text:#0b1220;
+      --muted:#5b6b82;
+      --line:#e6edf5;
+      --ok:#16a34a;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+      --shadow:0 10px 30px rgba(10,37,64,.10);
+      --radius:14px;
+      --btn:#0a2540;
+      --btn2:#123a64;
+      --chip:#eef4ff;
+      --chipText:#184a7a;
     }
-    *{box-sizing:border-box}
+
+    *{ box-sizing:border-box; }
     body{
       margin:0;
-      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-      background:var(--bg);
-      color:var(--ink);
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
     }
-    header{
-      background:var(--brand);
-      color:#fff;
-      padding:14px 18px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-    }
-    header .left{display:flex;gap:10px;align-items:center}
-    .logo{
-      width:34px;height:34px;border-radius:10px;
-      background:linear-gradient(135deg,var(--accent),#6aa6ff);
-      display:grid;place-items:center;
-      font-weight:900;
-      color:#fff;
-    }
-    .brand-title{line-height:1.1;font-weight:900}
-    header nav a{color:#fff;text-decoration:none;opacity:.9;font-weight:800}
-    header nav a:hover{opacity:1;text-decoration:underline}
 
-    .wrap{max-width:1100px;margin:26px auto;padding:0 16px 42px}
-    h1{margin:0 0 6px;font-size:28px;letter-spacing:-.3px}
-    .sub{margin:0;color:var(--muted);font-size:13px;line-height:1.35}
+    header{
+      background: linear-gradient(180deg, var(--navy) 0%, var(--navy2) 100%);
+      color:#fff;
+      padding:18px 18px;
+      position: sticky;
+      top:0;
+      z-index:10;
+      box-shadow: 0 6px 22px rgba(0,0,0,.12);
+    }
+    .wrap{ max-width: 1080px; margin: 0 auto; }
 
     .topbar{
-      margin-top:14px;
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:12px 14px;
       display:flex;
+      gap:14px;
+      align-items:flex-start;
+      justify-content:space-between;
       flex-wrap:wrap;
+    }
+    .brand h1{
+      margin:0;
+      font-size:20px;
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+    .brand p{
+      margin:6px 0 0 0;
+      font-size:13px;
+      opacity:.92;
+    }
+
+    .pills{
+      display:flex;
       gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      align-items:center;
+    }
+    .pill{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.18);
+      font-size:12px;
+      white-space:nowrap;
+    }
+    .dot{
+      width:9px;
+      height:9px;
+      border-radius:999px;
+      background: rgba(255,255,255,.35);
+      box-shadow: 0 0 0 3px rgba(255,255,255,.08);
+    }
+    .dot.ok{ background: #22c55e; }
+    .dot.warn{ background: #f59e0b; }
+    .dot.bad{ background: #ef4444; }
+
+    main{
+      padding:26px 18px 40px;
+    }
+
+    .hero{
+      background: var(--card);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px 18px;
+      margin-bottom: 18px;
+    }
+    .hero h2{
+      margin:0 0 6px 0;
+      font-size:22px;
+      letter-spacing:.1px;
+    }
+    .hero p{
+      margin:0;
+      color: var(--muted);
+      font-size:13px;
+      line-height:1.35;
+    }
+
+    .metaRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
       align-items:center;
       justify-content:space-between;
     }
-    .pill{
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      border:1px solid var(--line);
-      border-radius:999px;
-      padding:8px 10px;
-      background:#fbfdff;
-      font-weight:900;
-      font-size:12px;
-      color:#111827;
-    }
-    .pill small{color:var(--muted);font-weight:800}
-
-    .grid{
-      margin-top:14px;
-      display:grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap:14px;
-      align-items:stretch;
-    }
-    @media (max-width: 980px){ .grid{grid-template-columns:1fr 1fr} }
-    @media (max-width: 620px){ .grid{grid-template-columns:1fr} }
-
-    .card{
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:14px;
+    .chips{
       display:flex;
-      flex-direction:column;
-      min-height:295px;
-      position:relative;
-      transition:transform .08s ease, border-color .12s ease, box-shadow .12s ease;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
     }
-    .badge{
-      position:absolute; top:12px; right:12px;
-      background:var(--accent2);
-      color:#fff;
-      font-weight:1000;
-      font-size:11px;
+    .chip{
+      background: var(--chip);
+      color: var(--chipText);
+      border: 1px solid rgba(24,74,122,.15);
       padding:6px 10px;
       border-radius:999px;
-      letter-spacing:.3px;
+      font-size:12px;
+      font-weight:600;
+    }
+    .chip.muted{
+      background:#f3f6fb;
+      color:#41546d;
+      border-color: rgba(65,84,109,.12);
+      font-weight:600;
+    }
+
+    .hint{
+      font-size:12px;
+      color: var(--muted);
+    }
+    .hint a{
+      color:#1d4ed8;
+      text-decoration:none;
+      font-weight:700;
+    }
+    .hint a:hover{ text-decoration:underline; }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(4, minmax(220px, 1fr));
+      gap:14px;
+    }
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: repeat(2, minmax(220px, 1fr)); }
+    }
+    @media (max-width: 520px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      background: var(--card);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 8px 22px rgba(10,37,64,.08);
+      padding: 16px;
+      position:relative;
+      overflow:hidden;
     }
     .card.selected{
-      border:3px solid var(--accent);
-      box-shadow:0 14px 30px rgba(47,128,255,.22);
-      transform:translateY(-1px);
+      border:2px solid rgba(34,197,94,.55);
+      box-shadow: 0 10px 26px rgba(34,197,94,.12);
     }
-    .tier{font-weight:1000;margin:0 0 6px;font-size:16px}
-    .title{font-weight:1000;margin:0 0 8px;font-size:14px;color:#1f4dd6;min-height:34px}
-    .price{color:var(--danger);font-weight:1000;margin:0 0 8px}
-    .desc{color:var(--muted);font-size:12px;line-height:1.35;margin:0 0 12px;flex:1}
+    .badge{
+      position:absolute;
+      top:12px;
+      right:12px;
+      background: rgba(34,197,94,.12);
+      color: #15803d;
+      border: 1px solid rgba(34,197,94,.25);
+      padding:5px 9px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:800;
+      display:none;
+    }
+    .card.selected .badge{ display:inline-flex; }
 
-    .btn{
-      border:none;
+    .tierName{
+      margin:0;
+      font-size:18px;
+      font-weight:900;
+    }
+    .tierSub{
+      margin:4px 0 0 0;
+      font-size:13px;
+      font-weight:800;
+      color:#1d4ed8;
+    }
+    .price{
+      margin:10px 0 10px 0;
+      font-size:20px;
+      font-weight:900;
+      color:#b91c1c;
+    }
+    .desc{
+      margin:0 0 12px 0;
+      font-size:13px;
+      line-height:1.35;
+      color: var(--muted);
+      min-height: 64px;
+    }
+
+    .btnRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    button{
       cursor:pointer;
-      border-radius:12px;
-      padding:12px 14px;
-      font-weight:1000;
-      letter-spacing:.2px;
-      width:100%;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      background:var(--accent);
-      color:#fff;
-      text-decoration:none;
+      border:none;
+      border-radius: 10px;
+      padding: 12px 12px;
+      font-weight:800;
+      font-size:13px;
+      flex:1;
+      min-width: 150px;
     }
-    .btn.secondary{
-      background:#eef4ff;
-      color:#1f4dd6;
-      border:1px solid rgba(47,128,255,.25);
+    .payBtn{
+      background: var(--btn);
+      color:#fff;
+    }
+    .payBtn:hover{ background: var(--btn2); }
+
+    .selectBtn{
+      background: #eef2f7;
+      color:#1f2a3a;
+      border:1px solid rgba(31,42,58,.12);
+    }
+    .selectBtn:hover{ background:#e8eef6; }
+
+    .footerNote{
+      margin-top: 14px;
+      font-size:12px;
+      color: var(--muted);
     }
 
-    .notice{
-      margin-top:14px;
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:12px 14px;
-      color:var(--muted);
+    .errorBox{
+      margin-top:12px;
+      padding:10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(239,68,68,.22);
+      background: rgba(239,68,68,.08);
+      color:#7f1d1d;
+      display:none;
       font-size:12px;
-      line-height:1.4;
+      font-weight:700;
     }
-    .notice strong{color:#111827}
-    .tiny-link{color:#1f4dd6;font-weight:900;text-decoration:none}
-    .tiny-link:hover{text-decoration:underline}
   </style>
 </head>
 
 <body>
-<header>
-  <div class="left">
-    <div class="logo">e</div>
-    <div class="brand-title">
-      E-LegalBoom<br><span style="opacity:.85;font-weight:700;font-size:12px">Secure Payment</span>
+  <header>
+    <div class="wrap">
+      <div class="topbar">
+        <div class="brand">
+          <h1>E-LegalBoom · Secure Payment</h1>
+          <p>Confirm your tier, then you’ll be redirected to our secure payment page.</p>
+        </div>
+
+        <div class="pills">
+          <div class="pill"><span class="dot ok" id="dotTier"></span><span id="pillTier">Tier: checking…</span></div>
+          <div class="pill"><span class="dot" id="dotDoc"></span><span id="pillDoc">Doc: checking…</span></div>
+          <div class="pill"><span class="dot" id="dotNext"></span><span id="pillNext">Next: pay.elegalboom.org</span></div>
+        </div>
+      </div>
     </div>
-  </div>
-  <nav><a href="/index.html">Home</a></nav>
-</header>
+  </header>
 
-<div class="wrap">
-  <h1>Confirm Your Tier &amp; Complete Payment</h1>
-  <p class="sub">
-    Review your selection below. The correct tier will be highlighted automatically. You can still choose a different tier if needed.
-  </p>
+  <main>
+    <div class="wrap">
+      <section class="hero">
+        <h2>Confirm Your Tier & Complete Payment</h2>
+        <p>
+          We detected your selection from your intake flow. If it looks wrong, you can change it below.
+          When you click <b>Pay</b>, we’ll send you to the secure PayLink checkout.
+        </p>
 
-  <div class="topbar">
-    <div class="pill">Detected Tier: <small id="detectedTier">—</small></div>
-    <div class="pill">Doc(s): <small id="detectedDocs">—</small></div>
-    <div class="pill">Tip: <small><a class="tiny-link" href="/catalog.html">Return to catalog</a> if anything looks off</small></div>
-  </div>
+        <div class="metaRow">
+          <div class="chips">
+            <span class="chip" id="chipDetectedTier">Detected Tier: —</span>
+            <span class="chip muted" id="chipDoc">Doc Type: —</span>
+          </div>
 
-  <div class="grid">
+          <div class="hint">
+            Tip: <a href="catalog.html">Return to catalog</a>
+          </div>
+        </div>
 
-    <div class="card" id="card-T1" data-tier="T1">
-      <div class="tier">Tier One</div>
-      <div class="title">Startup &amp; Essential Documents</div>
-      <div class="price">$39.00 — per document</div>
-      <div class="desc">Best for one straightforward document such as an NDA, promissory note, or single-member LLC agreement.</div>
-      <a class="btn" id="payT1" href="https://pay.elegalboom.org/e4b79a60-0fd7-431c-8bfc-ae0">Pay for Tier One</a>
-      <a class="btn secondary" href="/catalog.html" style="margin-top:10px">Change Selection</a>
+        <div class="errorBox" id="errorBox"></div>
+      </section>
+
+      <section class="grid" id="tierGrid">
+        <!-- Tier One -->
+        <div class="card" data-tier="T1" id="cardT1">
+          <div class="badge">Detected</div>
+          <h3 class="tierName">Tier One</h3>
+          <div class="tierSub">Startup & Essential Documents</div>
+          <div class="price">$39.00 — per document</div>
+          <p class="desc">
+            Best for one straightforward document, such as an NDA, promissory note, or single-member LLC agreement.
+          </p>
+          <div class="btnRow">
+            <button class="payBtn" data-pay="T1">Pay for Tier One</button>
+            <button class="selectBtn" data-select="T1">Change Selection</button>
+          </div>
+        </div>
+
+        <!-- Tier Two -->
+        <div class="card" data-tier="T2" id="cardT2">
+          <div class="badge">Detected</div>
+          <h3 class="tierName">Tier Two</h3>
+          <div class="tierSub">Business Foundation</div>
+          <div class="price">$59.00 — per document</div>
+          <p class="desc">
+            For partnership agreements, two-member LLCs, employment contracts, and core business relationships.
+          </p>
+          <div class="btnRow">
+            <button class="payBtn" data-pay="T2">Pay for Tier Two</button>
+            <button class="selectBtn" data-select="T2">Change Selection</button>
+          </div>
+        </div>
+
+        <!-- Tier Three -->
+        <div class="card" data-tier="T3" id="cardT3">
+          <div class="badge">Detected</div>
+          <h3 class="tierName">Tier Three</h3>
+          <div class="tierSub">Advanced Protection</div>
+          <div class="price">$99.00 — coordinated set</div>
+          <p class="desc">
+            For complex or coordinated structures where you need multiple documents aligned.
+          </p>
+          <div class="btnRow">
+            <button class="payBtn" data-pay="T3">Pay for Tier Three</button>
+            <button class="selectBtn" data-select="T3">Change Selection</button>
+          </div>
+        </div>
+
+        <!-- Bundle -->
+        <div class="card" data-tier="BUNDLE" id="cardBUNDLE">
+          <div class="badge">Detected</div>
+          <h3 class="tierName">Entrepreneur Starter Bundle</h3>
+          <div class="tierSub">3 Coordinated Documents</div>
+          <div class="price">$149.00 — bundle</div>
+          <p class="desc">
+            For entrepreneurs who want a coordinated starter set prepared as a legal package.
+          </p>
+          <div class="btnRow">
+            <button class="payBtn" data-pay="BUNDLE">Pay for Bundle</button>
+            <button class="selectBtn" data-select="BUNDLE">Change Selection</button>
+          </div>
+        </div>
+
+        <!-- Optional: 30-day plan (kept off-grid on small screens if you prefer; but included here) -->
+        <div class="card" data-tier="UNLIMITED" id="cardUNLIMITED" style="grid-column: 1 / -1;">
+          <div class="badge">Detected</div>
+          <h3 class="tierName">30 Days Unlimited Legal Documents</h3>
+          <div class="tierSub">Founder Plan</div>
+          <div class="price">Subscription / plan checkout</div>
+          <p class="desc">
+            For founders who want unlimited document help for 30 days, including coordinated revisions and add-ons.
+          </p>
+          <div class="btnRow">
+            <button class="payBtn" data-pay="UNLIMITED">Pay for 30-Day Plan</button>
+            <button class="selectBtn" data-select="UNLIMITED">Change Selection</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="footerNote">
+        Note: Payment is processed securely via your PayLinks. After successful payment, we can match the payment confirmation to the request and release the finished document.
+      </div>
     </div>
+  </main>
 
-    <div class="card" id="card-T2" data-tier="T2">
-      <div class="tier">Tier Two</div>
-      <div class="title">Business Foundation</div>
-      <div class="price">$59.00 — per document</div>
-      <div class="desc">For partnership agreements, two-member LLCs, employment contracts, and core business relationships.</div>
-      <a class="btn" id="payT2" href="https://pay.elegalboom.org/aeda58cf-65f5-4bf0-98f3-7a2">Pay for Tier Two</a>
-      <a class="btn secondary" href="/catalog.html" style="margin-top:10px">Change Selection</a>
-    </div>
+  <script>
+    // --- YOUR PAYLINKS (verbatim from your screenshot) ---
+    const PAYLINKS = {
+      T1: "https://pay.elegalboom.org/e4b79a60-0fd7-431c-8bfc-ae0",
+      T2: "https://pay.elegalboom.org/aeda586f-65f5-4bf0-98f3-7a2",
+      T3: "https://pay.elegalboom.org/71ca7144-e537-4fbd-823d-c10",
+      BUNDLE: "https://pay.elegalboom.org/55c7cd3d-1048-4b8c-aadb-843",
+      UNLIMITED: "https://pay.elegalboom.org/c9c5e4f6-ac37-4fd3-98a8-a84"
+    };
 
-    <div class="card" id="card-T3" data-tier="T3">
-      <div class="tier">Tier Three</div>
-      <div class="title">Advanced Protection</div>
-      <div class="price">$99.00 — coordinated set</div>
-      <div class="desc">For complex or coordinated structures where you need multiple documents aligned.</div>
-      <a class="btn" id="payT3" href="https://pay.elegalboom.org/71ca7144-e537-4fbd-823d-c10">Pay for Tier Three</a>
-      <a class="btn secondary" href="/catalog.html" style="margin-top:10px">Change Selection</a>
-    </div>
+    function qs() {
+      const u = new URL(window.location.href);
+      return {
+        tier: (u.searchParams.get("tier") || "").trim(),
+        doc_type: (u.searchParams.get("doc_type") || "").trim(),
+        bundle: (u.searchParams.get("bundle") || "").trim()
+      };
+    }
 
-    <div class="card" id="card-BUNDLE" data-tier="BUNDLE">
-      <div class="badge">BEST VALUE</div>
-      <div class="tier">Entrepreneur Bundle</div>
-      <div class="title">3 Coordinated Documents</div>
-      <div class="price">$149.00 — bundle</div>
-      <div class="desc">For entrepreneurs wanting three documents prepared as a coordinated legal package.</div>
-      <a class="btn" id="payBUNDLE" href="https://pay.elegalboom.org/55c7cd3d-1048-4b8c-aadb-843">Pay for Bundle</a>
-      <a class="btn secondary" href="/catalog.html" style="margin-top:10px">Change Selection</a>
-    </div>
+    function normalizeTier(rawTier, rawBundle) {
+      // Accept common forms: T1 / t1 / tier1 / 1 / Tier One
+      const t = (rawTier || "").toUpperCase();
 
-  </div>
+      if (rawBundle && rawBundle.length) return "BUNDLE";
+      if (t === "BUNDLE") return "BUNDLE";
+      if (t === "UNLIMITED" || t === "30DAY" || t === "30_DAYS" || t === "30DAYS") return "UNLIMITED";
 
-  <div class="notice">
-    <strong>Note:</strong> Payment is processed securely on Stripe. If your selection looks wrong, return to the catalog and reselect.
-  </div>
-</div>
+      if (t === "T1" || t === "TIER1" || t === "1" || t === "TIER_ONE") return "T1";
+      if (t === "T2" || t === "TIER2" || t === "2" || t === "TIER_TWO") return "T2";
+      if (t === "T3" || t === "TIER3" || t === "3" || t === "TIER_THREE") return "T3";
 
-<script>
-  function safeParse(json) {
-    try { return JSON.parse(json); } catch (e) { return null; }
-  }
+      // If nothing detected, default to T1 (safe default)
+      return "T1";
+    }
 
-  // We expect intake.html to set sessionStorage.ELB_SELECTION = JSON string
-  const raw = sessionStorage.getItem("ELB_SELECTION");
-  const sel = raw ? safeParse(raw) : null;
+    function setStatus(tier, docType) {
+      document.getElementById("pillTier").textContent = `Tier: ${tier}`;
+      document.getElementById("pillDoc").textContent = docType ? `Doc: ${docType}` : "Doc: (none)";
 
-  const tier = sel?.tier || "";
-  const docs = sel?.docs || sel?.selected_docs || [];
+      document.getElementById("chipDetectedTier").textContent = `Detected Tier: ${tier}`;
+      document.getElementById("chipDoc").textContent = `Doc Type: ${docType || "—"}`;
 
-  // UI labels
-  const tierEl = document.getElementById("detectedTier");
-  const docsEl = document.getElementById("detectedDocs");
+      document.getElementById("dotTier").classList.add("ok");
+      document.getElementById("dotDoc").classList.add(docType ? "ok" : "warn");
+      document.getElementById("dotNext").classList.add("ok");
+    }
 
-  tierEl.textContent = tier ? tier : "—";
-  docsEl.textContent = Array.isArray(docs) && docs.length ? docs.join(", ") : "—";
+    function highlightTier(tier) {
+      ["T1","T2","T3","BUNDLE","UNLIMITED"].forEach(k => {
+        const el = document.querySelector(`.card[data-tier="${k}"]`);
+        if (!el) return;
+        if (k === tier) el.classList.add("selected");
+        else el.classList.remove("selected");
+      });
+    }
 
-  // Highlight correct card
-  const allCards = document.querySelectorAll(".card");
-  allCards.forEach(c => c.classList.remove("selected"));
+    function showError(msg) {
+      const box = document.getElementById("errorBox");
+      box.style.display = "block";
+      box.textContent = msg;
+    }
 
-  if (tier) {
-    const card = document.getElementById("card-" + tier);
-    if (card) card.classList.add("selected");
-  }
+    function updateUrlTier(nextTier, docType) {
+      const url = new URL(window.location.href);
+      url.searchParams.set("tier", nextTier);
+      if (docType) url.searchParams.set("doc_type", docType);
+      history.replaceState({}, "", url.toString());
+    }
 
-  // Allow manual highlight if user clicks a card
-  allCards.forEach(c => {
-    c.addEventListener("click", () => {
-      allCards.forEach(x => x.classList.remove("selected"));
-      c.classList.add("selected");
-    });
-  });
+    function goPay(tier, docType) {
+      const link = PAYLINKS[tier];
+      if (!link) {
+        showError(`No paylink found for tier: ${tier}.`);
+        return;
+      }
 
-  // Optional: keep Stripe links opening same tab (default). Nothing else needed.
-</script>
+      // Preserve context as query params (optional – only if your PayLink supports/records them)
+      const payUrl = new URL(link);
+      if (docType) payUrl.searchParams.set("doc_type", docType);
+      payUrl.searchParams.set("tier", tier);
+
+      window.location.href = payUrl.toString();
+    }
+
+    // --- Boot ---
+    (function init(){
+      const { tier, doc_type, bundle } = qs();
+      const detectedTier = normalizeTier(tier, bundle);
+
+      setStatus(detectedTier, doc_type);
+      highlightTier(detectedTier);
+
+      // Handle Pay button clicks
+      document.querySelectorAll("button.payBtn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const t = btn.getAttribute("data-pay");
+          const docType = qs().doc_type;
+          goPay(t, docType);
+        });
+      });
+
+      // Handle Change Selection clicks (just changes highlight + URL param)
+      document.querySelectorAll("button.selectBtn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const t = btn.getAttribute("data-select");
+          const docType = qs().doc_type;
+          updateUrlTier(t, docType);
+          setStatus(t, docType);
+          highlightTier(t);
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
