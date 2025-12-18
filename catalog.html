@@ -1,353 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>E-LegalBoom – Choose Your Tier</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<head>
+  <meta charset="UTF-8" />
+  <title>E-LegalBoom — Document Catalog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <style>
-      :root {
-        --eb-navy: #1e1e2f;
-        --eb-blue: #2b6cff;
-        --eb-blue-dark: #1e54cc;
-        --eb-accent: #ff7b2c;
-        --eb-bg1: #f0f5ff;
-        --eb-bg2: #e6edff;
-        --eb-card-bg: #ffffff;
-      }
+  <style>
+    :root {
+      --eb-navy: #1e1e2f;
+      --eb-blue: #2b6cff;
+      --eb-accent: #ff7b2c;
+      --eb-bg1: #f0f5ff;
+      --eb-bg2: #e6edff;
+      --eb-card-bg: #ffffff;
+    }
 
-      * {
-        box-sizing: border-box;
-      }
+    * {
+      box-sizing: border-box;
+    }
 
-      body {
-        margin: 0;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          sans-serif;
-        background: linear-gradient(135deg, var(--eb-bg1), var(--eb-bg2));
-        color: #222;
-      }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, var(--eb-bg1), var(--eb-bg2));
+      color: #222;
+    }
 
-      header {
-        background: var(--eb-navy);
-        color: #fff;
-        padding: 14px 20px;
-      }
+    header {
+      background: var(--eb-navy);
+      color: #fff;
+      padding: 24px;
+      text-align: center;
+    }
 
-      header .brand {
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        font-size: 0.9rem;
-      }
+    header h1 {
+      margin: 0 0 8px;
+    }
 
-      header .tagline {
-        font-size: 0.8rem;
-        opacity: 0.8;
-      }
+    header p {
+      margin: 0;
+      opacity: 0.9;
+    }
 
-      .page-wrap {
-        max-width: 1100px;
-        margin: 24px auto 40px;
-        padding: 0 16px 40px;
-      }
+    main {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
 
-      h1 {
-        margin: 0 0 6px;
-        font-size: 1.8rem;
-        color: var(--eb-navy);
-      }
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
 
-      .page-intro {
-        max-width: 720px;
-        font-size: 0.95rem;
-        color: #444;
-        line-height: 1.5;
-      }
+    /* CLICKABLE CARD WRAPPER */
+    .doc-card-link {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+    }
 
-      .page-intro strong {
-        color: var(--eb-navy);
-      }
+    .doc-card {
+      background: var(--eb-card-bg);
+      border-radius: 14px;
+      padding: 22px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      height: 100%;
+    }
 
-      .tiers-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 20px;
-        margin-top: 24px;
-      }
+    .doc-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.12);
+    }
 
-      .tier-card {
-        background: var(--eb-card-bg);
-        border-radius: 14px;
-        padding: 20px 18px 18px;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        transition: transform 0.18s ease, box-shadow 0.18s ease;
-        border: 1px solid rgba(0, 0, 0, 0.04);
-      }
+    .doc-card h3 {
+      margin-top: 0;
+      color: var(--eb-navy);
+    }
 
-      .tier-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.12);
-      }
+    .doc-card p {
+      font-size: 0.95rem;
+      line-height: 1.4;
+      margin-bottom: 18px;
+    }
 
-      .tier-heading-row {
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        gap: 10px;
-      }
+    .doc-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-      .tier-name {
-        margin: 0;
-        font-size: 1.05rem;
-        color: var(--eb-navy);
-      }
+    .price {
+      font-weight: 700;
+      color: var(--eb-blue);
+    }
 
-      .tier-label-pill {
-        display: inline-block;
-        padding: 3px 10px;
-        border-radius: 999px;
-        font-size: 0.7rem;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        background: #f1f3ff;
-        color: #1e54cc;
-        font-weight: 600;
-        white-space: nowrap;
-      }
+    .cta {
+      background: var(--eb-accent);
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
 
-      .tier-card.best-value {
-        border: 2px solid var(--eb-accent);
-      }
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      font-size: 0.85rem;
+      color: #666;
+    }
+  </style>
+</head>
 
-      .tier-card.best-value .tier-label-pill {
-        background: var(--eb-accent);
-        color: #fff;
-      }
+<body>
 
-      .price-row {
-        margin-top: 10px;
-        margin-bottom: 6px;
-      }
+  <header>
+    <h1>Choose Your Legal Document</h1>
+    <p>AI-powered legal drafts — fast, simple, and transparent</p>
+  </header>
 
-      .price-main {
-        font-size: 1.4rem;
-        font-weight: 700;
-        color: var(--eb-blue);
-      }
+  <main>
+    <section class="catalog-grid">
 
-      .price-note {
-        font-size: 0.8rem;
-        color: #666;
-        margin-left: 4px;
-      }
-
-      .short-blurb {
-        font-size: 0.9rem;
-        color: #444;
-        margin: 6px 0 8px;
-      }
-
-      .tier-features {
-        margin: 8px 0 14px;
-        padding-left: 18px;
-        font-size: 0.88rem;
-        color: #444;
-      }
-
-      .tier-features li {
-        margin-bottom: 4px;
-      }
-
-      .btn-primary {
-        display: inline-block;
-        margin-top: auto;
-        background: var(--eb-blue);
-        color: #fff;
-        padding: 9px 12px;
-        border-radius: 8px;
-        text-align: center;
-        text-decoration: none;
-        font-size: 0.92rem;
-        font-weight: 600;
-        border: none;
-        cursor: pointer;
-        transition: background 0.18s ease, transform 0.1s ease;
-      }
-
-      .btn-primary:hover {
-        background: #1e54cc;
-        transform: translateY(-1px);
-      }
-
-      .fine-print {
-        margin-top: 22px;
-        font-size: 0.8rem;
-        color: #555;
-        max-width: 720px;
-      }
-
-      .fine-print strong {
-        color: var(--eb-navy);
-      }
-
-      @media (max-width: 600px) {
-        h1 {
-          font-size: 1.4rem;
-        }
-
-        .page-wrap {
-          margin-top: 18px;
-        }
-
-        .tier-card {
-          padding: 18px 14px 16px;
-        }
-      }
-    </style>
-  </head>
-
-  <body>
-    <header>
-      <div class="brand">E-LEGALBOOM</div>
-      <div class="tagline">Legal Confidence for Everyday Entrepreneurs</div>
-    </header>
-
-    <main class="page-wrap">
-      <h1>Select Your Tier</h1>
-      <p class="page-intro">
-        Choose the option that best fits what you need right now.
-        <strong>Tier One–Three</strong> are based on how many documents or how
-        coordinated your structure needs to be. The
-        <strong>Entrepreneur Bundle</strong> gives you three coordinated
-        documents prepared together as a set. Once you choose a tier, you’ll move
-        into the secure intake and payment process.
-      </p>
-
-      <div class="tiers-grid">
-        <!-- Tier One -->
-        <div class="tier-card">
-          <div class="tier-heading-row">
-            <h2 class="tier-name">Tier One – Startup &amp; Essential Documents</h2>
-            <span class="tier-label-pill">Single document</span>
+      <!-- LLC SINGLE MEMBER -->
+      <a href="/intake.html?doc_type=llc_single_member" class="doc-card-link">
+        <div class="doc-card">
+          <h3>LLC – Single Member</h3>
+          <p>For businesses owned by one individual seeking limited liability protection.</p>
+          <div class="doc-meta">
+            <span class="price">$99</span>
+            <span class="cta">Select</span>
           </div>
-
-          <div class="price-row">
-            <span class="price-main">$39</span>
-            <span class="price-note">per document</span>
-          </div>
-
-          <p class="short-blurb">
-            Best for one straightforward document such as an NDA, promissory
-            note, or single-member LLC agreement.
-          </p>
-
-          <ul class="tier-features">
-            <li>One core legal document prepared for your business</li>
-            <li>Focused protection for a single need or relationship</li>
-            <li>Clean, plain-language structure so you know what you’re signing</li>
-          </ul>
-
-          <a href="tier1.html?tier=T1" class="btn-primary">
-            Select Tier One – $39
-          </a>
         </div>
+      </a>
 
-        <!-- Tier Two -->
-        <div class="tier-card">
-          <div class="tier-heading-row">
-            <h2 class="tier-name">Tier Two – Business Foundation</h2>
-            <span class="tier-label-pill">Single document</span>
+      <!-- LLC MULTI MEMBER -->
+      <a href="/intake.html?doc_type=llc_multi_member" class="doc-card-link">
+        <div class="doc-card">
+          <h3>LLC – Multi Member</h3>
+          <p>For companies with multiple owners defining ownership, voting, and profit sharing.</p>
+          <div class="doc-meta">
+            <span class="price">$149</span>
+            <span class="cta">Select</span>
           </div>
-
-          <div class="price-row">
-            <span class="price-main">$59</span>
-            <span class="price-note">per document</span>
-          </div>
-
-          <p class="short-blurb">
-            For partnership agreements, two-member LLCs, employment contracts,
-            and core business relationships where terms really matter.
-          </p>
-
-          <ul class="tier-features">
-            <li>Designed for relationships that carry more ongoing risk</li>
-            <li>Stronger structure for roles, money flow, and exits</li>
-            <li>Good fit as your operations begin to grow</li>
-          </ul>
-
-          <a href="tier2.html?tier=T2" class="btn-primary">
-            Select Tier Two – $59
-          </a>
         </div>
+      </a>
 
-        <!-- Tier Three -->
-        <div class="tier-card">
-          <div class="tier-heading-row">
-            <h2 class="tier-name">Tier Three – Advanced Protection</h2>
-            <span class="tier-label-pill">Coordinated set</span>
+      <!-- NDA -->
+      <a href="/intake.html?doc_type=nda" class="doc-card-link">
+        <div class="doc-card">
+          <h3>Non-Disclosure Agreement (NDA)</h3>
+          <p>Protect confidential information shared with employees, partners, or contractors.</p>
+          <div class="doc-meta">
+            <span class="price">$49</span>
+            <span class="cta">Select</span>
           </div>
-
-          <div class="price-row">
-            <span class="price-main">$99</span>
-            <span class="price-note">coordinated set</span>
-          </div>
-
-          <p class="short-blurb">
-            For complex or coordinated structures where you need multiple
-            documents aligned to say the same thing.
-          </p>
-
-          <ul class="tier-features">
-            <li>Built for multi-piece structures and layered relationships</li>
-            <li>Helps keep language and obligations in sync</li>
-            <li>Ideal when a change in one document affects the others</li>
-          </ul>
-
-          <a href="tier3.html?tier=T3" class="btn-primary">
-            Select Tier Three – $99
-          </a>
         </div>
+      </a>
 
-        <!-- Entrepreneur Bundle -->
-        <div class="tier-card best-value">
-          <div class="tier-heading-row">
-            <h2 class="tier-name">Entrepreneur Bundle – 3 Coordinated Documents</h2>
-            <span class="tier-label-pill">Best value</span>
+      <!-- INDEPENDENT CONTRACTOR -->
+      <a href="/intake.html?doc_type=independent_contractor" class="doc-card-link">
+        <div class="doc-card">
+          <h3>Independent Contractor Agreement</h3>
+          <p>Clearly define scope, payment terms, and IP ownership with contractors.</p>
+          <div class="doc-meta">
+            <span class="price">$79</span>
+            <span class="cta">Select</span>
           </div>
-
-          <div class="price-row">
-            <span class="price-main">$149</span>
-            <span class="price-note">bundle</span>
-          </div>
-
-          <p class="short-blurb">
-            Three coordinated legal documents prepared together as one bundled
-            entrepreneur package.
-          </p>
-
-          <ul class="tier-features">
-            <li>3 documents drafted to work together as a set</li>
-            <li>Coordinated language and cross-references</li>
-            <li>Great for entrepreneurs wanting a stronger foundation up front</li>
-          </ul>
-
-          <!-- IMPORTANT: this is the new target -->
-          <a href="bundle-select.html" class="btn-primary">
-            Select Entrepreneur Bundle – $149
-          </a>
         </div>
-      </div>
+      </a>
 
-      <p class="fine-print">
-        <strong>Next step:</strong> After you choose your tier, you’ll move
-        through intake and payment. Once payment is complete, you’ll receive
-        instructions for securely providing your business details so your
-        documents can be prepared and delivered.
-      </p>
-    </main>
-  </body>
+    </section>
+  </main>
+
+  <footer>
+    © 2025 E-LegalBoom · AI-powered legal docs · Not a law firm
+  </footer>
+
+</body>
 </html>
