@@ -2,183 +2,216 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>E-LegalBoom — Document Catalog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>E-LegalBoom | Document Catalog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
-    :root {
-      --eb-navy: #1e1e2f;
-      --eb-blue: #2b6cff;
-      --eb-accent: #ff7b2c;
-      --eb-bg1: #f0f5ff;
-      --eb-bg2: #e6edff;
-      --eb-card-bg: #ffffff;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: linear-gradient(135deg, var(--eb-bg1), var(--eb-bg2));
-      color: #222;
+      background: #f3f4f8;
+      color: #111827;
     }
 
     header {
-      background: var(--eb-navy);
-      color: #fff;
+      background: #0f172a;
+      color: white;
       padding: 24px;
       text-align: center;
     }
 
     header h1 {
-      margin: 0 0 8px;
+      margin: 0;
+      font-size: 28px;
     }
 
     header p {
-      margin: 0;
-      opacity: 0.9;
+      margin-top: 6px;
+      font-size: 14px;
+      color: #cbd5f5;
     }
 
     main {
       max-width: 1100px;
-      margin: 40px auto;
-      padding: 0 20px;
+      margin: 32px auto 60px;
+      padding: 0 16px;
     }
 
-    .catalog-grid {
+    .category {
+      margin-bottom: 36px;
+    }
+
+    .category h2 {
+      font-size: 20px;
+      margin-bottom: 14px;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 6px;
+    }
+
+    .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 24px;
+      gap: 16px;
     }
 
-    /* CLICKABLE CARD WRAPPER */
-    .doc-card-link {
-      display: block;
-      text-decoration: none;
-      color: inherit;
+    @media (min-width: 900px) {
+      .grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
     }
 
-    .doc-card {
-      background: var(--eb-card-bg);
-      border-radius: 14px;
-      padding: 22px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-      height: 100%;
-    }
-
-    .doc-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.12);
-    }
-
-    .doc-card h3 {
-      margin-top: 0;
-      color: var(--eb-navy);
-    }
-
-    .doc-card p {
-      font-size: 0.95rem;
-      line-height: 1.4;
-      margin-bottom: 18px;
-    }
-
-    .doc-meta {
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid #e5e7eb;
       display: flex;
+      flex-direction: column;
       justify-content: space-between;
-      align-items: center;
+    }
+
+    .card h3 {
+      margin: 0 0 6px;
+      font-size: 16px;
+    }
+
+    .card p {
+      font-size: 13px;
+      color: #4b5563;
+      margin-bottom: 10px;
     }
 
     .price {
       font-weight: 700;
-      color: var(--eb-blue);
+      color: #0f766e;
+      margin-bottom: 10px;
     }
 
-    .cta {
-      background: var(--eb-accent);
-      color: #fff;
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-size: 0.85rem;
+    .card a {
+      display: inline-block;
+      text-align: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #0f766e;
+      color: white;
+      font-size: 13px;
+      text-decoration: none;
       font-weight: 600;
+    }
+
+    .card a:hover {
+      background: #115e59;
     }
 
     footer {
       text-align: center;
-      padding: 30px 20px;
-      font-size: 0.85rem;
-      color: #666;
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 40px;
     }
   </style>
 </head>
 
 <body>
 
-  <header>
-    <h1>Choose Your Legal Document</h1>
-    <p>AI-powered legal drafts — fast, simple, and transparent</p>
-  </header>
+<header>
+  <h1>Choose Your Legal Document</h1>
+  <p>AI-powered legal drafts — fast, simple, and transparent</p>
+</header>
 
-  <main>
-    <section class="catalog-grid">
+<main>
 
-      <!-- LLC SINGLE MEMBER -->
-      <a href="/intake.html?doc_type=llc_single_member" class="doc-card-link">
-        <div class="doc-card">
-          <h3>LLC – Single Member</h3>
-          <p>For businesses owned by one individual seeking limited liability protection.</p>
-          <div class="doc-meta">
-            <span class="price">$99</span>
-            <span class="cta">Select</span>
-          </div>
-        </div>
-      </a>
+  <!-- Tier 1 -->
+  <section class="category">
+    <h2>Tier 1 – Essential Startup Documents</h2>
+    <div class="grid">
 
-      <!-- LLC MULTI MEMBER -->
-      <a href="/intake.html?doc_type=llc_multi_member" class="doc-card-link">
-        <div class="doc-card">
-          <h3>LLC – Multi Member</h3>
-          <p>For companies with multiple owners defining ownership, voting, and profit sharing.</p>
-          <div class="doc-meta">
-            <span class="price">$149</span>
-            <span class="cta">Select</span>
-          </div>
-        </div>
-      </a>
+      <div class="card">
+        <h3>LLC – Single Member</h3>
+        <p>For businesses owned by one individual seeking limited liability protection.</p>
+        <div class="price">$39</div>
+        <a href="intake.html?tier=1&doc_type=llc_single_member&doc_name=LLC Single Member">
+          Select
+        </a>
+      </div>
 
-      <!-- NDA -->
-      <a href="/intake.html?doc_type=nda" class="doc-card-link">
-        <div class="doc-card">
-          <h3>Non-Disclosure Agreement (NDA)</h3>
-          <p>Protect confidential information shared with employees, partners, or contractors.</p>
-          <div class="doc-meta">
-            <span class="price">$49</span>
-            <span class="cta">Select</span>
-          </div>
-        </div>
-      </a>
+      <div class="card">
+        <h3>Non-Disclosure Agreement (NDA)</h3>
+        <p>Protect confidential information shared with partners or contractors.</p>
+        <div class="price">$39</div>
+        <a href="intake.html?tier=1&doc_type=nda&doc_name=Non-Disclosure Agreement">
+          Select
+        </a>
+      </div>
 
-      <!-- INDEPENDENT CONTRACTOR -->
-      <a href="/intake.html?doc_type=independent_contractor" class="doc-card-link">
-        <div class="doc-card">
-          <h3>Independent Contractor Agreement</h3>
-          <p>Clearly define scope, payment terms, and IP ownership with contractors.</p>
-          <div class="doc-meta">
-            <span class="price">$79</span>
-            <span class="cta">Select</span>
-          </div>
-        </div>
-      </a>
+      <div class="card">
+        <h3>Promissory Note</h3>
+        <p>Formal agreement outlining loan terms and repayment obligations.</p>
+        <div class="price">$39</div>
+        <a href="intake.html?tier=1&doc_type=promissory_note&doc_name=Promissory Note">
+          Select
+        </a>
+      </div>
 
-    </section>
-  </main>
+    </div>
+  </section>
 
-  <footer>
-    © 2025 E-LegalBoom · AI-powered legal docs · Not a law firm
-  </footer>
+  <!-- Tier 2 -->
+  <section class="category">
+    <h2>Tier 2 – Business Foundation Documents</h2>
+    <div class="grid">
+
+      <div class="card">
+        <h3>LLC – Multi Member</h3>
+        <p>For companies with multiple owners defining roles and profit sharing.</p>
+        <div class="price">$59</div>
+        <a href="intake.html?tier=2&doc_type=llc_multi_member&doc_name=LLC Multi Member">
+          Select
+        </a>
+      </div>
+
+      <div class="card">
+        <h3>Partnership Agreement</h3>
+        <p>Defines ownership, responsibilities, and exit terms between partners.</p>
+        <div class="price">$59</div>
+        <a href="intake.html?tier=2&doc_type=partnership&doc_name=Partnership Agreement">
+          Select
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Tier 3 -->
+  <section class="category">
+    <h2>Tier 3 – Premium & Ongoing Agreements</h2>
+    <div class="grid">
+
+      <div class="card">
+        <h3>Independent Contractor Agreement</h3>
+        <p>Clearly defines scope, payment terms, and IP ownership.</p>
+        <div class="price">$99</div>
+        <a href="intake.html?tier=3&doc_type=contractor&doc_name=Independent Contractor Agreement">
+          Select
+        </a>
+      </div>
+
+      <div class="card">
+        <h3>Consulting Agreement</h3>
+        <p>Professional services agreement with deliverables and protections.</p>
+        <div class="price">$99</div>
+        <a href="intake.html?tier=3&doc_type=consulting&doc_name=Consulting Agreement">
+          Select
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  © 2025 E-LegalBoom · AI-powered legal docs · Not a law firm
+</footer>
 
 </body>
 </html>
