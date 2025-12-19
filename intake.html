@@ -17,7 +17,7 @@
     .container {
       max-width: 900px;
       margin: 50px auto;
-      background: #fff;
+      background: #ffffff;
       padding: 36px 40px;
       border-radius: 10px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.06);
@@ -64,7 +64,7 @@
 
     button {
       background: #2b6cff;
-      color: #fff;
+      color: #ffffff;
       border: none;
       padding: 14px 22px;
       font-size: 16px;
@@ -81,7 +81,10 @@
 
     <div class="context" id="contextBox"></div>
 
-    <!-- 85% DATA -->
+    <!-- =========================
+         85% DATA COLLECTION
+    ========================== -->
+
     <h2>Client Information</h2>
 
     <div class="field">
@@ -106,10 +109,13 @@
       <input id="entity_name" />
     </div>
 
-    <!-- CONDITIONAL: MULTI-OWNER ALLOCATION -->
+    <!-- =========================
+         MULTI-OWNER ALLOCATION
+    ========================== -->
+
     <div id="allocationSection" style="display:none;">
       <h2>Ownership Allocation</h2>
-      <p>Please allocate ownership percentages so the total equals 100%.</p>
+      <p>Please allocate ownership so the total equals 100%.</p>
 
       <table id="allocationTable">
         <thead>
@@ -129,6 +135,13 @@
 
   <script>
     /* ===============================
+       SUPABASE CONFIG (PUBLIC / ANON)
+    =============================== */
+
+    const SUPABASE_URL = "https://vvjbjfltqsivvxxifnvi.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";
+
+    /* ===============================
        READ SUMMARY CONTEXT (15%)
     =============================== */
 
@@ -138,11 +151,14 @@
       tier: params.get("tier"),
       doc_type: params.get("doc_type"),
       state: params.get("state"),
+
       owner_count_bucket: params.get("owner_count_bucket"),
       ownership_structure: params.get("ownership_structure"),
       control_threshold: params.get("control_threshold"),
+
       primary_ownership_pct: params.get("primary_ownership_pct"),
       secondary_ownership_pct: params.get("secondary_ownership_pct"),
+
       allocation_required: params.get("allocation_required") === "true"
     };
 
@@ -164,7 +180,7 @@
     `;
 
     /* ===============================
-       OWNERSHIP ALLOCATION TABLE
+       OWNERSHIP TABLE (IF REQUIRED)
     =============================== */
 
     const allocationSection = document.getElementById("allocationSection");
@@ -201,17 +217,28 @@
 
       if (total !== 100) {
         alert("Ownership percentages must total 100%");
-        throw new Error("Invalid allocation total");
+        throw new Error("Allocation total invalid");
       }
 
       return owners;
     }
 
     /* ===============================
-       SUBMIT PAYLOAD (AUTOMATION-READY)
+       SUBMIT → SUPABASE (AUTOMATED)
     =============================== */
 
-    document.getElementById("submitBtn").onclick = () => {
+    document.getElementById("submitBtn").onclick = async () => {
+      let ownershipData = [];
+
+      if (CONTEXT.allocation_required) {
+        ownershipData = collectAllocations();
+      } else if (CONTEXT.primary_ownership_pct) {
+        ownershipData = [
+          { name: "Primary", pct: Number(CONTEXT.primary_ownership_pct) },
+          { name: "Secondary", pct: Number(CONTEXT.secondary_ownership_pct) }
+        ];
+      }
+
       const payload = {
         context: CONTEXT,
         client: {
@@ -222,18 +249,52 @@
         entity: {
           name: entity_name.value
         },
-        ownership: CONTEXT.allocation_required
-          ? collectAllocations()
-          : CONTEXT.primary_ownership_pct
-            ? [
-                { name: "Primary", pct: Number(CONTEXT.primary_ownership_pct) },
-                { name: "Secondary", pct: Number(CONTEXT.secondary_ownership_pct) }
-              ]
-            : []
+        ownership: ownershipData
       };
 
-      console.log("FINAL PAYLOAD:", payload);
-      alert("Intake captured. Ready for automation.");
+      const row = {
+        tier: CONTEXT.tier,
+        doc_type: CONTEXT.doc_type,
+        state: CONTEXT.state,
+
+        owner_count_bucket: CONTEXT.owner_count_bucket,
+        ownership_structure: CONTEXT.ownership_structure,
+        control_threshold: CONTEXT.control_threshold,
+
+        primary_ownership_pct: CONTEXT.primary_ownership_pct
+          ? Number(CONTEXT.primary_ownership_pct)
+          : null,
+
+        secondary_ownership_pct: CONTEXT.secondary_ownership_pct
+          ? Number(CONTEXT.secondary_ownership_pct)
+          : null,
+
+        allocation_required: CONTEXT.allocation_required,
+        payload: payload,
+
+        payment_status: "PENDING",
+        processing_status: "NEW"
+      };
+
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/document_requests`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_ANON_KEY,
+          "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+          "Prefer": "return=representation"
+        },
+        body: JSON.stringify(row)
+      });
+
+      if (!res.ok) {
+        const err = await res.text();
+        console.error(err);
+        alert("There was an error submitting your intake.");
+        return;
+      }
+
+      alert("Intake submitted successfully. Your document is now in processing.");
     };
   </script>
 </body>
