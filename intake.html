@@ -2,246 +2,239 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>E-LegalBoom | Document Intake</title>
+  <title>E-LegalBoom – Intake</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- Supabase CDN -->
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
   <style>
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont;
-      background: #f3f4f8;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f6f8fc;
+      color: #1e1e2f;
       margin: 0;
-      color: #111827;
+      padding: 0;
     }
 
-    header {
-      background: #ffffff;
-      padding: 20px 32px;
-      border-bottom: 1px solid #e5e7eb;
-      font-weight: 700;
+    .container {
+      max-width: 900px;
+      margin: 50px auto;
+      background: #fff;
+      padding: 36px 40px;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
     }
 
-    main {
-      max-width: 920px;
-      margin: 32px auto 60px;
-      padding: 0 16px;
-    }
+    h1 { margin-top: 0; }
+    h2 { margin-top: 32px; }
 
-    h1 {
-      margin-bottom: 8px;
-    }
-
-    .lead {
-      color: #4b5563;
-      margin-bottom: 28px;
+    .context {
+      background: #eef3ff;
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
       font-size: 14px;
     }
 
-    .section {
-      background: #ffffff;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 24px;
-    }
-
-    .section h2 {
-      margin-top: 0;
-      font-size: 16px;
-      margin-bottom: 16px;
+    .field {
+      margin-bottom: 22px;
     }
 
     label {
-      font-weight: 600;
       display: block;
+      font-weight: 600;
       margin-bottom: 6px;
-      font-size: 13px;
     }
 
-    textarea {
+    input, select {
       width: 100%;
-      min-height: 60px;
+      padding: 10px;
+      font-size: 15px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
       padding: 8px;
-      border-radius: 6px;
-      border: 1px solid #d1d5db;
-      margin-bottom: 16px;
-      font-size: 14px;
+      text-align: left;
     }
 
     button {
-      background: #0f766e;
-      color: white;
-      padding: 12px 22px;
-      border-radius: 999px;
+      background: #2b6cff;
+      color: #fff;
       border: none;
-      font-size: 14px;
-      font-weight: 600;
+      padding: 14px 22px;
+      font-size: 16px;
+      border-radius: 6px;
       cursor: pointer;
-    }
-
-    .status {
-      margin-top: 12px;
-      font-size: 14px;
-    }
-
-    .error {
-      color: #b91c1c;
-    }
-
-    .success {
-      color: #065f46;
-      font-weight: 600;
+      margin-top: 30px;
     }
   </style>
 </head>
 
 <body>
-<header>E-LegalBoom — Document Intake</header>
+  <div class="container">
+    <h1>Document Intake</h1>
 
-<main>
-  <h1>Document Intake</h1>
-  <p class="lead">
-    Complete the information below. This will be used to generate your legal document.
-  </p>
-<!-- Intake Context (Tier + Document) -->
-<div id="intakeContext" class="intake-context"></div>
-  <form id="intakeForm">
-    <!-- Context from catalog -->
-    <input type="hidden" id="tier" name="tier">
-    <input type="hidden" id="doc_type" name="doc_type">
-    <input type="hidden" id="doc_name" name="doc_name">
+    <div class="context" id="contextBox"></div>
 
-    <div id="sections"></div>
+    <!-- 85% DATA -->
+    <h2>Client Information</h2>
 
-    <button type="submit">Submit Intake</button>
-    <div id="status" class="status"></div>
-  </form>
-</main>
+    <div class="field">
+      <label>Full Legal Name</label>
+      <input id="client_name" />
+    </div>
 
-<script>
-document.addEventListener("DOMContentLoaded", () => {
+    <div class="field">
+      <label>Email Address</label>
+      <input id="client_email" type="email" />
+    </div>
 
-  /* =============================
-     CONFIG — INSERT YOUR KEYS
-     ============================= */
-  const SUPABASE_URL = "https://vvjbjfltqsivvxxifnvi.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";
+    <div class="field">
+      <label>Phone Number</label>
+      <input id="client_phone" />
+    </div>
 
-  const supabase = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-  );
+    <h2>Entity Information</h2>
 
-  /* =============================
-     URL CONTEXT FROM CATALOG
-     ============================= */
-  const params = new URLSearchParams(window.location.search);
-  const tier = params.get("tier") || "";
-  const docType = params.get("doc_type") || "";
-  const docName = params.get("doc_name") || "";
+    <div class="field">
+      <label>Legal Entity Name</label>
+      <input id="entity_name" />
+    </div>
 
-  document.getElementById("tier").value = tier;
-  document.getElementById("doc_type").value = docType;
-  document.getElementById("doc_name").value = docName;
+    <!-- CONDITIONAL: MULTI-OWNER ALLOCATION -->
+    <div id="allocationSection" style="display:none;">
+      <h2>Ownership Allocation</h2>
+      <p>Please allocate ownership percentages so the total equals 100%.</p>
 
-  /* =============================
-     FIELD MAP (21 FIELDS)
-     ============================= */
-  const fieldMap = [
-    ["Client Info", "customer_name", "Client Name"],
-    ["Client Info", "entity_name", "Business / Entity Name"],
-    ["Client Info", "other_parties", "Other Parties"],
-    ["Jurisdiction", "governing_state", "Governing State"],
-    ["Economics", "ownership_split", "Ownership Split"],
-    ["Economics", "capital_contrib", "Capital Contributions"],
-    ["Economics", "profit_loss_split", "Profit / Loss Split"],
-    ["Management", "management_type", "Management Type"],
-    ["Management", "decision_rules", "Decision Rules"],
-    ["Management", "management_model", "Management Model"],
-    ["Disputes", "dispute_method", "Dispute Method"],
-    ["Disputes", "dispute_resolution", "Dispute Resolution"],
-    ["Disputes", "dissolution_terms", "Dissolution Terms"],
-    ["Disputes", "transfer_rules", "Transfer Rules"],
-    ["Restrictions", "confidentiality", "Confidentiality Terms"],
-    ["Restrictions", "non_compete", "Non-Compete Terms"],
-    ["Restrictions", "non_compete_option", "Non-Compete Option"],
-    ["Economics", "capital_types", "Capital Types"],
-    ["Custom", "special_notes", "Special Notes"],
-    ["Custom", "special_clauses", "Special Clauses"],
-    ["Custom", "additional_clauses", "Additional Clauses"]
-  ];
+      <table id="allocationTable">
+        <thead>
+          <tr>
+            <th>Owner Name</th>
+            <th>Ownership %</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
 
-  /* =============================
-     RENDER FORM
-     ============================= */
-  const sectionsEl = document.getElementById("sections");
-  const grouped = {};
+      <button type="button" onclick="addOwnerRow()">Add Owner</button>
+    </div>
 
-  fieldMap.forEach(([section, name, label]) => {
-    if (!grouped[section]) grouped[section] = [];
-    grouped[section].push({ name, label });
-  });
+    <button id="submitBtn">Submit Intake</button>
+  </div>
 
-  Object.entries(grouped).forEach(([section, fields]) => {
-    const sectionDiv = document.createElement("div");
-    sectionDiv.className = "section";
+  <script>
+    /* ===============================
+       READ SUMMARY CONTEXT (15%)
+    =============================== */
 
-    const h2 = document.createElement("h2");
-    h2.textContent = section;
-    sectionDiv.appendChild(h2);
+    const params = new URLSearchParams(window.location.search);
 
-    fields.forEach(f => {
-      const label = document.createElement("label");
-      label.textContent = f.label;
-
-      const textarea = document.createElement("textarea");
-      textarea.name = f.name;
-
-      sectionDiv.appendChild(label);
-      sectionDiv.appendChild(textarea);
-    });
-
-    sectionsEl.appendChild(sectionDiv);
-  });
-
-  /* =============================
-     SUBMIT HANDLER
-     ============================= */
-  document.getElementById("intakeForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const status = document.getElementById("status");
-    status.textContent = "";
-    status.className = "status";
-
-    const payload = {
-      tier,
-      doc_type: docType,
-      doc_name: docName
+    const CONTEXT = {
+      tier: params.get("tier"),
+      doc_type: params.get("doc_type"),
+      state: params.get("state"),
+      owner_count_bucket: params.get("owner_count_bucket"),
+      ownership_structure: params.get("ownership_structure"),
+      control_threshold: params.get("control_threshold"),
+      primary_ownership_pct: params.get("primary_ownership_pct"),
+      secondary_ownership_pct: params.get("secondary_ownership_pct"),
+      allocation_required: params.get("allocation_required") === "true"
     };
 
-    new FormData(e.target).forEach((value, key) => {
-      payload[key] = value;
-    });
+    /* ===============================
+       DISPLAY CONTEXT (READ-ONLY)
+    =============================== */
 
-    const { error } = await supabase
-      .from("document_requests")
-      .insert([payload]);
+    document.getElementById("contextBox").innerHTML = `
+      <strong>Tier:</strong> ${CONTEXT.tier}<br>
+      <strong>Document:</strong> ${CONTEXT.doc_type}<br>
+      <strong>State:</strong> ${CONTEXT.state}<br>
+      <strong>Ownership:</strong> ${
+        CONTEXT.allocation_required
+          ? "Multi-owner allocation required"
+          : CONTEXT.primary_ownership_pct
+            ? `${CONTEXT.primary_ownership_pct}% / ${CONTEXT.secondary_ownership_pct}%`
+            : "Not applicable"
+      }
+    `;
 
-    if (error) {
-      status.textContent = "Error submitting intake: " + error.message;
-      status.classList.add("error");
-    } else {
-      status.textContent = "Intake submitted successfully.";
-      status.classList.add("success");
-      e.target.reset();
+    /* ===============================
+       OWNERSHIP ALLOCATION TABLE
+    =============================== */
+
+    const allocationSection = document.getElementById("allocationSection");
+    const allocationBody = document.querySelector("#allocationTable tbody");
+
+    if (CONTEXT.allocation_required) {
+      allocationSection.style.display = "block";
+      addOwnerRow();
+      addOwnerRow();
     }
-  });
 
-});
-</script>
+    function addOwnerRow() {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td><input class="owner_name" /></td>
+        <td><input class="owner_pct" type="number" min="0" max="100" /></td>
+      `;
+      allocationBody.appendChild(row);
+    }
 
+    function collectAllocations() {
+      const rows = allocationBody.querySelectorAll("tr");
+      const owners = [];
+      let total = 0;
+
+      rows.forEach(r => {
+        const name = r.querySelector(".owner_name").value;
+        const pct = Number(r.querySelector(".owner_pct").value);
+        if (name && pct) {
+          owners.push({ name, pct });
+          total += pct;
+        }
+      });
+
+      if (total !== 100) {
+        alert("Ownership percentages must total 100%");
+        throw new Error("Invalid allocation total");
+      }
+
+      return owners;
+    }
+
+    /* ===============================
+       SUBMIT PAYLOAD (AUTOMATION-READY)
+    =============================== */
+
+    document.getElementById("submitBtn").onclick = () => {
+      const payload = {
+        context: CONTEXT,
+        client: {
+          name: client_name.value,
+          email: client_email.value,
+          phone: client_phone.value
+        },
+        entity: {
+          name: entity_name.value
+        },
+        ownership: CONTEXT.allocation_required
+          ? collectAllocations()
+          : CONTEXT.primary_ownership_pct
+            ? [
+                { name: "Primary", pct: Number(CONTEXT.primary_ownership_pct) },
+                { name: "Secondary", pct: Number(CONTEXT.secondary_ownership_pct) }
+              ]
+            : []
+      };
+
+      console.log("FINAL PAYLOAD:", payload);
+      alert("Intake captured. Ready for automation.");
+    };
+  </script>
 </body>
 </html>
