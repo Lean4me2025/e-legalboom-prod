@@ -3,85 +3,77 @@
 <head>
   <meta charset="UTF-8" />
   <title>E-LegalBoom | Document Intake</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- Supabase CDN -->
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
   <style>
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont;
       background: #f3f4f8;
-      color: #111827;
       margin: 0;
+      color: #111827;
     }
 
     header {
       background: #ffffff;
+      padding: 20px 32px;
       border-bottom: 1px solid #e5e7eb;
-      padding: 14px 24px;
       font-weight: 700;
     }
 
     main {
       max-width: 920px;
-      margin: 28px auto 60px;
+      margin: 32px auto 60px;
       padding: 0 16px;
     }
 
     h1 {
-      font-size: 22px;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     .lead {
-      font-size: 14px;
       color: #4b5563;
-      margin-bottom: 22px;
+      margin-bottom: 28px;
+      font-size: 14px;
     }
 
     .section {
       background: #ffffff;
       border: 1px solid #e5e7eb;
-      border-radius: 10px;
-      padding: 16px;
-      margin-bottom: 18px;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
     }
 
     .section h2 {
+      margin-top: 0;
       font-size: 16px;
-      margin-bottom: 10px;
+      margin-bottom: 16px;
     }
 
-    .field {
-      margin-bottom: 12px;
-    }
-
-    .field label {
-      display: block;
-      font-size: 13px;
+    label {
       font-weight: 600;
-      margin-bottom: 4px;
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
     }
 
-    .field textarea {
+    textarea {
       width: 100%;
+      min-height: 60px;
       padding: 8px;
-      border: 1px solid #d1d5db;
       border-radius: 6px;
+      border: 1px solid #d1d5db;
+      margin-bottom: 16px;
       font-size: 14px;
-      resize: vertical;
-    }
-
-    .actions {
-      margin-top: 24px;
-      text-align: right;
     }
 
     button {
       background: #0f766e;
-      color: #ffffff;
-      padding: 10px 18px;
+      color: white;
+      padding: 12px 22px;
       border-radius: 999px;
       border: none;
       font-size: 14px;
@@ -89,178 +81,164 @@
       cursor: pointer;
     }
 
-    button:hover {
-      background: #115e59;
+    .status {
+      margin-top: 12px;
+      font-size: 14px;
     }
 
     .error {
       color: #b91c1c;
-      font-size: 13px;
-      margin-top: 8px;
     }
 
     .success {
       color: #065f46;
-      font-size: 14px;
-      margin-top: 12px;
       font-weight: 600;
     }
   </style>
 </head>
 
 <body>
-
-<header>
-  E-LegalBoom — Document Intake
-</header>
+<header>E-LegalBoom — Document Intake</header>
 
 <main>
   <h1>Document Intake</h1>
   <p class="lead">
-    Complete the intake below. Your responses will be used to generate your legal document.
+    Complete the information below. This will be used to generate your legal document.
   </p>
 
   <form id="intakeForm">
-    <!-- Context -->
+    <!-- Context from catalog -->
     <input type="hidden" id="tier" name="tier">
     <input type="hidden" id="doc_type" name="doc_type">
     <input type="hidden" id="doc_name" name="doc_name">
 
-    <div id="formSections"></div>
+    <div id="sections"></div>
 
-    <div class="actions">
-      <button type="submit">Submit Intake</button>
-      <div id="status"></div>
-    </div>
+    <button type="submit">Submit Intake</button>
+    <div id="status" class="status"></div>
   </form>
 </main>
 
 <script>
-/* =========================
-   CONFIG — YOU EDIT HERE
-   ========================= */
+document.addEventListener("DOMContentLoaded", () => {
 
-const SUPABASE_URL = "https://vvjbjfltqsivvxxifnvi.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";
+  /* =============================
+     CONFIG — INSERT YOUR KEYS
+     ============================= */
+  const SUPABASE_URL = "https://vvjbjfltqsivvxxifnvi.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";
 
-/* ========================= */
+  const supabase = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
 
-const supabase = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
+  /* =============================
+     URL CONTEXT FROM CATALOG
+     ============================= */
+  const params = new URLSearchParams(window.location.search);
+  const tier = params.get("tier") || "";
+  const docType = params.get("doc_type") || "";
+  const docName = params.get("doc_name") || "";
 
-/* =========================
-   CONTEXT FROM URL
-   ========================= */
+  document.getElementById("tier").value = tier;
+  document.getElementById("doc_type").value = docType;
+  document.getElementById("doc_name").value = docName;
 
-const params = new URLSearchParams(window.location.search);
-const tier = params.get("tier") || "";
-const docType = params.get("doc_type") || "";
-const docName = params.get("doc_name") || "";
+  /* =============================
+     FIELD MAP (21 FIELDS)
+     ============================= */
+  const fieldMap = [
+    ["Client Info", "customer_name", "Client Name"],
+    ["Client Info", "entity_name", "Business / Entity Name"],
+    ["Client Info", "other_parties", "Other Parties"],
+    ["Jurisdiction", "governing_state", "Governing State"],
+    ["Economics", "ownership_split", "Ownership Split"],
+    ["Economics", "capital_contrib", "Capital Contributions"],
+    ["Economics", "profit_loss_split", "Profit / Loss Split"],
+    ["Management", "management_type", "Management Type"],
+    ["Management", "decision_rules", "Decision Rules"],
+    ["Management", "management_model", "Management Model"],
+    ["Disputes", "dispute_method", "Dispute Method"],
+    ["Disputes", "dispute_resolution", "Dispute Resolution"],
+    ["Disputes", "dissolution_terms", "Dissolution Terms"],
+    ["Disputes", "transfer_rules", "Transfer Rules"],
+    ["Restrictions", "confidentiality", "Confidentiality Terms"],
+    ["Restrictions", "non_compete", "Non-Compete Terms"],
+    ["Restrictions", "non_compete_option", "Non-Compete Option"],
+    ["Economics", "capital_types", "Capital Types"],
+    ["Custom", "special_notes", "Special Notes"],
+    ["Custom", "special_clauses", "Special Clauses"],
+    ["Custom", "additional_clauses", "Additional Clauses"]
+  ];
 
-document.getElementById("tier").value = tier;
-document.getElementById("doc_type").value = docType;
-document.getElementById("doc_name").value = docName;
+  /* =============================
+     RENDER FORM
+     ============================= */
+  const sectionsEl = document.getElementById("sections");
+  const grouped = {};
 
-/* =========================
-   UNIVERSAL FIELD MAP (21)
-   ========================= */
-
-const fieldMap = [
-  ["Client Information", "customer_name", "Client Name"],
-  ["Entity Information", "entity_name", "Entity / Business Name"],
-  ["Entity Information", "other_parties", "Other Parties"],
-  ["Jurisdiction", "governing_state", "Governing State"],
-  ["Custom", "special_notes", "Special Notes"],
-  ["Ownership & Economics", "ownership_split", "Ownership Split"],
-  ["Ownership & Economics", "capital_contrib", "Capital Contributions"],
-  ["Ownership & Economics", "profit_loss_split", "Profit / Loss Split"],
-  ["Management", "management_type", "Management Type"],
-  ["Management", "decision_rules", "Decision Rules"],
-  ["Dispute & Exit", "dissolution_terms", "Dissolution Terms"],
-  ["Dispute & Exit", "transfer_rules", "Transfer Rules"],
-  ["Restrictions", "non_compete", "Non-Compete Terms"],
-  ["Restrictions", "confidentiality", "Confidentiality Terms"],
-  ["Dispute & Exit", "dispute_resolution", "Dispute Resolution"],
-  ["Custom", "special_clauses", "Special Clauses"],
-  ["Management", "management_model", "Management Model"],
-  ["Dispute & Exit", "dispute_method", "Dispute Method"],
-  ["Restrictions", "non_compete_option", "Non-Compete Option"],
-  ["Ownership & Economics", "capital_types", "Capital Types"],
-  ["Custom", "special_clauses", "Additional Clauses"]
-];
-
-/* =========================
-   RENDER FORM
-   ========================= */
-
-const container = document.getElementById("formSections");
-const sections = {};
-
-fieldMap.forEach(([section, name, label]) => {
-  if (!sections[section]) sections[section] = [];
-  sections[section].push({ name, label });
-});
-
-Object.entries(sections).forEach(([section, fields]) => {
-  const sectionDiv = document.createElement("div");
-  sectionDiv.className = "section";
-
-  const h2 = document.createElement("h2");
-  h2.textContent = section;
-  sectionDiv.appendChild(h2);
-
-  fields.forEach(f => {
-    const fieldDiv = document.createElement("div");
-    fieldDiv.className = "field";
-
-    const label = document.createElement("label");
-    label.textContent = f.label;
-
-    const textarea = document.createElement("textarea");
-    textarea.name = f.name;
-    textarea.rows = 2;
-
-    fieldDiv.appendChild(label);
-    fieldDiv.appendChild(textarea);
-    sectionDiv.appendChild(fieldDiv);
+  fieldMap.forEach(([section, name, label]) => {
+    if (!grouped[section]) grouped[section] = [];
+    grouped[section].push({ name, label });
   });
 
-  container.appendChild(sectionDiv);
-});
+  Object.entries(grouped).forEach(([section, fields]) => {
+    const sectionDiv = document.createElement("div");
+    sectionDiv.className = "section";
 
-/* =========================
-   SUBMIT → SUPABASE
-   ========================= */
+    const h2 = document.createElement("h2");
+    h2.textContent = section;
+    sectionDiv.appendChild(h2);
 
-document.getElementById("intakeForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const status = document.getElementById("status");
-  status.textContent = "";
+    fields.forEach(f => {
+      const label = document.createElement("label");
+      label.textContent = f.label;
 
-  const payload = {
-    tier,
-    doc_type: docType,
-    doc_name: docName
-  };
+      const textarea = document.createElement("textarea");
+      textarea.name = f.name;
 
-  new FormData(e.target).forEach((value, key) => {
-    payload[key] = value;
+      sectionDiv.appendChild(label);
+      sectionDiv.appendChild(textarea);
+    });
+
+    sectionsEl.appendChild(sectionDiv);
   });
 
-  const { error } = await supabase
-    .from("document_requests")
-    .insert([payload]);
+  /* =============================
+     SUBMIT HANDLER
+     ============================= */
+  document.getElementById("intakeForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  if (error) {
-    status.textContent = "Error submitting intake: " + error.message;
-    status.className = "error";
-  } else {
-    status.textContent = "Intake submitted successfully.";
-    status.className = "success";
-    e.target.reset();
-  }
+    const status = document.getElementById("status");
+    status.textContent = "";
+    status.className = "status";
+
+    const payload = {
+      tier,
+      doc_type: docType,
+      doc_name: docName
+    };
+
+    new FormData(e.target).forEach((value, key) => {
+      payload[key] = value;
+    });
+
+    const { error } = await supabase
+      .from("document_requests")
+      .insert([payload]);
+
+    if (error) {
+      status.textContent = "Error submitting intake: " + error.message;
+      status.classList.add("error");
+    } else {
+      status.textContent = "Intake submitted successfully.";
+      status.classList.add("success");
+      e.target.reset();
+    }
+  });
+
 });
 </script>
 
