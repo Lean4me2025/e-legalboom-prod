@@ -14,92 +14,84 @@
     }
 
     header {
-      background: #0f172a;
-      color: white;
-      padding: 24px;
-      text-align: center;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 28px;
-    }
-
-    header p {
-      margin-top: 6px;
-      font-size: 14px;
-      color: #cbd5f5;
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 18px 28px;
+      font-weight: 700;
+      font-size: 18px;
     }
 
     main {
-      max-width: 1100px;
+      max-width: 1120px;
       margin: 32px auto 60px;
       padding: 0 16px;
     }
 
-    .category {
-      margin-bottom: 36px;
+    h1 {
+      font-size: 26px;
+      margin-bottom: 6px;
     }
 
-    .category h2 {
-      font-size: 20px;
-      margin-bottom: 14px;
-      border-bottom: 2px solid #e5e7eb;
-      padding-bottom: 6px;
-    }
-
-    .grid {
-      display: grid;
-      gap: 16px;
-    }
-
-    @media (min-width: 900px) {
-      .grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    .card {
-      background: white;
-      border-radius: 12px;
-      padding: 16px;
-      border: 1px solid #e5e7eb;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .card h3 {
-      margin: 0 0 6px;
-      font-size: 16px;
-    }
-
-    .card p {
-      font-size: 13px;
+    .lead {
       color: #4b5563;
-      margin-bottom: 10px;
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+
+    .tier {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+
+    .tier h2 {
+      margin-top: 0;
+      font-size: 20px;
     }
 
     .price {
+      font-size: 16px;
       font-weight: 700;
       color: #0f766e;
-      margin-bottom: 10px;
+      margin: 6px 0 12px;
     }
 
-    .card a {
+    .desc {
+      font-size: 14px;
+      color: #374151;
+      margin-bottom: 14px;
+    }
+
+    ul {
+      padding-left: 18px;
+      margin-bottom: 18px;
+    }
+
+    li {
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .cta {
       display: inline-block;
-      text-align: center;
-      padding: 8px 12px;
+      padding: 10px 18px;
       border-radius: 999px;
       background: #0f766e;
       color: white;
-      font-size: 13px;
-      text-decoration: none;
       font-weight: 600;
+      text-decoration: none;
+      font-size: 14px;
     }
 
-    .card a:hover {
+    .cta:hover {
       background: #115e59;
+    }
+
+    .bundle {
+      border: 2px solid #fde68a;
+      background: #fffbeb;
     }
 
     footer {
@@ -114,103 +106,84 @@
 <body>
 
 <header>
-  <h1>Choose Your Legal Document</h1>
-  <p>AI-powered legal drafts — fast, simple, and transparent</p>
+  E-LegalBoom — Legal Documents, Clearly Structured
 </header>
 
 <main>
 
+  <h1>Choose the Tier That Fits Your Needs</h1>
+  <p class="lead">
+    Our documents are organized by complexity and use-case. Review the tiers below to understand what level best matches your situation.  
+    You’ll select your specific document on the next page.
+  </p>
+
   <!-- Tier 1 -->
-  <section class="category">
-    <h2>Tier 1 – Essential Startup Documents</h2>
-    <div class="grid">
-
-      <div class="card">
-        <h3>LLC – Single Member</h3>
-        <p>For businesses owned by one individual seeking limited liability protection.</p>
-        <div class="price">$39</div>
-        <a href="intake.html?tier=1&doc_type=llc_single_member&doc_name=LLC Single Member">
-          Select
-        </a>
-      </div>
-
-      <div class="card">
-        <h3>Non-Disclosure Agreement (NDA)</h3>
-        <p>Protect confidential information shared with partners or contractors.</p>
-        <div class="price">$39</div>
-        <a href="intake.html?tier=1&doc_type=nda&doc_name=Non-Disclosure Agreement">
-          Select
-        </a>
-      </div>
-
-      <div class="card">
-        <h3>Promissory Note</h3>
-        <p>Formal agreement outlining loan terms and repayment obligations.</p>
-        <div class="price">$39</div>
-        <a href="intake.html?tier=1&doc_type=promissory_note&doc_name=Promissory Note">
-          Select
-        </a>
-      </div>
-
-    </div>
+  <section class="tier">
+    <h2>Tier 1 — Essential Startup Documents</h2>
+    <div class="price">$39 per document</div>
+    <p class="desc">
+      Best for straightforward legal needs and early-stage protection.
+    </p>
+    <ul>
+      <li>Non-Disclosure Agreement (NDA)</li>
+      <li>Promissory Note</li>
+      <li>Single-Member LLC Operating Agreement</li>
+      <li>Basic Payment / IOU Agreement</li>
+    </ul>
+    <a class="cta" href="tier1.html">View Tier 1 Documents</a>
   </section>
 
   <!-- Tier 2 -->
-  <section class="category">
-    <h2>Tier 2 – Business Foundation Documents</h2>
-    <div class="grid">
-
-      <div class="card">
-        <h3>LLC – Multi Member</h3>
-        <p>For companies with multiple owners defining roles and profit sharing.</p>
-        <div class="price">$59</div>
-        <a href="intake.html?tier=2&doc_type=llc_multi_member&doc_name=LLC Multi Member">
-          Select
-        </a>
-      </div>
-
-      <div class="card">
-        <h3>Partnership Agreement</h3>
-        <p>Defines ownership, responsibilities, and exit terms between partners.</p>
-        <div class="price">$59</div>
-        <a href="intake.html?tier=2&doc_type=partnership&doc_name=Partnership Agreement">
-          Select
-        </a>
-      </div>
-
-    </div>
+  <section class="tier">
+    <h2>Tier 2 — Business Foundation Documents</h2>
+    <div class="price">$59 per document</div>
+    <p class="desc">
+      Designed for partnerships, shared ownership, and structured business relationships.
+    </p>
+    <ul>
+      <li>Multi-Member LLC Operating Agreement</li>
+      <li>Partnership Agreement</li>
+      <li>Buy-Sell / Investor Agreements</li>
+      <li>Core Business Governance Documents</li>
+    </ul>
+    <a class="cta" href="tier2.html">View Tier 2 Documents</a>
   </section>
 
   <!-- Tier 3 -->
-  <section class="category">
-    <h2>Tier 3 – Premium & Ongoing Agreements</h2>
-    <div class="grid">
+  <section class="tier">
+    <h2>Tier 3 — Premium & Ongoing Agreements</h2>
+    <div class="price">$99 per document</div>
+    <p class="desc">
+      For complex relationships, ongoing services, and higher-risk arrangements.
+    </p>
+    <ul>
+      <li>Independent Contractor Agreements</li>
+      <li>Consulting & Professional Services Agreements</li>
+      <li>Joint Venture / Founder Agreements</li>
+      <li>Custom Structured Agreements</li>
+    </ul>
+    <a class="cta" href="tier3.html">View Tier 3 Documents</a>
+  </section>
 
-      <div class="card">
-        <h3>Independent Contractor Agreement</h3>
-        <p>Clearly defines scope, payment terms, and IP ownership.</p>
-        <div class="price">$99</div>
-        <a href="intake.html?tier=3&doc_type=contractor&doc_name=Independent Contractor Agreement">
-          Select
-        </a>
-      </div>
-
-      <div class="card">
-        <h3>Consulting Agreement</h3>
-        <p>Professional services agreement with deliverables and protections.</p>
-        <div class="price">$99</div>
-        <a href="intake.html?tier=3&doc_type=consulting&doc_name=Consulting Agreement">
-          Select
-        </a>
-      </div>
-
-    </div>
+  <!-- Bundle -->
+  <section class="tier bundle">
+    <h2>Entrepreneur Starter Bundle</h2>
+    <div class="price">$149 flat — 30-day access</div>
+    <p class="desc">
+      Ideal if you expect to need multiple documents in a short period of time.
+    </p>
+    <ul>
+      <li>Access to Tier 1, Tier 2, and Tier 3 documents</li>
+      <li>Multiple document intakes during the access window</li>
+      <li>Best overall value for founders and builders</li>
+    </ul>
+    <a class="cta" href="bundle.html">View Bundle Details</a>
   </section>
 
 </main>
 
 <footer>
-  © 2025 E-LegalBoom · AI-powered legal docs · Not a law firm
+  © 2025 E-LegalBoom · AI-Powered Legal Documents · Not a Law Firm
 </footer>
 
 </body>
