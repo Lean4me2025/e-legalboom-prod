@@ -13,7 +13,6 @@
       margin: 0;
       padding: 0;
     }
-
     .container {
       max-width: 900px;
       margin: 50px auto;
@@ -22,10 +21,8 @@
       border-radius: 10px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.06);
     }
-
     h1 { margin-top: 0; }
     h2 { margin-top: 32px; }
-
     .context {
       background: #eef3ff;
       padding: 16px 20px;
@@ -33,35 +30,11 @@
       margin-bottom: 30px;
       font-size: 14px;
     }
-
-    .field {
-      margin-bottom: 22px;
-    }
-
-    label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 10px;
-      font-size: 15px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      text-align: left;
-    }
-
+    .field { margin-bottom: 22px; }
+    label { display: block; font-weight: 600; margin-bottom: 6px; }
+    input { width: 100%; padding: 10px; font-size: 15px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #ccc; padding: 8px; }
     button {
       background: #2b6cff;
       color: #ffffff;
@@ -76,226 +49,182 @@
 </head>
 
 <body>
-  <div class="container">
-    <h1>Document Intake</h1>
+<div class="container">
+  <h1>Document Intake</h1>
 
-    <div class="context" id="contextBox"></div>
+  <div class="context" id="contextBox"></div>
 
-    <!-- =========================
-         85% DATA COLLECTION
-    ========================== -->
-
-    <h2>Client Information</h2>
-
-    <div class="field">
-      <label>Full Legal Name</label>
-      <input id="client_name" />
-    </div>
-
-    <div class="field">
-      <label>Email Address</label>
-      <input id="client_email" type="email" />
-    </div>
-
-    <div class="field">
-      <label>Phone Number</label>
-      <input id="client_phone" />
-    </div>
-
-    <h2>Entity Information</h2>
-
-    <div class="field">
-      <label>Legal Entity Name</label>
-      <input id="entity_name" />
-    </div>
-
-    <!-- =========================
-         MULTI-OWNER ALLOCATION
-    ========================== -->
-
-    <div id="allocationSection" style="display:none;">
-      <h2>Ownership Allocation</h2>
-      <p>Please allocate ownership so the total equals 100%.</p>
-
-      <table id="allocationTable">
-        <thead>
-          <tr>
-            <th>Owner Name</th>
-            <th>Ownership %</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-
-      <button type="button" onclick="addOwnerRow()">Add Owner</button>
-    </div>
-
-    <button id="submitBtn">Submit Intake</button>
+  <h2>Client Information</h2>
+  <div class="field">
+    <label>Full Legal Name</label>
+    <input id="client_name" />
+  </div>
+  <div class="field">
+    <label>Email Address</label>
+    <input id="client_email" type="email" />
+  </div>
+  <div class="field">
+    <label>Phone Number</label>
+    <input id="client_phone" />
   </div>
 
-  <script>
-    /* ===============================
-       SUPABASE CONFIG (PUBLIC / ANON)
-    =============================== */
+  <h2>Entity Information</h2>
+  <div class="field">
+    <label>Legal Entity Name</label>
+    <input id="entity_name" />
+  </div>
 
-    const SUPABASE_URL = "https://vvjbjfltqsivvxxifnvi.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";
+  <div id="allocationSection" style="display:none;">
+    <h2>Ownership Allocation</h2>
+    <p>Total must equal 100%</p>
+    <table id="allocationTable">
+      <thead>
+        <tr><th>Owner Name</th><th>Ownership %</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <button type="button" onclick="addOwnerRow()">Add Owner</button>
+  </div>
 
-    /* ===============================
-       READ SUMMARY CONTEXT (15%)
-    =============================== */
+  <button id="submitBtn">Submit Intake</button>
+</div>
 
-    const params = new URLSearchParams(window.location.search);
+<script>
+/* ===============================
+   SUPABASE CONFIG
+=============================== */
+const SUPABASE_URL = "https://vvjbjfltqsivvxxifnvi.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";
 
-    const CONTEXT = {
-      tier: params.get("tier"),
-      doc_type: params.get("doc_type"),
-      state: params.get("state"),
+/* ===============================
+   CONTEXT (15%)
+=============================== */
+const params = new URLSearchParams(window.location.search);
+const CONTEXT = {
+  tier: params.get("tier"),
+  doc_type: params.get("doc_type"),
+  state: params.get("state"),
+  owner_count_bucket: params.get("owner_count_bucket"),
+  ownership_structure: params.get("ownership_structure"),
+  control_threshold: params.get("control_threshold"),
+  primary_ownership_pct: params.get("primary_ownership_pct"),
+  secondary_ownership_pct: params.get("secondary_ownership_pct"),
+  allocation_required: params.get("allocation_required") === "true"
+};
 
-      owner_count_bucket: params.get("owner_count_bucket"),
-      ownership_structure: params.get("ownership_structure"),
-      control_threshold: params.get("control_threshold"),
+/* ===============================
+   DISPLAY CONTEXT
+=============================== */
+document.getElementById("contextBox").innerHTML = `
+  <strong>Tier:</strong> ${CONTEXT.tier}<br>
+  <strong>Document:</strong> ${CONTEXT.doc_type}<br>
+  <strong>State:</strong> ${CONTEXT.state}
+`;
 
-      primary_ownership_pct: params.get("primary_ownership_pct"),
-      secondary_ownership_pct: params.get("secondary_ownership_pct"),
+/* ===============================
+   OWNERSHIP TABLE
+=============================== */
+const allocationSection = document.getElementById("allocationSection");
+const allocationBody = document.querySelector("#allocationTable tbody");
 
-      allocation_required: params.get("allocation_required") === "true"
-    };
+if (CONTEXT.allocation_required) {
+  allocationSection.style.display = "block";
+  addOwnerRow(); addOwnerRow();
+}
 
-    /* ===============================
-       DISPLAY CONTEXT (READ-ONLY)
-    =============================== */
+function addOwnerRow() {
+  const row = document.createElement("tr");
+  row.innerHTML = `
+    <td><input class="owner_name" /></td>
+    <td><input class="owner_pct" type="number" min="0" max="100" /></td>
+  `;
+  allocationBody.appendChild(row);
+}
 
-    document.getElementById("contextBox").innerHTML = `
-      <strong>Tier:</strong> ${CONTEXT.tier}<br>
-      <strong>Document:</strong> ${CONTEXT.doc_type}<br>
-      <strong>State:</strong> ${CONTEXT.state}<br>
-      <strong>Ownership:</strong> ${
-        CONTEXT.allocation_required
-          ? "Multi-owner allocation required"
-          : CONTEXT.primary_ownership_pct
-            ? `${CONTEXT.primary_ownership_pct}% / ${CONTEXT.secondary_ownership_pct}%`
-            : "Not applicable"
-      }
-    `;
-
-    /* ===============================
-       OWNERSHIP TABLE (IF REQUIRED)
-    =============================== */
-
-    const allocationSection = document.getElementById("allocationSection");
-    const allocationBody = document.querySelector("#allocationTable tbody");
-
-    if (CONTEXT.allocation_required) {
-      allocationSection.style.display = "block";
-      addOwnerRow();
-      addOwnerRow();
+function collectAllocations() {
+  const owners = [];
+  let total = 0;
+  allocationBody.querySelectorAll("tr").forEach(r => {
+    const name = r.querySelector(".owner_name").value;
+    const pct = Number(r.querySelector(".owner_pct").value);
+    if (name && pct) {
+      owners.push({ name, pct });
+      total += pct;
     }
+  });
+  if (total !== 100) throw new Error("Ownership must total 100%");
+  return owners;
+}
 
-    function addOwnerRow() {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td><input class="owner_name" /></td>
-        <td><input class="owner_pct" type="number" min="0" max="100" /></td>
-      `;
-      allocationBody.appendChild(row);
-    }
+/* ===============================
+   SUBMIT INTAKE (FINAL)
+=============================== */
+document.getElementById("submitBtn").onclick = async () => {
+  try {
+    const ownership = CONTEXT.allocation_required
+      ? collectAllocations()
+      : (CONTEXT.primary_ownership_pct
+          ? [
+              { name: "Primary", pct: Number(CONTEXT.primary_ownership_pct) },
+              { name: "Secondary", pct: Number(CONTEXT.secondary_ownership_pct) }
+            ]
+          : []);
 
-    function collectAllocations() {
-      const rows = allocationBody.querySelectorAll("tr");
-      const owners = [];
-      let total = 0;
-
-      rows.forEach(r => {
-        const name = r.querySelector(".owner_name").value;
-        const pct = Number(r.querySelector(".owner_pct").value);
-        if (name && pct) {
-          owners.push({ name, pct });
-          total += pct;
-        }
-      });
-
-      if (total !== 100) {
-        alert("Ownership percentages must total 100%");
-        throw new Error("Allocation total invalid");
-      }
-
-      return owners;
-    }
-
-    /* ===============================
-       SUBMIT → SUPABASE (AUTOMATED)
-    =============================== */
-
-    document.getElementById("submitBtn").onclick = async () => {
-      let ownershipData = [];
-
-      if (CONTEXT.allocation_required) {
-        ownershipData = collectAllocations();
-      } else if (CONTEXT.primary_ownership_pct) {
-        ownershipData = [
-          { name: "Primary", pct: Number(CONTEXT.primary_ownership_pct) },
-          { name: "Secondary", pct: Number(CONTEXT.secondary_ownership_pct) }
-        ];
-      }
-
-      const payload = {
-        context: CONTEXT,
-        client: {
-          name: client_name.value,
-          email: client_email.value,
-          phone: client_phone.value
-        },
-        entity: {
-          name: entity_name.value
-        },
-        ownership: ownershipData
-      };
-
-      const row = {
-        tier: CONTEXT.tier,
-        doc_type: CONTEXT.doc_type,
-        state: CONTEXT.state,
-
+    const data = {
+      control: {
         owner_count_bucket: CONTEXT.owner_count_bucket,
         ownership_structure: CONTEXT.ownership_structure,
         control_threshold: CONTEXT.control_threshold,
-
-        primary_ownership_pct: CONTEXT.primary_ownership_pct
-          ? Number(CONTEXT.primary_ownership_pct)
-          : null,
-
-        secondary_ownership_pct: CONTEXT.secondary_ownership_pct
-          ? Number(CONTEXT.secondary_ownership_pct)
-          : null,
-
-        allocation_required: CONTEXT.allocation_required,
-        payload: payload,
-
-        payment_status: "PENDING",
-        processing_status: "NEW"
-      };
-
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/document_requests`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "apikey": SUPABASE_ANON_KEY,
-          "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
-          "Prefer": "return=representation"
-        },
-        body: JSON.stringify(row)
-      });
-
-      if (!res.ok) {
-        const err = await res.text();
-        console.error(err);
-        alert("There was an error submitting your intake.");
-        return;
-      }
-
-      alert("Intake submitted successfully. Your document is now in processing.");
+        primary_ownership_pct: CONTEXT.primary_ownership_pct,
+        secondary_ownership_pct: CONTEXT.secondary_ownership_pct,
+        allocation_required: CONTEXT.allocation_required
+      },
+      client: {
+        name: client_name.value,
+        email: client_email.value,
+        phone: client_phone.value
+      },
+      entity: {
+        name: entity_name.value
+      },
+      ownership: ownership,
+      submitted_at: new Date().toISOString()
     };
-  </script>
+
+    const row = {
+      customer_name: client_name.value,
+      customer_email: client_email.value,
+      doc_type: CONTEXT.doc_type,
+      governing_state: CONTEXT.state,
+      entity_name: entity_name.value,
+      status: "READY_FOR_GENERATION",
+      data: data
+    };
+
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/document_requests`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+        "Prefer": "return=representation"
+      },
+      body: JSON.stringify(row)
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      console.error(err);
+      alert("Error submitting intake.");
+      return;
+    }
+
+    alert("Intake submitted successfully.");
+
+  } catch (e) {
+    alert(e.message);
+  }
+};
+</script>
 </body>
 </html>
