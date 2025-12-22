@@ -122,7 +122,7 @@ document.getElementById("contextBox").innerHTML = `
 `;
 
 /* ===============================
-   OWNERSHIP TABLE
+   OWNERSHIP
 =============================== */
 const allocationSection = document.getElementById("allocationSection");
 const allocationBody = document.querySelector("#allocationTable tbody");
@@ -136,7 +136,7 @@ function addOwnerRow() {
   const row = document.createElement("tr");
   row.innerHTML = `
     <td><input class="owner_name" /></td>
-    <td><input class="owner_pct" type="number" min="0" max="100" /></td>
+    <td><input class="owner_pct" type="number" /></td>
   `;
   allocationBody.appendChild(row);
 }
@@ -157,51 +157,16 @@ function collectAllocations() {
 }
 
 /* ===============================
-   SUBMIT INTAKE (FINAL)
+   SUBMIT (CORRECT FLOW)
 =============================== */
 document.getElementById("submitBtn").onclick = async () => {
   try {
     const ownership = CONTEXT.allocation_required
       ? collectAllocations()
-      : (CONTEXT.primary_ownership_pct
-          ? [
-              { name: "Primary", pct: Number(CONTEXT.primary_ownership_pct) },
-              { name: "Secondary", pct: Number(CONTEXT.secondary_ownership_pct) }
-            ]
-          : []);
+      : [];
 
-    const data = {
-      control: {
-        owner_count_bucket: CONTEXT.owner_count_bucket,
-        ownership_structure: CONTEXT.ownership_structure,
-        control_threshold: CONTEXT.control_threshold,
-        primary_ownership_pct: CONTEXT.primary_ownership_pct,
-        secondary_ownership_pct: CONTEXT.secondary_ownership_pct,
-        allocation_required: CONTEXT.allocation_required
-      },
-      client: {
-        name: client_name.value,
-        email: client_email.value,
-        phone: client_phone.value
-      },
-      entity: {
-        name: entity_name.value
-      },
-      ownership: ownership,
-      submitted_at: new Date().toISOString()
-    };
-
-    const row = {
-      customer_name: client_name.value,
-      customer_email: client_email.value,
-      doc_type: CONTEXT.doc_type,
-      governing_state: CONTEXT.state,
-      entity_name: entity_name.value,
-      status: "READY_FOR_GENERATION",
-      data: data
-    };
-
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/document_requests`, {
+    /* STEP 1: CREATE REQUEST (ROOT) */
+    const requestRes = await fetch(`${SUPABASE_URL}/rest/v1/requests`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -209,20 +174,57 @@ document.getElementById("submitBtn").onclick = async () => {
         "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
         "Prefer": "return=representation"
       },
-      body: JSON.stringify(row)
+      body: JSON.stringify({
+        first_name: client_name.value.split(" ")[0],
+        last_name: client_name.value.split(" ").slice(1).join(" "),
+        email: client_email.value,
+        phone: client_phone.value,
+        doc_type: CONTEXT.doc_type
+      })
     });
 
-    if (!res.ok) {
-      const err = await res.text();
-      console.error(err);
-      alert("Error submitting intake.");
-      return;
-    }
+    if (!requestRes.ok) throw new Error("Failed to create request");
+
+    const [requestRow] = await requestRes.json();
+    const request_uuid = requestRow.request_uuid;
+
+    /* STEP 2: CREATE DOCUMENT REQUEST */
+    const payload = {
+      context: CONTEXT,
+      client: {
+        name: client_name.value,
+        email: client_email.value,
+        phone: client_phone.value
+      },
+      entity: { name: entity_name.value },
+      ownership
+    };
+
+    const docRes = await fetch(`${SUPABASE_URL}/rest/v1/document_requests`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
+      },
+      body: JSON.stringify({
+        request_uuid,
+        doc_type: CONTEXT.doc_type,
+        tier: CONTEXT.tier,
+        governing_state: CONTEXT.state,
+        entity_name: entity_name.value,
+        status: "READY_FOR_GENERATION",
+        data: payload
+      })
+    });
+
+    if (!docRes.ok) throw new Error("Failed to create document request");
 
     alert("Intake submitted successfully.");
+    window.location.href = `payment.html?request_uuid=${request_uuid}`;
 
-  } catch (e) {
-    alert(e.message);
+  } catch (err) {
+    alert(err.message);
   }
 };
 </script>
