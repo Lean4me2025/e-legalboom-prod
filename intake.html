@@ -116,13 +116,13 @@ const CONTEXT = {
    DISPLAY CONTEXT
 =============================== */
 document.getElementById("contextBox").innerHTML = `
-  <strong>Tier:</strong> ${CONTEXT.tier}<br>
-  <strong>Document:</strong> ${CONTEXT.doc_type}<br>
-  <strong>State:</strong> ${CONTEXT.state}
+  <strong>Tier:</strong> ${CONTEXT.tier || ""}<br>
+  <strong>Document:</strong> ${CONTEXT.doc_type || ""}<br>
+  <strong>State:</strong> ${CONTEXT.state || ""}
 `;
 
 /* ===============================
-   OWNERSHIP
+   OWNERSHIP TABLE
 =============================== */
 const allocationSection = document.getElementById("allocationSection");
 const allocationBody = document.querySelector("#allocationTable tbody");
@@ -136,7 +136,7 @@ function addOwnerRow() {
   const row = document.createElement("tr");
   row.innerHTML = `
     <td><input class="owner_name" /></td>
-    <td><input class="owner_pct" type="number" /></td>
+    <td><input class="owner_pct" type="number" min="0" max="100" /></td>
   `;
   allocationBody.appendChild(row);
 }
@@ -157,7 +157,7 @@ function collectAllocations() {
 }
 
 /* ===============================
-   SUBMIT (CORRECT FLOW)
+   SUBMIT INTAKE (CANONICAL)
 =============================== */
 document.getElementById("submitBtn").onclick = async () => {
   try {
@@ -165,30 +165,6 @@ document.getElementById("submitBtn").onclick = async () => {
       ? collectAllocations()
       : [];
 
-    /* STEP 1: CREATE REQUEST (ROOT) */
-    const requestRes = await fetch(`${SUPABASE_URL}/rest/v1/requests`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "apikey": SUPABASE_ANON_KEY,
-        "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
-        "Prefer": "return=representation"
-      },
-      body: JSON.stringify({
-        first_name: client_name.value.split(" ")[0],
-        last_name: client_name.value.split(" ").slice(1).join(" "),
-        email: client_email.value,
-        phone: client_phone.value,
-        doc_type: CONTEXT.doc_type
-      })
-    });
-
-    if (!requestRes.ok) throw new Error("Failed to create request");
-
-    const [requestRow] = await requestRes.json();
-    const request_uuid = requestRow.request_uuid;
-
-    /* STEP 2: CREATE DOCUMENT REQUEST */
     const payload = {
       context: CONTEXT,
       client: {
@@ -196,35 +172,48 @@ document.getElementById("submitBtn").onclick = async () => {
         email: client_email.value,
         phone: client_phone.value
       },
-      entity: { name: entity_name.value },
-      ownership
+      entity: {
+        name: entity_name.value
+      },
+      ownership,
+      submitted_at: new Date().toISOString()
     };
 
-    const docRes = await fetch(`${SUPABASE_URL}/rest/v1/document_requests`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "apikey": SUPABASE_ANON_KEY,
-        "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
-      },
-      body: JSON.stringify({
-        request_uuid,
-        doc_type: CONTEXT.doc_type,
-        tier: CONTEXT.tier,
-        governing_state: CONTEXT.state,
-        entity_name: entity_name.value,
-        status: "READY_FOR_GENERATION",
-        data: payload
-      })
-    });
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/rpc/create_full_order_from_intake`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_ANON_KEY,
+          "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
+        },
+        body: JSON.stringify({
+          p_customer_name: client_name.value,
+          p_customer_email: client_email.value,
+          p_doc_type: CONTEXT.doc_type,
+          p_governing_state: CONTEXT.state,
+          p_entity_name: entity_name.value,
+          p_payload: payload
+        })
+      }
+    );
 
-    if (!docRes.ok) throw new Error("Failed to create document request");
+    if (!res.ok) {
+      const err = await res.text();
+      console.error(err);
+      alert("Order creation failed.");
+      return;
+    }
 
-    alert("Intake submitted successfully.");
-    window.location.href = `payment.html?request_uuid=${request_uuid}`;
+    const request_uuid = await res.json();
+    alert("Order created successfully.");
 
-  } catch (err) {
-    alert(err.message);
+    // Optional redirect
+    // window.location.href = `/payment.html?request_uuid=${request_uuid}`;
+
+  } catch (e) {
+    alert(e.message);
   }
 };
 </script>
