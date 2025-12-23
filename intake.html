@@ -2,205 +2,183 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>E-LegalBoom – Intake</title>
+  <title>E-LegalBoom — Intake</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
   <style>
-    body {
-      font-family: system-ui, sans-serif;
-      background: #f6f8fc;
-      margin: 0;
-    }
-
-    .container {
-      max-width: 760px;
-      margin: 60px auto;
-      background: #fff;
-      padding: 32px;
-      border-radius: 10px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.06);
-    }
-
-    label {
-      display: block;
-      margin-top: 16px;
-      font-weight: 600;
-    }
-
-    input, select {
+    body { font-family: system-ui, -apple-system, sans-serif; padding: 24px; }
+    h1, h2 { margin-top: 32px; }
+    label { display: block; margin-top: 14px; font-weight: 600; }
+    input, select, textarea {
       width: 100%;
-      padding: 10px;
+      padding: 8px;
       margin-top: 6px;
-      font-size: 15px;
+      font-size: 14px;
     }
-
+    textarea { min-height: 80px; }
     button {
-      margin-top: 28px;
+      margin-top: 32px;
       padding: 14px 22px;
-      background: #2b6cff;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
       font-size: 16px;
       cursor: pointer;
     }
-
-    .error {
-      margin-top: 16px;
-      color: #b00020;
-      font-weight: 600;
+    .section {
+      border-top: 1px solid #ddd;
+      padding-top: 24px;
+      margin-top: 24px;
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <h1>Tell us a bit more</h1>
 
-    <!-- =====================================================
-         🔒 CANONICAL VALUES (SYNCED FROM UI)
-         ===================================================== -->
-    <input type="hidden" id="tier" />
-    <input type="hidden" id="doc_type" />
-    <input type="hidden" id="management" />
-    <input type="hidden" id="state" />
+<h1>E-LegalBoom Intake</h1>
+<p>Please complete the information below to prepare your document.</p>
 
-    <label>Full Legal Name</label>
-    <input type="text" id="full_name" required />
+<form id="intakeForm">
 
-    <label>Email Address</label>
-    <input type="email" id="email" required />
+  <!-- CUSTOMER -->
+  <div class="section">
+    <h2>Customer Information</h2>
 
-    <label>Business Name (if applicable)</label>
-    <input type="text" id="business_name" />
+    <label>Customer Name</label>
+    <input id="customer_name" required />
 
-    <!-- ✅ VISIBLE STATE SELECTOR -->
-    <label>State of Formation</label>
-    <select id="stateSelect" required>
-      <option value="">— Select a state —</option>
-      <option value="AL">Alabama</option>
-      <option value="AK">Alaska</option>
-      <option value="AZ">Arizona</option>
-      <option value="AR">Arkansas</option>
-      <option value="CA">California</option>
-      <option value="CO">Colorado</option>
-      <option value="CT">Connecticut</option>
-      <option value="DE">Delaware</option>
-      <option value="FL">Florida</option>
-      <option value="GA">Georgia</option>
-      <option value="IL">Illinois</option>
-      <option value="NY">New York</option>
-      <option value="TX">Texas</option>
-      <!-- add remaining states as desired -->
-    </select>
-
-    <button id="submitBtn">Continue to Payment</button>
-    <div id="errorBox" class="error"></div>
+    <label>Customer Email</label>
+    <input id="customer_email" type="email" required />
   </div>
 
-  <script>
-    /**********************************************************
-     * STEP 1: READ SUMMARY PARAMS
-     **********************************************************/
-    const params = new URLSearchParams(window.location.search);
+  <!-- ENTITY -->
+  <div class="section">
+    <h2>Entity Information</h2>
 
-    const tier = params.get("tier");
-    const docType = params.get("doc_type");
-    const management = params.get("management");
-    const incomingState = params.get("state");
+    <label>Entity Type</label>
+    <select id="entity_type" required>
+      <option value="">Select</option>
+      <option value="LLC">LLC</option>
+      <option value="Corporation">Corporation</option>
+      <option value="Individual">Individual</option>
+    </select>
 
-    if (!tier || !docType || !management) {
-      alert("Missing required data. Please restart.");
-      throw new Error("Missing summary parameters");
-    }
+    <label>Entity Name</label>
+    <input id="entity_name" required />
 
-    document.getElementById("tier").value = tier;
-    document.getElementById("doc_type").value = docType;
-    document.getElementById("management").value = management;
+    <label>Governing State</label>
+    <input id="governing_state" required />
 
-    /**********************************************************
-     * STEP 2: SYNC STATE PARAM → DROPDOWN → HIDDEN FIELD
-     **********************************************************/
-    const stateSelect = document.getElementById("stateSelect");
-    const stateHidden = document.getElementById("state");
+    <label>Management Model</label>
+    <select id="management_model">
+      <option value="">Select</option>
+      <option value="Member-Managed">Member-Managed</option>
+      <option value="Manager-Managed">Manager-Managed</option>
+    </select>
+  </div>
 
-    if (incomingState) {
-      stateSelect.value = incomingState;
-      stateHidden.value = incomingState;
-    }
+  <!-- DOCUMENT -->
+  <div class="section">
+    <h2>Document Details</h2>
 
-    stateSelect.addEventListener("change", () => {
-      stateHidden.value = stateSelect.value;
-    });
+    <label>Document Type</label>
+    <select id="doc_type" required>
+      <option value="">Select</option>
+      <option value="llc_single_member">Single-Member LLC</option>
+      <option value="llc_multi_member">Multi-Member LLC</option>
+      <option value="operating_agreement">Operating Agreement</option>
+      <option value="nda">NDA</option>
+    </select>
 
-    /**********************************************************
-     * STEP 3: BUILD PAYLOAD
-     **********************************************************/
-    function buildPayload() {
-      if (!stateHidden.value) {
-        throw new Error("State not selected");
+    <label>Dispute Resolution Method</label>
+    <select id="dispute_method">
+      <option value="">Select</option>
+      <option value="Arbitration">Arbitration</option>
+      <option value="Mediation">Mediation</option>
+      <option value="Court">Court</option>
+    </select>
+
+    <label>Non-Compete Option</label>
+    <select id="non_compete_option">
+      <option value="">Select</option>
+      <option value="None">None</option>
+      <option value="Limited">Limited</option>
+      <option value="Standard">Standard</option>
+    </select>
+  </div>
+
+  <!-- SPECIAL TERMS -->
+  <div class="section">
+    <h2>Special Terms / Clauses</h2>
+
+    <label>Special Terms (Free-form)</label>
+    <textarea id="special_terms"></textarea>
+
+    <label>Special Clauses (Free-form)</label>
+    <textarea id="special_clauses"></textarea>
+  </div>
+
+  <button type="submit">Submit Intake</button>
+
+</form>
+
+<script type="module">
+  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+  const supabase = createClient(
+    "https://vvjbjfltqsivvxxifnvi.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q"
+  );
+
+  const form = document.getElementById("intakeForm");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    console.log("SUBMIT FIRED");
+
+    const payload = {
+      doc_type: doc_type.value,
+      entity_type: entity_type.value,
+      entity_name: entity_name.value,
+      governing_state: governing_state.value,
+      management_model: management_model.value || null,
+
+      customer_name: customer_name.value,
+      customer_email: customer_email.value,
+
+      dispute_method: dispute_method.value || null,
+      non_compete_option: non_compete_option.value || null,
+
+      special_terms: special_terms.value
+        ? { text: special_terms.value }
+        : null,
+
+      special_clauses: special_clauses.value
+        ? { text: special_clauses.value }
+        : null,
+
+      status: "INTAKE_COMPLETED",
+      payment_status: "PENDING",
+
+      data: {
+        source: "intake_v1",
+        submitted_at: new Date().toISOString()
       }
+    };
 
-      return {
-        tier,
-        doc_type: docType,
-        management,
-        state: stateHidden.value,
+    console.log("INSERT PAYLOAD:", payload);
 
-        full_name: full_name.value,
-        email: email.value,
-        business_name: business_name.value || null,
+    const { data, error } = await supabase
+      .from("document_requests")
+      .insert([payload]);
 
-        status: "intake_completed",
-        created_at: new Date().toISOString()
-      };
+    if (error) {
+      console.error("SUPABASE ERROR:", error);
+      alert("Submission failed: " + error.message);
+      return;
     }
 
-    /**********************************************************
-     * 🔴 SUPABASE INSERT ZONE
-     **********************************************************/
-    /*
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+    console.log("INSERT SUCCESS:", data);
+    alert("Intake submitted successfully.");
+    form.reset();
+  });
+</script>
 
-    const supabase = createClient(
-      "https://vvjbjfltqsivvxxifnvi.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q"
-    );
-
-    async function insertRequest(payload) {
-      const { data, error } = await supabase
-        .from("document_requests")
-        .insert([payload])
-        .select()
-        .single();
-
-      if (error) throw error;
-      return data;
-    }
-    */
-
-    /**********************************************************
-     * STEP 4: SUBMIT + REDIRECT
-     **********************************************************/
-    document.getElementById("submitBtn").addEventListener("click", async () => {
-      const errorBox = document.getElementById("errorBox");
-      errorBox.textContent = "";
-
-      try {
-        const payload = buildPayload();
-
-        // 🔴 Uncomment when Supabase is live
-        // const record = await insertRequest(payload);
-        // const requestId = record.id;
-
-        // TEMP SAFE TEST REDIRECT
-        window.location.href =
-          `/payment.html?tier=${encodeURIComponent(payload.tier)}`;
-
-      } catch (err) {
-        errorBox.textContent = err.message || "Please complete all fields.";
-      }
-    });
-  </script>
 </body>
 </html>
