@@ -169,7 +169,7 @@
 
     async function insertRequest(payload) {
       const { data, error } = await supabase
-        .from("requests")
+        .from("document_requests")
         .insert([payload])
         .select()
         .single();
