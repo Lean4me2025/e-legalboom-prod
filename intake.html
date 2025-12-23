@@ -2,176 +2,205 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>E-LegalBoom Intake</title>
+  <title>E-LegalBoom – Intake</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- Supabase CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #f5f7fb;
-      padding: 30px;
+      font-family: system-ui, sans-serif;
+      background: #f6f8fc;
+      margin: 0;
     }
-    h1 { margin-bottom: 10px; }
-    h2 { margin-top: 40px; }
-    label { display: block; margin-top: 15px; font-weight: 600; }
-    input, select, textarea {
+
+    .container {
+      max-width: 760px;
+      margin: 60px auto;
+      background: #fff;
+      padding: 32px;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.06);
+    }
+
+    label {
+      display: block;
+      margin-top: 16px;
+      font-weight: 600;
+    }
+
+    input, select {
       width: 100%;
       padding: 10px;
       margin-top: 6px;
       font-size: 15px;
     }
-    textarea { min-height: 80px; }
+
     button {
-      margin-top: 30px;
+      margin-top: 28px;
       padding: 14px 22px;
-      font-size: 16px;
-      background: #2563eb;
+      background: #2b6cff;
       color: #fff;
       border: none;
+      border-radius: 6px;
+      font-size: 16px;
       cursor: pointer;
     }
-    .error { color: #b91c1c; margin-top: 15px; }
-    .success { color: #047857; margin-top: 15px; }
+
+    .error {
+      margin-top: 16px;
+      color: #b00020;
+      font-weight: 600;
+    }
   </style>
 </head>
+
 <body>
+  <div class="container">
+    <h1>Tell us a bit more</h1>
 
-<h1>E-LegalBoom – Intake</h1>
+    <!-- =====================================================
+         🔒 CANONICAL VALUES (SYNCED FROM UI)
+         ===================================================== -->
+    <input type="hidden" id="tier" />
+    <input type="hidden" id="doc_type" />
+    <input type="hidden" id="management" />
+    <input type="hidden" id="state" />
 
-<form id="intakeForm">
+    <label>Full Legal Name</label>
+    <input type="text" id="full_name" required />
 
-  <!-- =========================
-       CLIENT INFORMATION
-  ========================== -->
-  <h2>Client Information</h2>
+    <label>Email Address</label>
+    <input type="email" id="email" required />
 
-  <label>Full Legal Name</label>
-  <input id="customer_name" required />
+    <label>Business Name (if applicable)</label>
+    <input type="text" id="business_name" />
 
-  <label>Email Address</label>
-  <input id="customer_email" type="email" required />
+    <!-- ✅ VISIBLE STATE SELECTOR -->
+    <label>State of Formation</label>
+    <select id="stateSelect" required>
+      <option value="">— Select a state —</option>
+      <option value="AL">Alabama</option>
+      <option value="AK">Alaska</option>
+      <option value="AZ">Arizona</option>
+      <option value="AR">Arkansas</option>
+      <option value="CA">California</option>
+      <option value="CO">Colorado</option>
+      <option value="CT">Connecticut</option>
+      <option value="DE">Delaware</option>
+      <option value="FL">Florida</option>
+      <option value="GA">Georgia</option>
+      <option value="IL">Illinois</option>
+      <option value="NY">New York</option>
+      <option value="TX">Texas</option>
+      <!-- add remaining states as desired -->
+    </select>
 
-  <label>Phone Number</label>
-  <input id="customer_phone" />
+    <button id="submitBtn">Continue to Payment</button>
+    <div id="errorBox" class="error"></div>
+  </div>
 
-  <!-- =========================
-       ENTITY INFORMATION
-  ========================== -->
-  <h2>Entity Information</h2>
+  <script>
+    /**********************************************************
+     * STEP 1: READ SUMMARY PARAMS
+     **********************************************************/
+    const params = new URLSearchParams(window.location.search);
 
-  <label>Legal Entity Name</label>
-  <input id="entity_name" required />
+    const tier = params.get("tier");
+    const docType = params.get("doc_type");
+    const management = params.get("management");
+    const incomingState = params.get("state");
 
-  <label>Governing State</label>
-  <input id="governing_state" required />
+    if (!tier || !docType || !management) {
+      alert("Missing required data. Please restart.");
+      throw new Error("Missing summary parameters");
+    }
 
-  <!-- =========================
-       DOCUMENT INFORMATION
-  ========================== -->
-  <h2>Document</h2>
+    document.getElementById("tier").value = tier;
+    document.getElementById("doc_type").value = docType;
+    document.getElementById("management").value = management;
 
-  <label>Document Type</label>
-  <select id="doc_type" required>
-    <option value="">Select</option>
-    <option value="LLC">LLC</option>
-    <option value="Operating Agreement">Operating Agreement</option>
-    <option value="NDA">NDA</option>
-    <option value="Contract">Contract</option>
-  </select>
+    /**********************************************************
+     * STEP 2: SYNC STATE PARAM → DROPDOWN → HIDDEN FIELD
+     **********************************************************/
+    const stateSelect = document.getElementById("stateSelect");
+    const stateHidden = document.getElementById("state");
 
-  <label>Urgency</label>
-  <select id="urgency">
-    <option value="normal">Normal</option>
-    <option value="urgent">Urgent</option>
-  </select>
+    if (incomingState) {
+      stateSelect.value = incomingState;
+      stateHidden.value = incomingState;
+    }
 
-  <label>Details / Special Instructions</label>
-  <textarea id="details"></textarea>
+    stateSelect.addEventListener("change", () => {
+      stateHidden.value = stateSelect.value;
+    });
 
-  <label>File Option</label>
-  <select id="file_option">
-    <option value="pdf">PDF</option>
-    <option value="docx">DOCX</option>
-  </select>
-
-  <!-- =========================
-       PARTY INFORMATION
-  ========================== -->
-  <h2>Primary Counterparty</h2>
-
-  <label>Party 1 Name</label>
-  <input id="party1_name" />
-
-  <label>Party 1 Role</label>
-  <input id="party1_role" />
-
-  <label>Party 1 Email</label>
-  <input id="party1_email" type="email" />
-
-  <!-- =========================
-       SUBMIT
-  ========================== -->
-  <button type="submit">Submit Intake</button>
-  <div id="status"></div>
-
-</form>
-
-<script>
-  // ===============================
-  // SUPABASE CLIENT
-  // ===============================
-  const supabase = window.supabase.createClient(
-    "https://vvjbjfltqsivvxxifnvi.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q"
-  );
-
-  // ===============================
-  // SUBMIT HANDLER
-  // ===============================
-  document.getElementById("intakeForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const status = document.getElementById("status");
-    status.textContent = "Submitting…";
-
-    const payload = {
-      phone: document.getElementById("customer_phone").value,
-      urgency: document.getElementById("urgency").value,
-      details: document.getElementById("details").value,
-      file_option: document.getElementById("file_option").value,
-      parties: [
-        {
-          name: document.getElementById("party1_name").value,
-          role: document.getElementById("party1_role").value,
-          email: document.getElementById("party1_email").value
-        }
-      ]
-    };
-
-    const { error } = await supabase.rpc(
-      "create_request_from_intake",
-      {
-        p_customer_email: document.getElementById("customer_email").value,
-        p_customer_name: document.getElementById("customer_name").value,
-        p_doc_type: document.getElementById("doc_type").value,
-        p_entity_name: document.getElementById("entity_name").value,
-        p_governing_state: document.getElementById("governing_state").value,
-        p_payload: payload
+    /**********************************************************
+     * STEP 3: BUILD PAYLOAD
+     **********************************************************/
+    function buildPayload() {
+      if (!stateHidden.value) {
+        throw new Error("State not selected");
       }
+
+      return {
+        tier,
+        doc_type: docType,
+        management,
+        state: stateHidden.value,
+
+        full_name: full_name.value,
+        email: email.value,
+        business_name: business_name.value || null,
+
+        status: "intake_completed",
+        created_at: new Date().toISOString()
+      };
+    }
+
+    /**********************************************************
+     * 🔴 SUPABASE INSERT ZONE
+     **********************************************************/
+    /*
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+    const supabase = createClient(
+      "https://vvjbjfltqsivvxxifnvi.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q"
     );
 
-    if (error) {
-      console.error(error);
-      status.innerHTML = `<div class="error">Order creation failed: ${error.message}</div>`;
-    } else {
-      status.innerHTML = `<div class="success">Order created successfully.</div>`;
-      document.getElementById("intakeForm").reset();
-    }
-  });
-</script>
+    async function insertRequest(payload) {
+      const { data, error } = await supabase
+        .from("requests")
+        .insert([payload])
+        .select()
+        .single();
 
+      if (error) throw error;
+      return data;
+    }
+    */
+
+    /**********************************************************
+     * STEP 4: SUBMIT + REDIRECT
+     **********************************************************/
+    document.getElementById("submitBtn").addEventListener("click", async () => {
+      const errorBox = document.getElementById("errorBox");
+      errorBox.textContent = "";
+
+      try {
+        const payload = buildPayload();
+
+        // 🔴 Uncomment when Supabase is live
+        // const record = await insertRequest(payload);
+        // const requestId = record.id;
+
+        // TEMP SAFE TEST REDIRECT
+        window.location.href =
+          `/payment.html?tier=${encodeURIComponent(payload.tier)}`;
+
+      } catch (err) {
+        errorBox.textContent = err.message || "Please complete all fields.";
+      }
+    });
+  </script>
 </body>
 </html>
