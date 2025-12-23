@@ -5,20 +5,37 @@
   <title>E-LegalBoom — Intake</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body { font-family: system-ui, -apple-system, sans-serif; padding: 24px; }
-    h1, h2 { margin-top: 32px; }
-    label { display: block; margin-top: 14px; font-weight: 600; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      padding: 24px;
+      background: #f6f8fc;
+      color: #1e1e2f;
+    }
+    h1, h2 {
+      margin-top: 32px;
+    }
+    label {
+      display: block;
+      margin-top: 14px;
+      font-weight: 600;
+    }
     input, select, textarea {
       width: 100%;
-      padding: 8px;
+      padding: 10px;
       margin-top: 6px;
       font-size: 14px;
     }
-    textarea { min-height: 80px; }
+    textarea {
+      min-height: 90px;
+    }
     button {
-      margin-top: 32px;
+      margin-top: 36px;
       padding: 14px 22px;
       font-size: 16px;
+      background: #2b6cff;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
       cursor: pointer;
     }
     .section {
@@ -32,7 +49,7 @@
 <body>
 
 <h1>E-LegalBoom Intake</h1>
-<p>Please complete the information below to prepare your document.</p>
+<p>Please complete the information below so we can prepare your document correctly.</p>
 
 <form id="intakeForm">
 
@@ -103,15 +120,13 @@
     </select>
   </div>
 
-  <!-- SPECIAL TERMS -->
+  <!-- SPECIAL CLAUSES -->
   <div class="section">
-    <h2>Special Terms / Clauses</h2>
+    <h2>Special Clauses</h2>
 
-    <label>Special Terms (Free-form)</label>
-    <textarea id="special_terms"></textarea>
-
-    <label>Special Clauses (Free-form)</label>
-    <textarea id="special_clauses"></textarea>
+    <label>Special Clauses / Notes</label>
+    <textarea id="special_clauses"
+      placeholder="Add any special clauses or notes you would like included."></textarea>
   </div>
 
   <button type="submit">Submit Intake</button>
@@ -144,10 +159,6 @@
 
       dispute_method: dispute_method.value || null,
       non_compete_option: non_compete_option.value || null,
-
-      special_terms: special_terms.value
-        ? { text: special_terms.value }
-        : null,
 
       special_clauses: special_clauses.value
         ? { text: special_clauses.value }
