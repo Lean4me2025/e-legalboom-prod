@@ -2,35 +2,68 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>E-LegalBoom — Intake</title>
+  <title>E-LegalBoom — Document Intake</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <style>
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      padding: 24px;
       background: #f6f8fc;
       color: #1e1e2f;
+      padding: 32px;
     }
-    h1, h2 {
-      margin-top: 32px;
+
+    .paper {
+      max-width: 820px;
+      margin: auto;
+      background: #ffffff;
+      padding: 36px 40px;
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.06);
     }
+
+    h1 {
+      margin-top: 0;
+      font-size: 26px;
+    }
+
+    h2 {
+      margin-top: 36px;
+      font-size: 18px;
+      border-bottom: 1px solid #e5e8f0;
+      padding-bottom: 8px;
+    }
+
+    p.helper {
+      font-size: 14px;
+      color: #555;
+      margin-top: 6px;
+    }
+
     label {
       display: block;
-      margin-top: 14px;
+      margin-top: 18px;
       font-weight: 600;
-    }
-    input, select, textarea {
-      width: 100%;
-      padding: 10px;
-      margin-top: 6px;
       font-size: 14px;
     }
-    textarea {
-      min-height: 90px;
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      margin-top: 6px;
+      font-size: 14px;
+      border: 1px solid #ccd3e0;
+      border-radius: 4px;
     }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
     button {
-      margin-top: 36px;
-      padding: 14px 22px;
+      margin-top: 42px;
+      padding: 14px 24px;
       font-size: 16px;
       background: #2b6cff;
       color: #fff;
@@ -38,37 +71,37 @@
       border-radius: 6px;
       cursor: pointer;
     }
-    .section {
-      border-top: 1px solid #ddd;
-      padding-top: 24px;
-      margin-top: 24px;
+
+    button:hover {
+      background: #1e54cc;
     }
   </style>
 </head>
 
 <body>
 
-<h1>E-LegalBoom Intake</h1>
-<p>Please complete the information below so we can prepare your document correctly.</p>
+<div class="paper">
+  <h1>Document Intake</h1>
+  <p class="helper">
+    Please complete the information below so your document can be prepared accurately.
+    This intake is reviewed before any document is released.
+  </p>
 
-<form id="intakeForm">
+  <form id="intakeForm">
 
-  <!-- CUSTOMER -->
-  <div class="section">
+    <!-- CUSTOMER -->
     <h2>Customer Information</h2>
 
-    <label>Customer Name</label>
+    <label for="customer_name">Full Legal Name</label>
     <input id="customer_name" required />
 
-    <label>Customer Email</label>
+    <label for="customer_email">Email Address</label>
     <input id="customer_email" type="email" required />
-  </div>
 
-  <!-- ENTITY -->
-  <div class="section">
+    <!-- ENTITY -->
     <h2>Entity Information</h2>
 
-    <label>Entity Type</label>
+    <label for="entity_type">Entity Type</label>
     <select id="entity_type" required>
       <option value="">Select</option>
       <option value="LLC">LLC</option>
@@ -76,117 +109,112 @@
       <option value="Individual">Individual</option>
     </select>
 
-    <label>Entity Name</label>
+    <label for="entity_name">Entity / Business Name</label>
     <input id="entity_name" required />
 
-    <label>Governing State</label>
+    <label for="governing_state">Governing State</label>
     <input id="governing_state" required />
 
-    <label>Management Model</label>
+    <label for="management_model">Management Model (if applicable)</label>
     <select id="management_model">
-      <option value="">Select</option>
+      <option value="">Not applicable</option>
       <option value="Member-Managed">Member-Managed</option>
       <option value="Manager-Managed">Manager-Managed</option>
     </select>
-  </div>
 
-  <!-- DOCUMENT -->
-  <div class="section">
+    <!-- DOCUMENT -->
     <h2>Document Details</h2>
 
-    <label>Document Type</label>
+    <label for="doc_type">Requested Document</label>
     <select id="doc_type" required>
       <option value="">Select</option>
       <option value="llc_single_member">Single-Member LLC</option>
       <option value="llc_multi_member">Multi-Member LLC</option>
       <option value="operating_agreement">Operating Agreement</option>
-      <option value="nda">NDA</option>
+      <option value="nda">Non-Disclosure Agreement (NDA)</option>
     </select>
 
-    <label>Dispute Resolution Method</label>
+    <label for="dispute_method">Dispute Resolution Preference</label>
     <select id="dispute_method">
-      <option value="">Select</option>
+      <option value="">No preference</option>
       <option value="Arbitration">Arbitration</option>
       <option value="Mediation">Mediation</option>
       <option value="Court">Court</option>
     </select>
 
-    <label>Non-Compete Option</label>
+    <label for="non_compete_option">Non-Compete Clause</label>
     <select id="non_compete_option">
-      <option value="">Select</option>
-      <option value="None">None</option>
+      <option value="">None</option>
       <option value="Limited">Limited</option>
       <option value="Standard">Standard</option>
     </select>
-  </div>
 
-  <!-- SPECIAL CLAUSES -->
-  <div class="section">
-    <h2>Special Clauses</h2>
+    <!-- SPECIAL -->
+    <h2>Special Instructions</h2>
 
-    <label>Special Clauses / Notes</label>
+    <label for="special_clauses">Additional Clauses or Notes</label>
     <textarea id="special_clauses"
-      placeholder="Add any special clauses or notes you would like included."></textarea>
-  </div>
+      placeholder="Include any special provisions, assets, or instructions you would like reviewed."></textarea>
 
-  <button type="submit">Submit Intake</button>
+    <button type="submit">Submit Intake</button>
 
-</form>
+  </form>
+</div>
 
 <script type="module">
   import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
   const supabase = createClient(
     "https://vvjbjfltqsivvxxifnvi.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q"
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q
+"
   );
 
   const form = document.getElementById("intakeForm");
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    console.log("SUBMIT FIRED");
 
     const payload = {
-      doc_type: doc_type.value,
+      customer_name: customer_name.value.trim(),
+      customer_email: customer_email.value.trim(),
+
       entity_type: entity_type.value,
-      entity_name: entity_name.value,
-      governing_state: governing_state.value,
+      entity_name: entity_name.value.trim(),
+      governing_state: governing_state.value.trim(),
       management_model: management_model.value || null,
 
-      customer_name: customer_name.value,
-      customer_email: customer_email.value,
-
+      doc_type: doc_type.value,
       dispute_method: dispute_method.value || null,
       non_compete_option: non_compete_option.value || null,
 
       special_clauses: special_clauses.value
-        ? { text: special_clauses.value }
+        ? { text: special_clauses.value.trim() }
         : null,
 
       status: "INTAKE_COMPLETED",
       payment_status: "PENDING",
 
-      data: {
-        source: "intake_v1",
+      release_ready: false,
+      release_status: "PENDING",
+      verification_source: null,
+
+      meta: {
+        source: "intake_v1_qualified",
         submitted_at: new Date().toISOString()
       }
     };
 
-    console.log("INSERT PAYLOAD:", payload);
-
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from("document_requests")
       .insert([payload]);
 
     if (error) {
-      console.error("SUPABASE ERROR:", error);
       alert("Submission failed: " + error.message);
       return;
     }
 
-    console.log("INSERT SUCCESS:", data);
-    alert("Intake submitted successfully.");
+    alert("Intake submitted successfully. Your document is being prepared.");
     form.reset();
   });
 </script>
