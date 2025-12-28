@@ -1,201 +1,212 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>E-LegalBoom — Intake</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      padding: 24px;
-      background: #f6f8fc;
-      color: #1e1e2f;
-    }
-    h1, h2 {
-      margin-top: 32px;
-    }
-    label {
-      display: block;
-      margin-top: 14px;
-      font-weight: 600;
-    }
-    input, select, textarea {
-      width: 100%;
-      padding: 10px;
-      margin-top: 6px;
-      font-size: 14px;
-    }
-    textarea {
-      min-height: 90px;
-    }
-    button {
-      margin-top: 36px;
-      padding: 14px 22px;
-      font-size: 16px;
-      background: #2b6cff;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .section {
-      border-top: 1px solid #ddd;
-      padding-top: 24px;
-      margin-top: 24px;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>E-LegalBoom — Document Intake</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+  body{
+    background:#f6f8fc;
+    font-family: Georgia, "Times New Roman", serif;
+    color:#1e1e2f;
+    padding:40px;
+  }
+  .doc{
+    max-width:900px;
+    margin:auto;
+    background:#fff;
+    padding:50px 60px;
+    box-shadow:0 8px 28px rgba(0,0,0,.08);
+  }
+  h1{
+    text-align:center;
+    margin-bottom:10px;
+  }
+  .note{
+    text-align:center;
+    color:#555;
+    margin-bottom:40px;
+  }
+  p{
+    font-size:16px;
+    line-height:1.8;
+    margin-bottom:18px;
+  }
+  .blank{
+    border:none;
+    border-bottom:1px solid #333;
+    font-family:inherit;
+    font-size:16px;
+    padding:2px 4px;
+    margin:0 4px;
+    min-width:120px;
+  }
+  select.blank{
+    border-bottom:1px solid #333;
+    background:#fff;
+  }
+  textarea.blank{
+    width:100%;
+    border:1px solid #ccc;
+    min-height:120px;
+    margin-top:10px;
+  }
+  .section{
+    margin-top:40px;
+  }
+  button{
+    margin-top:40px;
+    padding:14px 28px;
+    font-size:16px;
+    background:#2b6cff;
+    color:#fff;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+  }
+</style>
 </head>
 
 <body>
+<div class="doc">
 
-<h1>E-LegalBoom Intake</h1>
-<p>Please complete the information below so we can prepare your document correctly.</p>
+<h1>Document Intake</h1>
+<div class="note">
+Complete the information below to prepare your legal document.
+</div>
 
 <form id="intakeForm">
 
-  <!-- CUSTOMER -->
-  <div class="section">
-    <h2>Customer Information</h2>
+<!-- 1. PARTY -->
+<div class="section">
+<p>
+This document is requested by
+<input id="customer_name" class="blank" required>,
+whose email address is
+<input id="customer_email" class="blank" type="email" required>.
+</p>
+</div>
 
-    <label>Customer Name</label>
-    <input id="customer_name" required />
+<!-- 2. ENTITY -->
+<div class="section">
+<p>
+The requesting party is acting as an
+<select id="entity_type" class="blank" required>
+  <option value="">Select</option>
+  <option>Individual</option>
+  <option>LLC</option>
+  <option>Corporation</option>
+</select>
+doing business under the name
+<input id="entity_name" class="blank" required>,
+organized under the laws of
+<select id="governing_state" class="blank" required>
+<option value="">State</option>
+<option value="CA">California</option>
+<option value="TX">Texas</option>
+<option value="FL">Florida</option>
+<option value="NY">New York</option>
+<!-- add remaining states as needed -->
+</select>.
+</p>
 
-    <label>Customer Email</label>
-    <input id="customer_email" type="email" required />
-  </div>
+<p>
+Where applicable, the entity is
+<select id="management_model" class="blank">
+  <option value="">—</option>
+  <option value="Member-Managed">Member-Managed</option>
+  <option value="Manager-Managed">Manager-Managed</option>
+</select>.
+</p>
+</div>
 
-  <!-- ENTITY -->
-  <div class="section">
-    <h2>Entity Information</h2>
+<!-- 3. DOCUMENT -->
+<div class="section">
+<p>
+The requested document type is
+<select id="doc_type" class="blank" required>
+  <option value="">Select</option>
+  <option value="llc_single_member">Single-Member LLC</option>
+  <option value="llc_multi_member">Multi-Member LLC</option>
+  <option value="operating_agreement">Operating Agreement</option>
+  <option value="nda">Non-Disclosure Agreement</option>
+</select>.
+</p>
+</div>
 
-    <label>Entity Type</label>
-    <select id="entity_type" required>
-      <option value="">Select</option>
-      <option value="LLC">LLC</option>
-      <option value="Corporation">Corporation</option>
-      <option value="Individual">Individual</option>
-    </select>
+<!-- 4. TERMS -->
+<div class="section">
+<p>
+Any dispute shall be resolved by
+<select id="dispute_method" class="blank">
+  <option value="">—</option>
+  <option>Arbitration</option>
+  <option>Mediation</option>
+  <option>Court</option>
+</select>,
+and any non-compete obligation shall be
+<select id="non_compete_option" class="blank">
+  <option value="">None</option>
+  <option>Limited</option>
+  <option>Standard</option>
+</select>.
+</p>
+</div>
 
-    <label>Entity Name</label>
-    <input id="entity_name" required />
+<!-- 5. SPECIAL -->
+<div class="section">
+<p>
+Additional clauses or instructions:
+</p>
+<textarea id="special_clauses" class="blank"></textarea>
+</div>
 
-    <label>Governing State</label>
-    <input id="governing_state" required />
-
-    <label>Management Model</label>
-    <select id="management_model">
-      <option value="">Select</option>
-      <option value="Member-Managed">Member-Managed</option>
-      <option value="Manager-Managed">Manager-Managed</option>
-    </select>
-  </div>
-
-  <!-- DOCUMENT -->
-  <div class="section">
-    <h2>Document Details</h2>
-
-    <label>Document Type</label>
-    <select id="doc_type" required>
-      <option value="">Select</option>
-      <option value="llc_single_member">Single-Member LLC</option>
-      <option value="llc_multi_member">Multi-Member LLC</option>
-      <option value="operating_agreement">Operating Agreement</option>
-      <option value="nda">NDA</option>
-    </select>
-
-    <label>Dispute Resolution Method</label>
-    <select id="dispute_method">
-      <option value="">Select</option>
-      <option value="Arbitration">Arbitration</option>
-      <option value="Mediation">Mediation</option>
-      <option value="Court">Court</option>
-    </select>
-
-    <label>Non-Compete Option</label>
-    <select id="non_compete_option">
-      <option value="">Select</option>
-      <option value="None">None</option>
-      <option value="Limited">Limited</option>
-      <option value="Standard">Standard</option>
-    </select>
-  </div>
-
-  <!-- SPECIAL CLAUSES -->
-  <div class="section">
-    <h2>Special Clauses</h2>
-
-    <label>Special Clauses / Notes</label>
-    <textarea id="special_clauses"
-      placeholder="Add any special clauses or notes you would like included."></textarea>
-  </div>
-
-  <button type="submit">Submit Intake</button>
-
+<button type="submit">Submit Intake</button>
 </form>
+</div>
 
-<script type="module">
-  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+<script>
+const supabase = window.supabase.createClient(
+  "https://vvjbjfltqsivvxxifnvi.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q"
+);
 
-  const supabase = createClient(
-    "https://vvjbjfltqsivvxxifnvi.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q
-"
-  );
+document.getElementById("intakeForm").addEventListener("submit", async (e)=>{
+  e.preventDefault();
 
-  const form = document.getElementById("intakeForm");
+  const payload = {
+    customer_name: customer_name.value,
+    customer_email: customer_email.value,
+    entity_type: entity_type.value,
+    entity_name: entity_name.value,
+    governing_state: governing_state.value,
+    management_model: management_model.value || null,
+    doc_type: doc_type.value,
+    dispute_method: dispute_method.value || null,
+    non_compete_option: non_compete_option.value || null,
+    special_clauses: special_clauses.value || null,
+    status: "INTAKE_COMPLETED",
+    payment_status: "PENDING"
+  };
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  console.log("INSERT PAYLOAD:", payload);
 
-    const request_id = crypto.randomUUID();
+  const { error } = await supabase
+    .from("document_requests")
+    .insert([payload]);
 
-    const payload = {
-      request_id,
+  if(error){
+    alert("Insert failed: " + error.message);
+    console.error(error);
+    return;
+  }
 
-      doc_type: doc_type.value.trim(),
-      entity_type: entity_type.value.trim(),
-      entity_name: entity_name.value.trim(),
-      governing_state: governing_state.value.trim().toUpperCase(),
-      management_model: management_model.value || null,
-
-      customer_name: customer_name.value.trim(),
-      customer_email: customer_email.value.trim().toLowerCase(),
-
-      dispute_method: dispute_method.value || null,
-      non_compete_option: non_compete_option.value || null,
-
-      special_clauses: special_clauses.value
-        ? { text: special_clauses.value.trim() }
-        : null,
-
-      /* RELEASE + VERIFICATION PLACEHOLDERS */
-      release_status: "PENDING",
-      release_ready: false,
-      verification_source: null,
-      auto_release_enabled: false,
-
-      payment_status: "PENDING",
-
-      meta: {
-        intake_version: "v1.0",
-        intake_mode: "TEST",
-        source: "intake",
-        submitted_at: new Date().toISOString()
-      }
-    };
-
-    const { error } = await supabase
-      .from("document_requests")
-      .insert([payload]);
-
-    if (error) {
-      alert("Submission failed: " + error.message);
-      return;
-    }
-
-    alert("Intake submitted successfully (TEST MODE).");
-    form.reset();
-  });
+  alert("Intake submitted successfully.");
+  e.target.reset();
+});
 </script>
 
 </body>
