@@ -158,28 +158,57 @@ document.getElementById("tier").value = params.get("tier") || "";
 /* ================================
    SUBMIT HANDLER
    ================================ */
+<script>
+document
+  .getElementById("intakeForm")
+  .addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  document.getElementById("intakeForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  console.log("INTAKE SUBMIT HANDLER FIRED");
-  ...
-});
+    console.log("INTAKE SUBMIT HANDLER FIRED");
 
+    // Collect form data
+    const formData = Object.fromEntries(
+      new FormData(e.target).entries()
+    );
 
-  const formData = Object.fromEntries(new FormData(e.target).entries());
+    // Payload sent to Supabase
+    const payload = {
+      ...formData,
+      created_at: new Date().toISOString()
+    };
 
-  const { error } = await supabase
-    .from("document_requests")   // ← your intake table
-    .insert([formData]);
+    console.log("PAYLOAD", payload);
 
-  if (error) {
-    alert("Submission failed. Please try again.");
-    console.error(error);
-  } else {
+    // Double-barrel insert
+    const documentRequestsResult = await supabase
+      .from("document_requests")
+      .insert([payload]);
+
+    const requestsResult = await supabase
+      .from("requests")
+      .insert([payload]);
+
+    console.log("DOUBLE WRITE RESULTS", {
+      document_requests: documentRequestsResult,
+      requests: requestsResult
+    });
+
+    // Unified error handling
+    const error =
+      documentRequestsResult.error ||
+      requestsResult.error;
+
+    if (error) {
+      alert("Submission failed. Check console.");
+      console.error("document_requests error:", documentRequestsResult.error);
+      console.error("requests error:", requestsResult.error);
+      return;
+    }
+
+    // Success
     alert("Intake submitted successfully.");
     e.target.reset();
-  }
-});
+  });
 </script>
 
 </body>
