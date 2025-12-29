@@ -159,8 +159,12 @@ document.getElementById("tier").value = params.get("tier") || "";
    SUBMIT HANDLER
    ================================ */
 
-document.getElementById("intakeForm").addEventListener("submit", async (e) => {
+  document.getElementById("intakeForm").addEventListener("submit", async (e) => {
   e.preventDefault();
+  console.log("INTAKE SUBMIT HANDLER FIRED");
+  ...
+});
+
 
   const formData = Object.fromEntries(new FormData(e.target).entries());
 
