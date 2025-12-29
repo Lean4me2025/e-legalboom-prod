@@ -165,7 +165,7 @@ document.getElementById("intakeForm").addEventListener("submit", async (e) => {
   const formData = Object.fromEntries(new FormData(e.target).entries());
 
   const { error } = await supabase
-    .from("requests")   // ← your intake table
+    .from("document_requests")   // ← your intake table
     .insert([formData]);
 
   if (error) {
