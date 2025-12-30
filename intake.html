@@ -1,214 +1,253 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>E-LegalBoom – Full Intake</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8" />
+<title>E-LegalBoom – Document Intake</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Supabase JS v2 -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  body {
+    font-family: "Georgia", "Times New Roman", serif;
+    background: #f4f6f8;
+    color: #222;
+    margin: 0;
+    padding: 40px;
+  }
 
-  <style>
-    body {
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background: #f4f6f9;
-      margin: 0;
-      padding: 24px;
-      color: #222;
-    }
-    h1 { margin-bottom: 12px; }
-    form {
-      max-width: 780px;
-      background: #fff;
-      padding: 24px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,.08);
-    }
-    label {
-      display: block;
-      margin-top: 14px;
-      font-weight: 600;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      margin-top: 6px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      font-size: 14px;
-    }
-    textarea { min-height: 80px; }
-    button {
-      margin-top: 24px;
-      padding: 12px 18px;
-      font-size: 15px;
-      background: #2b6cff;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-  </style>
+  .document {
+    max-width: 850px;
+    margin: auto;
+    background: #ffffff;
+    padding: 48px 56px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 8px rgba(0,0,0,0.05);
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  .subtitle {
+    text-align: center;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 40px;
+  }
+
+  h2 {
+    margin-top: 36px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 6px;
+  }
+
+  .field {
+    margin-top: 18px;
+  }
+
+  label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .required label::after {
+    content: " *";
+    color: darkred;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    padding: 8px;
+    font-family: inherit;
+    font-size: 15px;
+    border: 1px solid #999;
+  }
+
+  textarea {
+    min-height: 90px;
+  }
+
+  .help {
+    font-size: 13px;
+    color: #555;
+    margin-top: 4px;
+  }
+
+  .required input:invalid,
+  .required textarea:invalid {
+    border-color: darkred;
+    background: #fff6f6;
+  }
+
+  .footer {
+    margin-top: 40px;
+    font-size: 13px;
+    color: #555;
+  }
+
+  button {
+    margin-top: 36px;
+    padding: 12px 22px;
+    font-size: 16px;
+    background: #1e2b44;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #162034;
+  }
+</style>
 </head>
 
 <body>
 
-<h1>Document Intake</h1>
+<div class="document">
 
-<form id="intakeForm">
+<h1>Document Intake Questionnaire</h1>
+<div class="subtitle">
+This intake collects the legally required information to prepare your requested document.
+All required fields must be completed to proceed.
+</div>
 
-  <!-- URL Context -->
-  <input type="hidden" name="doc_type" id="doc_type">
-  <input type="hidden" name="tier" id="tier">
+<form id="intakeForm" novalidate>
 
-  <!-- Identity -->
+<!-- ===================== SECTION 1 ===================== -->
+<h2>1. Request Context</h2>
+
+<div class="field required">
+  <label>Document Type</label>
+  <input id="doc_type" name="doc_type" required />
+  <div class="help">Example: Promissory Note, LLC Operating Agreement, NDA</div>
+</div>
+
+<div class="field required">
+  <label>Service Tier</label>
+  <input id="tier" name="tier" required />
+</div>
+
+<!-- ===================== SECTION 2 ===================== -->
+<h2>2. Requesting Party</h2>
+
+<div class="field required">
   <label>First Name</label>
-  <input name="first_name" required>
+  <input name="first_name" required />
+</div>
 
+<div class="field required">
   <label>Last Name</label>
-  <input name="last_name" required>
+  <input name="last_name" required />
+</div>
 
-  <label>Email</label>
-  <input name="email" type="email" required>
+<div class="field required">
+  <label>Email Address</label>
+  <input type="email" name="email" required />
+</div>
 
-  <label>Phone</label>
-  <input name="phone">
+<div class="field">
+  <label>Phone Number</label>
+  <input name="phone" />
+</div>
 
-  <!-- Address -->
-  <label>Street</label>
-  <input name="street">
+<!-- ===================== SECTION 3 ===================== -->
+<h2>3. Governing State & Jurisdiction</h2>
 
-  <label>City</label>
-  <input name="city">
+<div class="field required">
+  <label>State Governing This Document</label>
+  <input name="governing_state" required />
+  <div class="help">This determines statutory references and enforceability.</div>
+</div>
 
-  <label>Residence State</label>
-  <input name="residence_state">
+<!-- ===================== SECTION 4 ===================== -->
+<h2>4. Document-Specific Instructions</h2>
 
-  <label>ZIP</label>
-  <input name="zip">
+<div class="field required">
+  <label>Describe the Arrangement or Purpose</label>
+  <textarea name="details" required></textarea>
+  <div class="help">
+    Example: loan amount, parties involved, obligations, timing, special terms.
+  </div>
+</div>
 
-  <label>Governing State</label>
-  <input name="governing_state">
+<!-- ===================== SECTION 5 ===================== -->
+<h2>5. Acknowledgement</h2>
 
-  <!-- Document -->
-  <label>Additional Details</label>
-  <textarea name="details"></textarea>
+<div class="field required">
+  <label>
+    <input type="checkbox" name="acknowledged" required />
+    I certify that the information provided is accurate and complete.
+  </label>
+</div>
 
-  <button type="submit">Submit Intake</button>
+<button type="submit">Submit Intake</button>
+
 </form>
 
+<div class="footer">
+This service provides automated document preparation and is not a law firm.
+</div>
+
+</div>
+
+<!-- ===================== JAVASCRIPT ===================== -->
 <script>
 /* =====================================================
-   CONFIG (EXPLICIT, NO MAGIC)
-===================================================== */
+   CLEAN SUPABASE + INTAKE SUBMISSION SCRIPT
+   ===================================================== */
+
 const SUPABASE_URL = "https://vvjbjfltqsivvxxifnvi.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";
 
-/* SYSTEM MODES — FULLY PRESENT */
-const PAYMENT_MODE = "TEST";   // TEST | LIVE
-const DOC_MODE     = "TEST";   // TEST | LIVE
-const EMAIL_MODE   = "TEST";   // TEST | LIVE
-
-console.log("INTAKE SCRIPT PARSED");
-
-/* =====================================================
-   SUPABASE INIT
-===================================================== */
-const supabase = supabase.createClient(
+/* ---- SINGLE CLIENT ---- */
+const supabaseClient = supabase.createClient(
   SUPABASE_URL,
   SUPABASE_ANON_KEY
 );
 
-console.log("SUPABASE INITIALIZED");
-
-/* =====================================================
-   URL CONTEXT
-===================================================== */
-const params = new URLSearchParams(window.location.search);
-document.getElementById("doc_type").value = params.get("doc_type") || "";
-document.getElementById("tier").value     = params.get("tier") || "";
-
-/* =====================================================
-   FULL SYSTEM FUNCTIONS (PRESENT + EXECUTABLE)
-===================================================== */
-async function handlePayment(record) {
-  console.log("PAYMENT HANDOFF", PAYMENT_MODE, record.id);
-
-  if (PAYMENT_MODE === "LIVE") {
-    // real payment redirect / API here
-  }
-  return { status: "payment_pending" };
-}
-
-async function queueDocumentGeneration(record) {
-  console.log("DOCUMENT PIPELINE", DOC_MODE, record.id);
-
-  if (DOC_MODE === "LIVE") {
-    // real document generation trigger here
-  }
-  return { status: "doc_queued" };
-}
-
-async function sendNotificationEmail(record) {
-  console.log("EMAIL NOTIFICATION", EMAIL_MODE, record.id);
-
-  if (EMAIL_MODE === "LIVE") {
-    // real email service call here
-  }
-  return true;
-}
-
-/* =====================================================
-   SUBMIT HANDLER — FULL PIPELINE
-===================================================== */
-document
-  .getElementById("intakeForm")
-  .addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    console.log("SUBMIT HANDLER FIRED");
-
-    const formData = Object.fromEntries(
-      new FormData(e.target).entries()
-    );
-
-    const payload = {
-      ...formData,
-      status: "submitted",
-      created_at: new Date().toISOString()
-    };
-
-    console.log("INTAKE PAYLOAD", payload);
-
-    /* 1️⃣ Persist Intake */
-    const insertResult = await supabase
-      .from("document_requests")
-      .insert([payload])
-      .select()
-      .single();
-
-    console.log("SUPABASE INSERT RESULT", insertResult);
-
-    if (insertResult.error) {
-      console.error("INSERT FAILED", insertResult.error);
-      alert("Intake failed — see console");
-      return;
-    }
-
-    const record = insertResult.data;
-
-    /* 2️⃣ Payment */
-    await handlePayment(record);
-
-    /* 3️⃣ Document Generation */
-    await queueDocumentGeneration(record);
-
-    /* 4️⃣ Email Notification */
-    await sendNotificationEmail(record);
-
-    alert("Intake submitted — full pipeline executed");
-    e.target.reset();
+/* ---- URL PARAM HYDRATION ---- */
+(function hydrateFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  ["doc_type", "tier"].forEach((key) => {
+    const el = document.getElementById(key);
+    if (el && params.get(key)) el.value = params.get(key);
   });
+})();
+
+/* ---- SUBMIT HANDLER ---- */
+document.getElementById("intakeForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  console.log("✅ INTAKE SUBMIT HANDLER FIRED");
+
+  if (!e.target.checkValidity()) {
+    alert("Please complete all required fields.");
+    return;
+  }
+
+  const payload = Object.fromEntries(new FormData(e.target).entries());
+  payload.status = "intake_submitted";
+  payload.submitted_at = new Date().toISOString();
+
+  console.log("📦 PAYLOAD:", payload);
+
+  const { data, error } = await supabaseClient
+    .from("document_requests")
+    .insert([payload])
+    .select()
+    .single();
+
+  if (error) {
+    console.error("❌ SUPABASE ERROR:", error);
+    alert("Submission failed. Check console.");
+    return;
+  }
+
+  console.log("✅ INSERT SUCCESS:", data);
+  alert("Intake submitted successfully.");
+  e.target.reset();
+});
 </script>
 
 </body>
