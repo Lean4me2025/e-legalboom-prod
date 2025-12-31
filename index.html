@@ -2,185 +2,187 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>E-LegalBoom | Quality Legal Documents at Fair Prices</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>E-LegalBoom — Document Intake</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-
     body {
-      background: #f3f4f8;
-      color: #111827;
-      min-height: 100vh;
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5f7fb;
     }
 
     .page {
-      max-width: 1000px;
-      margin: auto;
-      padding: 40px 20px;
+      max-width: 860px;
+      margin: 40px auto;
+      background: #ffffff;
+      padding: 36px;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
     }
 
-    .hero-card {
-      background: white;
-      padding: 48px 36px;
-      border-radius: 14px;
-      box-shadow: 0 10px 25px rgba(0,0,0,.08);
+    h1 {
+      margin-top: 0;
+      font-size: 26px;
     }
 
-    .hero-highlight {
-      background: #1d4ed8;
-      color: white;
-      display: inline-block;
-      padding: 6px 14px;
-      border-radius: 999px;
+    .doc-header {
+      border: 1px solid #e2e6f0;
+      background: #f9fbff;
+      padding: 16px;
+      border-radius: 6px;
+      margin-bottom: 28px;
+    }
+
+    .doc-header p {
+      margin: 4px 0;
       font-size: 14px;
-      margin-bottom: 16px;
     }
 
-    .hero-title {
-      font-size: 36px;
-      margin-bottom: 14px;
-      font-weight: 700;
+    .section {
+      margin-bottom: 26px;
     }
 
-    .hero-subtitle {
-      font-size: 18px;
-      line-height: 1.6;
-      color: #374151;
-      margin-bottom: 24px;
-    }
-
-    .steps-title {
-      margin-top: 24px;
-      margin-bottom: 12px;
-      font-weight: 600;
-    }
-
-    .steps-list {
-      list-style: none;
-      margin-bottom: 30px;
-    }
-
-    .steps-list li {
+    .section h3 {
       margin-bottom: 10px;
+      font-size: 16px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 4px;
+    }
+
+    label {
+      display: block;
+      margin-top: 14px;
+      font-size: 14px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      font-size: 14px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    textarea {
+      min-height: 90px;
+    }
+
+    .row {
       display: flex;
-      align-items: center;
-      font-size: 15px;
+      gap: 20px;
     }
 
-    .steps-list span {
-      background: #1d4ed8;
-      color: white;
-      font-size: 12px;
-      min-width: 22px;
-      height: 22px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      font-weight: bold;
-      margin-right: 10px;
+    .row > div {
+      flex: 1;
     }
 
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    .btn-primary {
-      background: #1d4ed8;
-      color: white;
-      padding: 12px 22px;
-      border-radius: 999px;
-      font-weight: 600;
-      transition: background .2s;
-    }
-
-    .btn-primary:hover {
-      background: #1e40af;
-    }
-
-    .btn-secondary {
-      background: #eef2ff;
-      padding: 12px 22px;
-      border-radius: 999px;
-      font-weight: 600;
-      color: #1d4ed8;
-    }
-
-    .helper-text {
-      font-size: 13px;
-      color: #6b7280;
-    }
-
-    footer {
-      text-align: center;
-      font-size: 13px;
-      color: #6b7280;
+    button {
       margin-top: 30px;
+      padding: 14px 22px;
+      background: #2b6cff;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
     }
 
-    footer a {
-      color: #1d4ed8;
+    button:hover {
+      background: #1f57d6;
     }
   </style>
 </head>
 
 <body>
+  <div class="page">
+    <h1>Document Information</h1>
 
-<main class="page">
-  <section class="hero-card">
-
-    <div class="hero-highlight">Quality Documents · Fair Pricing · Clear Process</div>
-
-    <h1 class="hero-title">Welcome to E-LegalBoom</h1>
-
-    <p class="hero-subtitle">
-      We’re glad you’re here. At E-LegalBoom, we provide
-      <strong>high-quality legal documents at fair and transparent prices</strong>,
-      so you can move forward with confidence — without confusion, pressure,
-      or inflated legal costs.
-      <br><br>
-      Whether you're starting a business, formalizing an agreement, or preparing
-      an important document, you’re in the right place.
-    </p>
-
-    <p class="steps-title">Here’s how it works — in 5 simple steps:</p>
-
-    <ol class="steps-list">
-      <li><span>1</span> Choose your document from our catalog</li>
-      <li><span>2</span> Complete a guided application</li>
-      <li><span>3</span> Review and submit your information</li>
-      <li><span>4</span> Your document is professionally prepared</li>
-      <li><span>5</span> Receive your document by email</li>
-    </ol>
-
-    <div class="actions">
-      <a href="catalog.html" class="btn-primary">Start by viewing the Catalog</a>
+    <!-- DOCUMENT CONTEXT (READ-ONLY) -->
+    <div class="doc-header">
+      <p><strong>Document Requested:</strong> <span id="docLabel"></span></p>
+      <p><strong>Service Tier:</strong> <span id="tierLabel"></span></p>
     </div>
 
-    <p class="helper-text">
-      You can always start small and expand later. Choose the document that fits your needs today.
-    </p>
+    <form id="intakeForm">
 
-  </section>
+      <!-- REQUESTOR -->
+      <div class="section">
+        <h3>Requestor Information</h3>
 
-  <footer>
-    Questions? Email us at <a href="mailto:support@e-legalboom.com">support@e-legalboom.com</a>
-  </footer>
-</main>
+        <div class="row">
+          <div>
+            <label>First Name</label>
+            <input id="first_name" required />
+          </div>
+          <div>
+            <label>Last Name</label>
+            <input id="last_name" required />
+          </div>
+        </div>
 
+        <label>Email Address</label>
+        <input id="email" type="email" required />
+      </div>
+
+      <!-- ENTITY -->
+      <div class="section">
+        <h3>Entity Information</h3>
+
+        <label>Entity Type</label>
+        <select id="entity_type">
+          <option value="">Select</option>
+          <option>Individual</option>
+          <option>LLC</option>
+          <option>Corporation</option>
+          <option>Partnership</option>
+          <option>Trust</option>
+        </select>
+
+        <label>Entity Name (if applicable)</label>
+        <input id="entity_name" />
+      </div>
+
+      <!-- GOVERNING -->
+      <div class="section">
+        <h3>Governing Authority</h3>
+
+        <label>Governing State</label>
+        <select id="governing_state" required>
+          <option value="">Select state</option>
+          <option>AL</option><option>CA</option><option>DE</option>
+          <option>FL</option><option>NY</option><option>TX</option>
+        </select>
+      </div>
+
+      <!-- PARTIES -->
+      <div class="section">
+        <h3>Parties</h3>
+
+        <label>Party A Name</label>
+        <input id="party_a_name" />
+
+        <label>Party A Role</label>
+        <input id="party_a_role" />
+
+        <label>Party B Name</label>
+        <input id="party_b_name" />
+
+        <label>Party B Role</label>
+        <input id="party_b_role" />
+      </div>
+
+      <!-- NOTES -->
+      <div class="section">
+        <h3>Additional Instructions</h3>
+        <textarea id="notes" placeholder="Any special terms, conditions, or notes…"></textarea>
+      </div>
+
+      <button type="submit">Continue to Payment</button>
+    </form>
+  </div>
+
+  <script src="intake.js"></script>
 </body>
 </html>
