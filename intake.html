@@ -1,254 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>E-LegalBoom – Document Intake</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-
-<style>
-  body {
-    font-family: "Georgia", "Times New Roman", serif;
-    background: #f4f6f8;
-    color: #222;
-    margin: 0;
-    padding: 40px;
-  }
-
-  .document {
-    max-width: 850px;
-    margin: auto;
-    background: #ffffff;
-    padding: 48px 56px;
-    border: 1px solid #ccc;
-    box-shadow: 0 0 8px rgba(0,0,0,0.05);
-  }
-
-  h1 {
-    text-align: center;
-    margin-bottom: 6px;
-  }
-
-  .subtitle {
-    text-align: center;
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 40px;
-  }
-
-  h2 {
-    margin-top: 36px;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 6px;
-  }
-
-  .field {
-    margin-top: 18px;
-  }
-
-  label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 4px;
-  }
-
-  .required label::after {
-    content: " *";
-    color: darkred;
-  }
-
-  input, select, textarea {
-    width: 100%;
-    padding: 8px;
-    font-family: inherit;
-    font-size: 15px;
-    border: 1px solid #999;
-  }
-
-  textarea {
-    min-height: 90px;
-  }
-
-  .help {
-    font-size: 13px;
-    color: #555;
-    margin-top: 4px;
-  }
-
-  .required input:invalid,
-  .required textarea:invalid {
-    border-color: darkred;
-    background: #fff6f6;
-  }
-
-  .footer {
-    margin-top: 40px;
-    font-size: 13px;
-    color: #555;
-  }
-
-  button {
-    margin-top: 36px;
-    padding: 12px 22px;
-    font-size: 16px;
-    background: #1e2b44;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-
-  button:hover {
-    background: #162034;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <title>E-LegalBoom – Document Intake</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="intake.css" />
 </head>
 
 <body>
+  <main class="doc-wrapper">
+    <header class="doc-header">
+      <h1>Client Information Intake</h1>
+      <p class="subtitle">
+        Please complete the following information as it will appear in your legal document.
+      </p>
+    </header>
 
-<div class="document">
+    <!-- CONTEXT (Hidden, fed from Summary/Tier) -->
+    <input type="hidden" id="tier" name="tier" />
+    <input type="hidden" id="doc_type" name="doc_type" />
+    <input type="hidden" id="urgency" name="urgency" />
 
-<h1>Document Intake Questionnaire</h1>
-<div class="subtitle">
-This intake collects the legally required information to prepare your requested document.
-All required fields must be completed to proceed.
-</div>
+    <form id="intakeForm">
 
-<form id="intakeForm" novalidate>
+      <!-- SECTION: CLIENT -->
+      <section class="doc-section">
+        <h2>Client Information</h2>
 
-<!-- ===================== SECTION 1 ===================== -->
-<h2>1. Request Context</h2>
+        <div class="grid-2">
+          <div>
+            <label>First Name</label>
+            <input name="first_name" required />
+          </div>
+          <div>
+            <label>Last Name</label>
+            <input name="last_name" required />
+          </div>
+        </div>
 
-<div class="field required">
-  <label>Document Type</label>
-  <input id="doc_type" name="doc_type" required />
-  <div class="help">Example: Promissory Note, LLC Operating Agreement, NDA</div>
-</div>
+        <div class="grid-2">
+          <div>
+            <label>Email</label>
+            <input name="email" type="email" required />
+          </div>
+          <div>
+            <label>Phone</label>
+            <input name="phone" />
+          </div>
+        </div>
+      </section>
 
-<div class="field required">
-  <label>Service Tier</label>
-  <input id="tier" name="tier" required />
-</div>
+      <!-- SECTION: ADDRESS -->
+      <section class="doc-section">
+        <h2>Residence Address</h2>
 
-<!-- ===================== SECTION 2 ===================== -->
-<h2>2. Requesting Party</h2>
+        <label>Street Address</label>
+        <input name="street" />
 
-<div class="field required">
-  <label>First Name</label>
-  <input name="first_name" required />
-</div>
+        <div class="grid-3">
+          <input name="city" placeholder="City" />
+          <select name="state">
+            <option value="">State</option>
+          </select>
+          <input name="zip" placeholder="ZIP" />
+        </div>
+      </section>
 
-<div class="field required">
-  <label>Last Name</label>
-  <input name="last_name" required />
-</div>
+      <!-- SECTION: GOVERNING STATE -->
+      <section class="doc-section">
+        <h2>Governing Jurisdiction</h2>
+        <p class="hint">
+          This is the state law that will govern your document.
+        </p>
+        <select name="governing_state">
+          <option value="">Select Governing State</option>
+        </select>
+      </section>
 
-<div class="field required">
-  <label>Email Address</label>
-  <input type="email" name="email" required />
-</div>
+      <!-- SECTION: PARTIES -->
+      <section class="doc-section">
+        <h2>Additional Parties (if applicable)</h2>
 
-<div class="field">
-  <label>Phone Number</label>
-  <input name="phone" />
-</div>
+        <div class="grid-2">
+          <input name="party1_name" placeholder="Party Name" />
+          <input name="party1_role" placeholder="Role (Member, Manager, Trustee, etc.)" />
+        </div>
 
-<!-- ===================== SECTION 3 ===================== -->
-<h2>3. Governing State & Jurisdiction</h2>
+        <div class="grid-2">
+          <input name="party2_name" placeholder="Party Name" />
+          <input name="party2_role" placeholder="Role" />
+        </div>
+      </section>
 
-<div class="field required">
-  <label>State Governing This Document</label>
-  <input name="governing_state" required />
-  <div class="help">This determines statutory references and enforceability.</div>
-</div>
+      <!-- SECTION: DETAILS -->
+      <section class="doc-section">
+        <h2>Additional Instructions</h2>
+        <textarea name="details" rows="4"></textarea>
+      </section>
 
-<!-- ===================== SECTION 4 ===================== -->
-<h2>4. Document-Specific Instructions</h2>
+      <footer class="doc-footer">
+        <button type="submit">Continue</button>
+      </footer>
 
-<div class="field required">
-  <label>Describe the Arrangement or Purpose</label>
-  <textarea name="details" required></textarea>
-  <div class="help">
-    Example: loan amount, parties involved, obligations, timing, special terms.
-  </div>
-</div>
+    </form>
+  </main>
 
-<!-- ===================== SECTION 5 ===================== -->
-<h2>5. Acknowledgement</h2>
-
-<div class="field required">
-  <label>
-    <input type="checkbox" name="acknowledged" required />
-    I certify that the information provided is accurate and complete.
-  </label>
-</div>
-
-<button type="submit">Submit Intake</button>
-
-</form>
-
-<div class="footer">
-This service provides automated document preparation and is not a law firm.
-</div>
-
-</div>
-
-<!-- ===================== JAVASCRIPT ===================== -->
-<script>
-/* =====================================================
-   CLEAN SUPABASE + INTAKE SUBMISSION SCRIPT
-   ===================================================== */
-
-const SUPABASE_URL = "https://vvjbjfltqsivvxxifnvi.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";
-
-/* ---- SINGLE CLIENT ---- */
-const supabaseClient = supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
-
-/* ---- URL PARAM HYDRATION ---- */
-(function hydrateFromURL() {
-  const params = new URLSearchParams(window.location.search);
-  ["doc_type", "tier"].forEach((key) => {
-    const el = document.getElementById(key);
-    if (el && params.get(key)) el.value = params.get(key);
-  });
-})();
-
-/* ---- SUBMIT HANDLER ---- */
-document.getElementById("intakeForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  console.log("✅ INTAKE SUBMIT HANDLER FIRED");
-
-  if (!e.target.checkValidity()) {
-    alert("Please complete all required fields.");
-    return;
-  }
-
-  const payload = Object.fromEntries(new FormData(e.target).entries());
-  payload.status = "intake_submitted";
-  payload.submitted_at = new Date().toISOString();
-
-  console.log("📦 PAYLOAD:", payload);
-
-  const { data, error } = await supabaseClient
-    .from("document_requests")
-    .insert([payload])
-    .select()
-    .single();
-
-  if (error) {
-    console.error("❌ SUPABASE ERROR:", error);
-    alert("Submission failed. Check console.");
-    return;
-  }
-
-  console.log("✅ INSERT SUCCESS:", data);
-  alert("Intake submitted successfully.");
-  e.target.reset();
-});
-</script>
-
+  <script src="intake.js"></script>
 </body>
 </html>
