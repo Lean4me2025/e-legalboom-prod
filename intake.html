@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>E-LegalBoom – Document Intake</title>
+  <title>E-LegalBoom – Client Information Intake</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="intake.css" />
 </head>
@@ -16,46 +16,46 @@
       </p>
     </header>
 
-    <!-- CONTEXT (Hidden, fed from Summary/Tier) -->
+    <!-- ===== CONTEXT (INTENT FROM SUMMARY) ===== -->
     <input type="hidden" id="tier" name="tier" />
     <input type="hidden" id="doc_type" name="doc_type" />
     <input type="hidden" id="urgency" name="urgency" />
 
     <form id="intakeForm">
 
-      <!-- SECTION: CLIENT -->
+      <!-- ===== CLIENT INFORMATION ===== -->
       <section class="doc-section">
         <h2>Client Information</h2>
 
         <div class="grid-2">
           <div>
-            <label>First Name</label>
-            <input name="first_name" required />
+            <label for="first_name">First Name</label>
+            <input id="first_name" name="first_name" required />
           </div>
           <div>
-            <label>Last Name</label>
-            <input name="last_name" required />
+            <label for="last_name">Last Name</label>
+            <input id="last_name" name="last_name" required />
           </div>
         </div>
 
         <div class="grid-2">
           <div>
-            <label>Email</label>
-            <input name="email" type="email" required />
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required />
           </div>
           <div>
-            <label>Phone</label>
-            <input name="phone" />
+            <label for="phone">Phone</label>
+            <input id="phone" name="phone" />
           </div>
         </div>
       </section>
 
-      <!-- SECTION: ADDRESS -->
+      <!-- ===== RESIDENCE ADDRESS ===== -->
       <section class="doc-section">
         <h2>Residence Address</h2>
 
-        <label>Street Address</label>
-        <input name="street" />
+        <label for="street">Street Address</label>
+        <input id="street" name="street" />
 
         <div class="grid-3">
           <input name="city" placeholder="City" />
@@ -66,18 +66,19 @@
         </div>
       </section>
 
-      <!-- SECTION: GOVERNING STATE -->
+      <!-- ===== GOVERNING STATE ===== -->
       <section class="doc-section">
         <h2>Governing Jurisdiction</h2>
         <p class="hint">
-          This is the state law that will govern your document.
+          Select the state law that will govern this document.
         </p>
+
         <select name="governing_state">
           <option value="">Select Governing State</option>
         </select>
       </section>
 
-      <!-- SECTION: PARTIES -->
+      <!-- ===== ADDITIONAL PARTIES ===== -->
       <section class="doc-section">
         <h2>Additional Parties (if applicable)</h2>
 
@@ -92,19 +93,25 @@
         </div>
       </section>
 
-      <!-- SECTION: DETAILS -->
+      <!-- ===== ADDITIONAL INSTRUCTIONS ===== -->
       <section class="doc-section">
         <h2>Additional Instructions</h2>
         <textarea name="details" rows="4"></textarea>
       </section>
 
+      <!-- ===== SUBMIT ===== -->
       <footer class="doc-footer">
-        <button type="submit">Continue</button>
+        <button type="submit">Continue to Payment</button>
       </footer>
 
     </form>
   </main>
 
+  <!-- ===== SUPABASE (UMD / NON-MODULE) ===== -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+  <!-- ===== INTAKE LOGIC ===== -->
   <script src="intake.js"></script>
+
 </body>
 </html>
