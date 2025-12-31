@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const formData = Object.fromEntries(new FormData(form));
 
     const { error } = await supabaseClient
-      .from("requests")
+      .from("document_requests")
       .insert([formData]);
 
     if (error) {
