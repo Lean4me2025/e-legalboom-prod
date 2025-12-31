@@ -2,23 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>E-LegalBoom – Review & Confirm</title>
+  <title>E-LegalBoom — Review & Confirm</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <style>
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
       background: #f6f8fc;
       margin: 0;
     }
 
     .container {
       max-width: 760px;
-      margin: 60px auto;
+      margin: 40px auto;
       background: #ffffff;
       padding: 32px;
       border-radius: 10px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.06);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
     }
 
     h1 {
@@ -26,34 +27,20 @@
     }
 
     .summary-box {
-      background: #f0f4ff;
+      background: #f4f7ff;
       padding: 16px;
       border-radius: 8px;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
     }
 
-    label {
-      display: block;
-      margin-top: 18px;
-      font-weight: 600;
-    }
-
-    select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 6px;
-      font-size: 15px;
-    }
-
-    .radio-group label {
-      font-weight: normal;
-      margin-right: 20px;
+    .summary-box p {
+      margin: 6px 0;
     }
 
     .note {
       font-size: 14px;
       color: #555;
-      margin-top: 14px;
+      margin-top: 16px;
       line-height: 1.5;
     }
 
@@ -61,93 +48,65 @@
       margin-top: 30px;
       padding: 14px 22px;
       background: #2b6cff;
-      color: #fff;
+      color: #ffffff;
       border: none;
       border-radius: 6px;
       font-size: 16px;
       cursor: pointer;
     }
 
-    button:disabled {
-      background: #aaa;
-      cursor: not-allowed;
+    button:hover {
+      background: #1f57d6;
     }
   </style>
 </head>
 
 <body>
   <div class="container">
-    <h1>Review & Confirm</h1>
+    <h1>Review &amp; Confirm</h1>
 
-    <!-- SUMMARY OF SELECTION -->
+    <!-- SUMMARY DISPLAY -->
     <div class="summary-box">
-      <p><strong>Tier selected:</strong> <span id="tierLabel">—</span></p>
-      <p><strong>Document selected:</strong> <span id="docLabel">—</span></p>
+      <p><strong>Tier selected:</strong> <span id="tierLabel"></span></p>
+      <p><strong>Document selected:</strong> <span id="docLabel"></span></p>
     </div>
 
     <!-- ORIENTATION / EXPECTATION SETTING -->
     <p class="note">
       <strong>You’re almost finished.</strong><br />
-      On the next step, you’ll provide the information needed to prepare your document
-      and complete your payment. Once submitted, we’ll take care of creating your
-      document and delivering it to you.
+      On the next step, you’ll provide the information needed to prepare your
+      document and complete your payment. Once submitted, we’ll take care of
+      creating your document and delivering it to you.
     </p>
 
     <!-- SUPPORT / PAYMENT CONTACT -->
     <p class="note">
       <strong>Questions or need assistance?</strong><br />
-      If you have any questions about your document or payment, you can contact us at
-      <a href="mailto:Payments@Elegalboom.com">Payments@Elegalboom.com</a>.<br />
-      The email address you provide will be used to identify your request and deliver
-      your completed document.
+      If you have any questions about your document or payment, you can contact us
+      at
+      <a href="mailto:Payments@Elegalboom.com">Payments@Elegalboom.com</a>.
+      The email address you provide will be used to identify your request and
+      deliver your completed document.
     </p>
 
-    <!-- STATE (DOCUMENT-DEFINING) -->
-    <label for="stateSelect">State of Formation</label>
-    <select id="stateSelect">
-      <option value="">— Select a state —</option>
-      <option value="AL">Alabama</option>
-      <option value="CA">California</option>
-      <option value="DE">Delaware</option>
-      <option value="FL">Florida</option>
-      <option value="NY">New York</option>
-      <option value="TX">Texas</option>
-    </select>
-
-    <!-- MANAGEMENT TYPE -->
-    <label>LLC Management Type</label>
-    <div class="radio-group">
-      <label>
-        <input type="radio" name="management" value="member" />
-        Member-managed
-      </label>
-      <label>
-        <input type="radio" name="management" value="manager" />
-        Manager-managed
-      </label>
-    </div>
-
-    <button id="continueBtn" disabled>
-      Continue to Information & Payment
+    <!-- CONTINUE -->
+    <button id="continueBtn">
+      Continue to Information &amp; Payment
     </button>
   </div>
 
   <script>
-    /**********************************************************
-     * READ REQUIRED PARAMS FROM PREVIOUS STEP
-     **********************************************************/
+    // READ REQUIRED PARAMS FROM PREVIOUS STEP
     const params = new URLSearchParams(window.location.search);
     const tier = params.get("tier");
     const docType = params.get("doc_type");
 
     if (!tier || !docType) {
-      alert("Missing selection. Please start again.");
-      throw new Error("Missing tier or doc_type");
+      alert("Missing order information. Please start from the catalog.");
+      window.location.href = "/catalog.html";
     }
 
-    /**********************************************************
-     * DISPLAY FRIENDLY LABELS
-     **********************************************************/
+    // FRIENDLY LABEL MAPS
     const tierMap = {
       T1: "Tier 1",
       T2: "Tier 2",
@@ -157,7 +116,8 @@
 
     const docMap = {
       llc_single_member: "Single-Member LLC",
-      llc_multi_member: "Multi-Member LLC"
+      llc_multi_member: "Multi-Member LLC",
+      promissory_note: "Promissory Note"
     };
 
     document.getElementById("tierLabel").textContent =
@@ -166,38 +126,17 @@
     document.getElementById("docLabel").textContent =
       docMap[docType] || docType;
 
-    /**********************************************************
-     * VALIDATION GATE
-     **********************************************************/
-    const stateSelect = document.getElementById("stateSelect");
-    const continueBtn = document.getElementById("continueBtn");
+    // CONTINUE → INTAKE (NO DATA COLLECTION HERE)
+    document.getElementById("continueBtn").addEventListener("click", () => {
+      sessionStorage.setItem(
+        "eb_order",
+        JSON.stringify({
+          tier,
+          doc_type: docType
+        })
+      );
 
-    function checkReady() {
-      const state = stateSelect.value;
-      const management =
-        document.querySelector('input[name="management"]:checked');
-      continueBtn.disabled = !(state && management);
-    }
-
-    stateSelect.addEventListener("change", checkReady);
-    document.querySelectorAll('input[name="management"]').forEach(r =>
-      r.addEventListener("change", checkReady)
-    );
-
-    /**********************************************************
-     * REDIRECT TO INTAKE (MATCHES LIVE INTAKE CONTRACT)
-     **********************************************************/
-    continueBtn.addEventListener("click", () => {
-      const state = stateSelect.value;
-      const management =
-        document.querySelector('input[name="management"]:checked').value;
-
-      window.location.href =
-        `/intake.html` +
-        `?tier=${encodeURIComponent(tier)}` +
-        `&doc_type=${encodeURIComponent(docType)}` +
-        `&state=${encodeURIComponent(state)}` +
-        `&management=${encodeURIComponent(management)}`;
+      window.location.href = "/intake.html";
     });
   </script>
 </body>
