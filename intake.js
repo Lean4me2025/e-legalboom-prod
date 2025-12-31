@@ -8,16 +8,16 @@ const WeSubmittedCode = window.supabase.createClient(
   SUPABASE_ANON_KEY
 );
 
-// ===============================
-// URL CONTEXT (AUTHORITATIVE)
-// ===============================
-const params = new URLSearchParams(window.location.search);
-const docType = params.get("doc_type");
-const tier = params.get("tier");
+// ORDER CONTEXT (PASS-THROUGH, NON-BLOCKING)
+let docType = null;
+let tier = null;
 
-if (!docType) {
-  alert("Missing document type. Please start from the catalog.");
-  throw new Error("doc_type missing from URL");
+try {
+  const order = JSON.parse(sessionStorage.getItem("eb_order")) || {};
+  docType = order.doc_type || null;
+  tier = order.tier || null;
+} catch {
+  // intentionally swallow — intake must never block
 }
 
 // ===============================
