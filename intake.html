@@ -2,116 +2,46 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>E-LegalBoom – Client Information Intake</title>
+  <title>E-LegalBoom Intake</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="intake.css" />
 </head>
 
 <body>
   <main class="doc-wrapper">
-    <header class="doc-header">
-      <h1>Client Information Intake</h1>
-      <p class="subtitle">
-        Please complete the following information as it will appear in your legal document.
-      </p>
-    </header>
-
-    <!-- ===== CONTEXT (INTENT FROM SUMMARY) ===== -->
-    <input type="hidden" id="tier" name="tier" />
-    <input type="hidden" id="doc_type" name="doc_type" />
-    <input type="hidden" id="urgency" name="urgency" />
+    <h1>Client Intake</h1>
 
     <form id="intakeForm">
 
-      <!-- ===== CLIENT INFORMATION ===== -->
-      <section class="doc-section">
-        <h2>Client Information</h2>
+      <label>First Name</label>
+      <input name="first_name" required />
 
-        <div class="grid-2">
-          <div>
-            <label for="first_name">First Name</label>
-            <input id="first_name" name="first_name" required />
-          </div>
-          <div>
-            <label for="last_name">Last Name</label>
-            <input id="last_name" name="last_name" required />
-          </div>
-        </div>
+      <label>Last Name</label>
+      <input name="last_name" required />
 
-        <div class="grid-2">
-          <div>
-            <label for="email">Email</label>
-            <input id="email" name="email" type="email" required />
-          </div>
-          <div>
-            <label for="phone">Phone</label>
-            <input id="phone" name="phone" />
-          </div>
-        </div>
-      </section>
+      <label>Email</label>
+      <input name="email" type="email" required />
 
-      <!-- ===== RESIDENCE ADDRESS ===== -->
-      <section class="doc-section">
-        <h2>Residence Address</h2>
+      <label>State</label>
+      <select name="state" id="state" required>
+        <option value="">Select state</option>
+      </select>
 
-        <label for="street">Street Address</label>
-        <input id="street" name="street" />
+      <label>Governing State</label>
+      <select name="governing_state" id="governing_state" required>
+        <option value="">Select governing state</option>
+      </select>
 
-        <div class="grid-3">
-          <input name="city" placeholder="City" />
-          <select name="state">
-            <option value="">State</option>
-          </select>
-          <input name="zip" placeholder="ZIP" />
-        </div>
-      </section>
+      <!-- Hidden fields from summary -->
+      <input type="hidden" name="tier" id="tier" />
+      <input type="hidden" name="doc_type" id="doc_type" />
 
-      <!-- ===== GOVERNING STATE ===== -->
-      <section class="doc-section">
-        <h2>Governing Jurisdiction</h2>
-        <p class="hint">
-          Select the state law that will govern this document.
-        </p>
-
-        <select name="governing_state">
-          <option value="">Select Governing State</option>
-        </select>
-      </section>
-
-      <!-- ===== ADDITIONAL PARTIES ===== -->
-      <section class="doc-section">
-        <h2>Additional Parties (if applicable)</h2>
-
-        <div class="grid-2">
-          <input name="party1_name" placeholder="Party Name" />
-          <input name="party1_role" placeholder="Role (Member, Manager, Trustee, etc.)" />
-        </div>
-
-        <div class="grid-2">
-          <input name="party2_name" placeholder="Party Name" />
-          <input name="party2_role" placeholder="Role" />
-        </div>
-      </section>
-
-      <!-- ===== ADDITIONAL INSTRUCTIONS ===== -->
-      <section class="doc-section">
-        <h2>Additional Instructions</h2>
-        <textarea name="details" rows="4"></textarea>
-      </section>
-
-      <!-- ===== SUBMIT ===== -->
-      <footer class="doc-footer">
-        <button type="submit">Continue to Payment</button>
-      </footer>
-
+      <button type="submit">Continue to Payment</button>
     </form>
   </main>
 
-  <!-- ===== SUPABASE (UMD / NON-MODULE) ===== -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
-  <!-- ===== INTAKE LOGIC ===== -->
+  <!-- Supabase CDN (browser-safe) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="intake.js"></script>
-
 </body>
 </html>
