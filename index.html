@@ -2,229 +2,160 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>E-LegalBoom</title>
+  <title>E-LegalBoom | Quality Legal Documents</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <style>
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #f6f8fb;
-      color: #1e1e2f;
+      background: #f5f6fa;
+      color: #222;
+      line-height: 1.6;
     }
 
     .container {
       max-width: 900px;
-      margin: 0 auto;
-      padding: 40px 20px;
+      margin: auto;
+      padding: 60px 20px;
     }
 
-    .card {
-      background: #ffffff;
-      padding: 30px;
-      margin-bottom: 24px;
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-    }
-
-    h1, h2 {
-      margin-top: 0;
-    }
-
-    .options button {
-      display: block;
-      width: 100%;
-      padding: 14px;
-      margin-bottom: 12px;
-      font-size: 16px;
-      border-radius: 8px;
-      border: 1px solid #d0d7e2;
-      background: #ffffff;
-      cursor: pointer;
-      text-align: left;
-    }
-
-    .options button.selected {
-      border-color: #2b6cff;
-      background: #eef3ff;
-    }
-
-    .primary {
-      margin-top: 20px;
-      padding: 14px 22px;
-      font-size: 16px;
-      border-radius: 8px;
-      border: none;
+    .badge {
+      display: inline-block;
       background: #2b6cff;
-      color: #ffffff;
-      cursor: pointer;
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 20px;
     }
 
-    .primary:disabled {
-      background: #aab8e6;
-      cursor: not-allowed;
+    h1 {
+      font-size: 40px;
+      margin-bottom: 15px;
+    }
+
+    p {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    .steps {
+      margin-top: 40px;
+    }
+
+    .step {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 18px;
+      align-items: flex-start;
+    }
+
+    .step-number {
+      background: #2b6cff;
+      color: #fff;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+
+    .cta {
+      margin-top: 40px;
+    }
+
+    .cta a {
+      display: inline-block;
+      background: #2b6cff;
+      color: #fff;
+      padding: 14px 26px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .cta a:hover {
+      background: #1e54cc;
+    }
+
+    footer {
+      margin-top: 80px;
+      font-size: 14px;
+      color: #555;
     }
   </style>
 </head>
 
 <body>
+
   <div class="container">
 
-    <!-- WELCOME -->
-    <div class="card">
-      <h1>Welcome to E-LegalBoom</h1>
+    <div class="badge">Quality Documents · Fair Pricing · Clear Process</div>
+
+    <h1>Welcome to E-LegalBoom</h1>
+
+    <p>
+      We provide high-quality legal document preparation at fair and transparent prices,
+      so you can move forward with confidence — without confusion, pressure, or inflated legal costs.
+    </p>
+
+    <p>
+      Whether you’re starting a business, formalizing an agreement, or preparing an important document,
+      you’re in the right place.
+    </p>
+
+    <p><strong>Fast Turnaround.</strong><br>
+      Your document will be prepared and emailed to you shortly after submission.
+    </p>
+
+    <div class="steps">
+      <p><strong>Here’s how it works — in 5 simple steps:</strong></p>
+
+      <div class="step">
+        <div class="step-number">1</div>
+        <div>Choose your document from our catalog</div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">2</div>
+        <div>Complete a guided application</div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">3</div>
+        <div>Review and submit your information</div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">4</div>
+        <div>Your document is professionally prepared</div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">5</div>
+        <div>Receive your document by email</div>
+      </div>
+    </div>
+
+    <div class="cta">
+      <a href="summary.html">Start by Viewing the Catalog</a>
+    </div>
+
+    <footer>
       <p>
-        Select your document and tier.  
-        We’ll collect your information next.
+        E-LegalBoom provides document preparation based on the information you supply.
+        We do not provide legal advice.
       </p>
-    </div>
-
-    <!-- TIER SELECTION -->
-    <div class="card">
-      <h2>Select a Tier</h2>
-      <div class="options" id="tierOptions">
-        <button onclick="selectTier('tier1')">Tier 1 — Basic</button>
-        <button onclick="selectTier('tier2')">Tier 2 — Standard</button>
-        <button onclick="selectTier('tier3')">Tier 3 — Premium</button>
-      </div>
-    </div>
-
-    <!-- DOCUMENT SELECTION -->
-    <div class="card">
-      <h2>Select a Document</h2>
-      <div class="options" id="docOptions">
-        <button onclick="selectDoc('promissory_note')">Promissory Note</button>
-        <button onclick="selectDoc('llc_agreement')">LLC Agreement</button>
-        <button onclick="selectDoc('nda')">Non-Disclosure Agreement</button>
-      </div>
-    </div>
-
-    <!-- SUMMARY -->
-    <div class="card">
-      <h2>Summary</h2>
-      <p><strong>Tier:</strong> <span id="summaryTier">—</span></p>
-      <p><strong>Document:</strong> <span id="summaryDoc">—</span></p>
-
-      <button class="primary" id="continueBtn" disabled onclick="goToIntake()">
-        Continue to Intake
-      </button>
-    </div>
+    </footer>
 
   </div>
-
-  <!-- SUPABASE CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <script>
-    // =====================================
-    // STATE (INDEX IS AUTHORITY)
-    // =====================================
-    let selectedTier = null;
-    let selectedDoc = null;
-
-    // =====================================
-    // SUPABASE CONFIG (YOU FILL THESE IN)
-    // =====================================
-    const SUPABASE_URL = "https://vvjbjfltqsivvxxifnvi.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";
-
-    let supabaseClient = null;
-
-    if (window.supabase) {
-      try {
-        supabaseClient = window.supabase.createClient(
-          SUPABASE_URL,
-          SUPABASE_ANON_KEY
-        );
-      } catch (e) {
-        console.warn("Supabase init failed (safe):", e);
-      }
-    }
-
-    // =====================================
-    // UI HANDLERS
-    // =====================================
-    function selectTier(tier) {
-      selectedTier = tier;
-      updateUI('tierOptions', tier);
-      updateSummary();
-    }
-
-    function selectDoc(doc) {
-      selectedDoc = doc;
-      updateUI('docOptions', doc);
-      updateSummary();
-    }
-
-    function updateUI(containerId, value) {
-      const buttons = document
-        .getElementById(containerId)
-        .querySelectorAll('button');
-
-      buttons.forEach(btn => {
-        btn.classList.toggle(
-          'selected',
-          btn.textContent.toLowerCase().includes(value.replace('_', ' '))
-        );
-      });
-    }
-
-    function updateSummary() {
-      document.getElementById('summaryTier').textContent =
-        selectedTier || '—';
-
-      document.getElementById('summaryDoc').textContent =
-        selectedDoc || '—';
-
-      document.getElementById('continueBtn').disabled =
-        !(selectedTier && selectedDoc);
-    }
-
-    // =====================================
-    // STREAM A — INTENT WRITE (NON-BLOCKING)
-    // =====================================
-    async function saveIntentDraft(tier, documentType) {
-      if (!supabaseClient) {
-        console.warn("Supabase unavailable — intent not saved.");
-        return null;
-      }
-
-      const { data, error } = await supabaseClient
-        .from("document_intents")
-        .insert([{
-          tier: tier,
-          document_type: documentType,
-          status: "draft"
-        }])
-        .select()
-        .single();
-
-      if (error) {
-        console.warn("Intent save failed (non-blocking):", error);
-        return null;
-      }
-
-      return data.id;
-    }
-
-    // =====================================
-    // CONTROLLED NAVIGATION
-    // =====================================
-    async function goToIntake() {
-      const intentId = await saveIntentDraft(selectedTier, selectedDoc);
-
-      const params = new URLSearchParams({
-        tier: selectedTier,
-        doc: selectedDoc
-      });
-
-      if (intentId) {
-        params.set("intent_id", intentId);
-      }
-
-      window.location.href = `/intake.html?${params.toString()}`;
-    }
-  </script>
 
 </body>
 </html>
