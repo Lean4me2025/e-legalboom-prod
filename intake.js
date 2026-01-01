@@ -1,20 +1,29 @@
-/**************************************************
- * E-LegalBoom — Intake Logic (Canonical, Stable)
- * Non-blocking • Deterministic • Safe
- **************************************************/
+/*************************************************
+ * E-LegalBoom — Intake Logic (Stable)
+ * Scope-Safe • Non-Blocking • Deterministic
+ *************************************************/
 
-/* ---------- SUPABASE CLIENT ---------- */
-const SUPABASE_URL = "https://vvjbjftqsivwxxifovi.supabase.co";
-const SUPABASE_ANON_KEY = 
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";
+// 🔒 HARD STOP — do nothing unless intake form exists
+const intakeForm = document.getElementById("intakeForm");
+if (!intakeForm) {
+  console.warn("intake.js loaded on non-intake page — exiting safely");
+  return;
+}
 
+/* ===============================
+   SUPABASE CLIENT
+================================ */
+const SUPABASE_URL = "https://vvjbfjtqsivxxifovi.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";
 
 const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_ANON_KEY
 );
 
-/* ---------- ORDER CONTEXT (PASS-THROUGH ONLY) ---------- */
+/* ===============================
+   CONTEXT (READ-ONLY)
+================================ */
 let tier = null;
 let docType = null;
 
@@ -23,73 +32,58 @@ try {
   tier = stored.tier || null;
   docType = stored.doc_type || null;
 } catch (_) {
-  // swallow — intake must NEVER block
+  // intentionally swallow — intake must never block
 }
 
-/* ---------- OPTIONAL DISPLAY (READ-ONLY) ---------- */
+/* ===============================
+   DISPLAY CONTEXT (OPTIONAL)
+================================ */
 document.addEventListener("DOMContentLoaded", () => {
   const tierEl = document.getElementById("tierLabel");
   const docEl = document.getElementById("docLabel");
 
-  if (tierEl && tier) tierEl.textContent = tier;
-  if (docEl && docType) docEl.textContent = docType;
+  if (tierEl) tierEl.textContent = tier || "—";
+  if (docEl) docEl.textContent = docType || "—";
 });
 
-/* ---------- FORM SUBMISSION ---------- */
-const form = document.getElementById("intakeForm");
+/* ===============================
+   FORM SUBMISSION
+================================ */
+intakeForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-if (form) {
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  const payload = {
+    tier,
+    doc_type: docType,
 
-    const payload = {
-      tier,
-      doc_type: docType,
+    first_name: document.getElementById("first_name").value.trim(),
+    last_name: document.getElementById("last_name").value.trim(),
+    email: document.getElementById("email").value.trim(),
 
-      first_name: document.getElementById("first_name")?.value?.trim() || null,
-      last_name: document.getElementById("last_name")?.value?.trim() || null,
-      email: document.getElementById("email")?.value?.trim() || null,
+    entity_type: document.getElementById("entity_type")?.value || null,
+    entity_name: document.getElementById("entity_name")?.value || null,
+    governing_state: document.getElementById("governing_state")?.value || null,
 
-      entity_type:
-        document.getElementById("entity_type")?.value || null,
-      entity_name:
-        document.getElementById("entity_name")?.value?.trim() || null,
+    source: "intake",
+    submitted_at: new Date().toISOString()
+  };
 
-      governing_state:
-        document.getElementById("governing_state")?.value || null,
+  try {
+    const { error } = await supabaseClient
+      .from("document_requests")
+      .insert(payload);
 
-      party_a_name:
-        document.getElementById("party_a_name")?.value?.trim() || null,
-      party_a_role:
-        document.getElementById("party_a_role")?.value?.trim() || null,
-      party_b_name:
-        document.getElementById("party_b_name")?.value?.trim() || null,
-      party_b_role:
-        document.getElementById("party_b_role")?.value?.trim() || null,
-
-      notes:
-        document.getElementById("notes")?.value?.trim() || null,
-
-      source: "intake",
-      submitted_at: new Date().toISOString()
-    };
-
-    try {
-      const { error } = await supabaseClient
-        .from("document_requests")
-        .insert(payload);
-
-      if (error) {
-        console.error("Supabase insert error:", error);
-        return;
-      }
-
-      // SAFE HANDOFF — tier locked if present
-      const nextTier = tier ? encodeURIComponent(tier) : "";
-      window.location.href = `/payment.html?tier=${nextTier}`;
-
-    } catch (err) {
-      console.error("Unexpected intake failure:", err);
+    if (error) {
+      console.error("Supabase insert failed:", error);
+      alert("Submission failed. Please try again.");
+      return;
     }
-  });
-}
+
+    // ✅ HANDOFF TO PAYMENT — ONLY PLACE REDIRECT OCCURS
+    window.location.href = `/payment.html?tier=${encodeURIComponent(tier || "")}`;
+
+  } catch (err) {
+    console.error("Unexpected intake failure:", err);
+    alert("Unexpected error. Please retry.");
+  }
+});
