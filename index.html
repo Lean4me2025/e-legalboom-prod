@@ -2,187 +2,229 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>E-LegalBoom — Document Intake</title>
+  <title>E-LegalBoom</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <style>
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #f5f7fb;
+      background: #f6f8fb;
+      color: #1e1e2f;
     }
 
-    .page {
-      max-width: 860px;
-      margin: 40px auto;
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .card {
       background: #ffffff;
-      padding: 36px;
-      border-radius: 10px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      padding: 30px;
+      margin-bottom: 24px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
     }
 
-    h1 {
+    h1, h2 {
       margin-top: 0;
-      font-size: 26px;
     }
 
-    .doc-header {
-      border: 1px solid #e2e6f0;
-      background: #f9fbff;
-      padding: 16px;
-      border-radius: 6px;
-      margin-bottom: 28px;
-    }
-
-    .doc-header p {
-      margin: 4px 0;
-      font-size: 14px;
-    }
-
-    .section {
-      margin-bottom: 26px;
-    }
-
-    .section h3 {
-      margin-bottom: 10px;
-      font-size: 16px;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 4px;
-    }
-
-    label {
+    .options button {
       display: block;
-      margin-top: 14px;
-      font-size: 14px;
-    }
-
-    input, select, textarea {
       width: 100%;
-      padding: 8px;
-      margin-top: 4px;
-      font-size: 14px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
+      padding: 14px;
+      margin-bottom: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #d0d7e2;
+      background: #ffffff;
+      cursor: pointer;
+      text-align: left;
     }
 
-    textarea {
-      min-height: 90px;
+    .options button.selected {
+      border-color: #2b6cff;
+      background: #eef3ff;
     }
 
-    .row {
-      display: flex;
-      gap: 20px;
-    }
-
-    .row > div {
-      flex: 1;
-    }
-
-    button {
-      margin-top: 30px;
+    .primary {
+      margin-top: 20px;
       padding: 14px 22px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
       background: #2b6cff;
       color: #ffffff;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
       cursor: pointer;
     }
 
-    button:hover {
-      background: #1f57d6;
+    .primary:disabled {
+      background: #aab8e6;
+      cursor: not-allowed;
     }
   </style>
 </head>
 
 <body>
-  <div class="page">
-    <h1>Document Information</h1>
+  <div class="container">
 
-    <!-- DOCUMENT CONTEXT (READ-ONLY) -->
-    <div class="doc-header">
-      <p><strong>Document Requested:</strong> <span id="docLabel"></span></p>
-      <p><strong>Service Tier:</strong> <span id="tierLabel"></span></p>
+    <!-- WELCOME -->
+    <div class="card">
+      <h1>Welcome to E-LegalBoom</h1>
+      <p>
+        Select your document and tier.  
+        We’ll collect your information next.
+      </p>
     </div>
 
-    <form id="intakeForm">
-
-      <!-- REQUESTOR -->
-      <div class="section">
-        <h3>Requestor Information</h3>
-
-        <div class="row">
-          <div>
-            <label>First Name</label>
-            <input id="first_name" required />
-          </div>
-          <div>
-            <label>Last Name</label>
-            <input id="last_name" required />
-          </div>
-        </div>
-
-        <label>Email Address</label>
-        <input id="email" type="email" required />
+    <!-- TIER SELECTION -->
+    <div class="card">
+      <h2>Select a Tier</h2>
+      <div class="options" id="tierOptions">
+        <button onclick="selectTier('tier1')">Tier 1 — Basic</button>
+        <button onclick="selectTier('tier2')">Tier 2 — Standard</button>
+        <button onclick="selectTier('tier3')">Tier 3 — Premium</button>
       </div>
+    </div>
 
-      <!-- ENTITY -->
-      <div class="section">
-        <h3>Entity Information</h3>
-
-        <label>Entity Type</label>
-        <select id="entity_type">
-          <option value="">Select</option>
-          <option>Individual</option>
-          <option>LLC</option>
-          <option>Corporation</option>
-          <option>Partnership</option>
-          <option>Trust</option>
-        </select>
-
-        <label>Entity Name (if applicable)</label>
-        <input id="entity_name" />
+    <!-- DOCUMENT SELECTION -->
+    <div class="card">
+      <h2>Select a Document</h2>
+      <div class="options" id="docOptions">
+        <button onclick="selectDoc('promissory_note')">Promissory Note</button>
+        <button onclick="selectDoc('llc_agreement')">LLC Agreement</button>
+        <button onclick="selectDoc('nda')">Non-Disclosure Agreement</button>
       </div>
+    </div>
 
-      <!-- GOVERNING -->
-      <div class="section">
-        <h3>Governing Authority</h3>
+    <!-- SUMMARY -->
+    <div class="card">
+      <h2>Summary</h2>
+      <p><strong>Tier:</strong> <span id="summaryTier">—</span></p>
+      <p><strong>Document:</strong> <span id="summaryDoc">—</span></p>
 
-        <label>Governing State</label>
-        <select id="governing_state" required>
-          <option value="">Select state</option>
-          <option>AL</option><option>CA</option><option>DE</option>
-          <option>FL</option><option>NY</option><option>TX</option>
-        </select>
-      </div>
+      <button class="primary" id="continueBtn" disabled onclick="goToIntake()">
+        Continue to Intake
+      </button>
+    </div>
 
-      <!-- PARTIES -->
-      <div class="section">
-        <h3>Parties</h3>
-
-        <label>Party A Name</label>
-        <input id="party_a_name" />
-
-        <label>Party A Role</label>
-        <input id="party_a_role" />
-
-        <label>Party B Name</label>
-        <input id="party_b_name" />
-
-        <label>Party B Role</label>
-        <input id="party_b_role" />
-      </div>
-
-      <!-- NOTES -->
-      <div class="section">
-        <h3>Additional Instructions</h3>
-        <textarea id="notes" placeholder="Any special terms, conditions, or notes…"></textarea>
-      </div>
-
-      <button type="submit">Continue to Payment</button>
-    </form>
   </div>
 
-  <script src="intake.js"></script>
+  <!-- SUPABASE CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    // =====================================
+    // STATE (INDEX IS AUTHORITY)
+    // =====================================
+    let selectedTier = null;
+    let selectedDoc = null;
+
+    // =====================================
+    // SUPABASE CONFIG (YOU FILL THESE IN)
+    // =====================================
+    const SUPABASE_URL = "https://vvjbjfltqsivvxxifnvi.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";
+
+    let supabaseClient = null;
+
+    if (window.supabase) {
+      try {
+        supabaseClient = window.supabase.createClient(
+          SUPABASE_URL,
+          SUPABASE_ANON_KEY
+        );
+      } catch (e) {
+        console.warn("Supabase init failed (safe):", e);
+      }
+    }
+
+    // =====================================
+    // UI HANDLERS
+    // =====================================
+    function selectTier(tier) {
+      selectedTier = tier;
+      updateUI('tierOptions', tier);
+      updateSummary();
+    }
+
+    function selectDoc(doc) {
+      selectedDoc = doc;
+      updateUI('docOptions', doc);
+      updateSummary();
+    }
+
+    function updateUI(containerId, value) {
+      const buttons = document
+        .getElementById(containerId)
+        .querySelectorAll('button');
+
+      buttons.forEach(btn => {
+        btn.classList.toggle(
+          'selected',
+          btn.textContent.toLowerCase().includes(value.replace('_', ' '))
+        );
+      });
+    }
+
+    function updateSummary() {
+      document.getElementById('summaryTier').textContent =
+        selectedTier || '—';
+
+      document.getElementById('summaryDoc').textContent =
+        selectedDoc || '—';
+
+      document.getElementById('continueBtn').disabled =
+        !(selectedTier && selectedDoc);
+    }
+
+    // =====================================
+    // STREAM A — INTENT WRITE (NON-BLOCKING)
+    // =====================================
+    async function saveIntentDraft(tier, documentType) {
+      if (!supabaseClient) {
+        console.warn("Supabase unavailable — intent not saved.");
+        return null;
+      }
+
+      const { data, error } = await supabaseClient
+        .from("document_intents")
+        .insert([{
+          tier: tier,
+          document_type: documentType,
+          status: "draft"
+        }])
+        .select()
+        .single();
+
+      if (error) {
+        console.warn("Intent save failed (non-blocking):", error);
+        return null;
+      }
+
+      return data.id;
+    }
+
+    // =====================================
+    // CONTROLLED NAVIGATION
+    // =====================================
+    async function goToIntake() {
+      const intentId = await saveIntentDraft(selectedTier, selectedDoc);
+
+      const params = new URLSearchParams({
+        tier: selectedTier,
+        doc: selectedDoc
+      });
+
+      if (intentId) {
+        params.set("intent_id", intentId);
+      }
+
+      window.location.href = `/intake.html?${params.toString()}`;
+    }
+  </script>
+
 </body>
 </html>
