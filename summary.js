@@ -1,46 +1,38 @@
-// ===== SUMMARY PAGE LOGIC =====
+// --- Read parameters from Tier page ---
+const params = new URLSearchParams(window.location.search);
+const tier = params.get("tier");
+const docType = params.get("doc_type");
 
-// Example: values coming from Catalog selection
-// (These would already be set before landing here)
-const category = sessionStorage.getItem("category");
-const tier = sessionStorage.getItem("tier");
-const price = sessionStorage.getItem("price");
-const docType = sessionStorage.getItem("doc_type");
-
-// Guard: must come from catalog
-if (!category || !tier || !price) {
+// --- Guard: Summary MUST have tier + doc_type ---
+if (!tier || !docType) {
   window.location.href = "catalog.html";
 }
 
-// Generate Order ID
-const orderId = `ELB-${Date.now()}`;
-sessionStorage.setItem("order_id", orderId);
+// --- Create authoritative Order Intent ---
+const orderIntent = {
+  order_id: "ELB-" + Date.now(),
+  tier: tier,
+  doc_type: docType,
+  status: "intent",
+  created_at: new Date().toISOString()
+};
 
-// Lock tier
-sessionStorage.setItem("tier_locked", "true");
+// --- Persist as authoritative state ---
+sessionStorage.setItem("elb_order_intent", JSON.stringify(orderIntent));
 
-// Display summary
-document.getElementById("summaryDetails").innerHTML = `
-  <p><strong>Category:</strong> ${category}</p>
-  <p><strong>Document:</strong> ${docType || "Selected Document"}</p>
-  <p><strong>Tier:</strong> ${tier}</p>
-  <p><strong>Price:</strong> $${price}</p>
-  <p><strong>Order ID:</strong> ${orderId}</p>
+// --- Render summary ---
+document.getElementById("summary").innerHTML = `
+  <div class="summary-line"><strong>Order ID:</strong> ${orderIntent.order_id}</div>
+  <div class="summary-line"><strong>Tier:</strong> ${orderIntent.tier}</div>
+  <div class="summary-line"><strong>Document:</strong> ${orderIntent.doc_type}</div>
 `;
 
-// Continue
+// --- Navigation controls ---
 function continueToIntake() {
   window.location.href = "intake.html";
 }
 
-// ===== ABORT LOGIC =====
 function abortOrder() {
-  const confirmAbort = confirm(
-    "If you cancel, your information will not be saved and you will need to start over."
-  );
-
-  if (!confirmAbort) return;
-
-  sessionStorage.clear();
+  sessionStorage.removeItem("elb_order_intent");
   window.location.href = "catalog.html";
 }
